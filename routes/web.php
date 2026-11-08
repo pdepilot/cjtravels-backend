@@ -37,20 +37,40 @@ Router::get('/register', [RegisterController::class, 'showRegistrationForm'])->n
 Router::post('/register', [RegisterController::class, 'register']);
 Router::any('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Admin Routes
+// Admin Authentication Routes (Guest Only)
+Router::get('/admin/login', [Admin\AuthController::class, 'showLoginForm'])->name('admin.login')->middleware('admin.guest');
+Router::post('/admin/login', [Admin\AuthController::class, 'login'])->middleware(['csrf', 'admin.guest']);
+Router::get('/admin/forgot-password', [Admin\AuthController::class, 'showForgotPasswordForm'])->name('admin.forgot-password')->middleware('admin.guest');
+Router::post('/admin/forgot-password', [Admin\AuthController::class, 'sendResetLink'])->middleware(['csrf', 'admin.guest']);
+Router::get('/admin/reset-password', [Admin\AuthController::class, 'showResetPasswordForm'])->name('admin.reset-password')->middleware('admin.guest');
+Router::post('/admin/reset-password', [Admin\AuthController::class, 'resetPassword'])->middleware(['csrf', 'admin.guest']);
+
+// Admin Logout
+Router::post('/admin/logout', [Admin\AuthController::class, 'logout'])->name('admin.logout')->middleware(['csrf', 'admin.auth']);
+Router::get('/admin/logout', [Admin\AuthController::class, 'logout'])->middleware('admin.auth');
+
+// Protected Admin Routes
 Router::get('/admin', function () {
     return redirect('/admin/dashboard');
-});
-Router::get('/admin/dashboard', [Admin\DashboardController::class, 'index'])->name('admin.dashboard');
-Router::get('/admin/customers', [Admin\CustomerController::class, 'index'])->name('admin.customers');
-Router::get('/admin/flights', [Admin\FlightController::class, 'index'])->name('admin.flights');
-Router::get('/admin/hotels', [Admin\HotelController::class, 'index'])->name('admin.hotels');
-Router::get('/admin/loans', [Admin\LoanController::class, 'index'])->name('admin.loans');
-Router::get('/admin/destinations', [Admin\DestinationController::class, 'index'])->name('admin.destinations');
-Router::get('/admin/transactions', [Admin\TransactionController::class, 'index'])->name('admin.transactions');
-Router::get('/admin/api', [Admin\ApiController::class, 'index'])->name('admin.api');
-Router::get('/admin/reports', [Admin\ReportController::class, 'index'])->name('admin.reports');
-Router::get('/admin/settings', [Admin\SettingController::class, 'index'])->name('admin.settings');
+})->middleware('admin.auth');
+
+Router::get('/admin/dashboard', [Admin\DashboardController::class, 'index'])->name('admin.dashboard')->middleware('admin.auth');
+Router::get('/admin/api/dashboard-stats', [Admin\DashboardController::class, 'statsApi'])->name('admin.api.dashboard-stats')->middleware('admin.auth');
+Router::get('/admin/customers', [Admin\CustomerController::class, 'index'])->name('admin.customers')->middleware('admin.auth');
+Router::get('/admin/flights', [Admin\FlightController::class, 'index'])->name('admin.flights')->middleware('admin.auth');
+Router::get('/admin/hotels', [Admin\HotelController::class, 'index'])->name('admin.hotels')->middleware('admin.auth');
+Router::get('/admin/loans', [Admin\LoanController::class, 'index'])->name('admin.loans')->middleware('admin.auth');
+Router::get('/admin/destinations', [Admin\DestinationController::class, 'index'])->name('admin.destinations')->middleware('admin.auth');
+Router::get('/admin/transactions', [Admin\TransactionController::class, 'index'])->name('admin.transactions')->middleware('admin.auth');
+Router::get('/admin/api', [Admin\ApiController::class, 'index'])->name('admin.api')->middleware('admin.auth');
+Router::get('/admin/api/live-data', [Admin\ApiController::class, 'liveData'])->name('admin.api.live-data')->middleware('admin.auth');
+Router::post('/admin/api/records/update', [Admin\ApiController::class, 'updateRecord'])->name('admin.api.records.update')->middleware(['csrf', 'admin.auth']);
+Router::post('/admin/api/records/delete', [Admin\ApiController::class, 'deleteRecord'])->name('admin.api.records.delete')->middleware(['csrf', 'admin.auth']);
+Router::post('/admin/api/destinations/create', [Admin\ApiController::class, 'createDestination'])->name('admin.api.destinations.create')->middleware(['csrf', 'admin.auth']);
+Router::get('/admin/reports', [Admin\ReportController::class, 'index'])->name('admin.reports')->middleware('admin.auth');
+Router::get('/admin/settings', [Admin\SettingController::class, 'index'])->name('admin.settings')->middleware('admin.auth');
+Router::post('/admin/settings/profile', [Admin\SettingController::class, 'updateProfile'])->name('admin.settings.profile')->middleware(['csrf', 'admin.auth']);
+Router::post('/admin/settings/password', [Admin\SettingController::class, 'updatePassword'])->name('admin.settings.password')->middleware(['csrf', 'admin.auth']);
 
 // Customer Routes
 Router::get('/customer', function () {
@@ -65,7 +85,7 @@ Router::get('/customer/payments', [Customer\PaymentController::class, 'index'])-
 Router::get('/customer/profile', [Customer\ProfileController::class, 'index'])->name('customer.profile');
 Router::get('/customer/settings', [Customer\SettingController::class, 'index'])->name('customer.settings');
 
-// Legacy .html redirects for backward compatibility
+// Legacy .html and .php redirects for backward compatibility
 Router::get('/index.html', fn() => redirect('/'));
 Router::get('/about.html', fn() => redirect('/about'));
 Router::get('/contact.html', fn() => redirect('/contact'));
@@ -76,23 +96,33 @@ Router::get('/hotels.html', fn() => redirect('/hotels'));
 Router::get('/login.html', fn() => redirect('/login'));
 Router::get('/register.html', fn() => redirect('/register'));
 
-Router::get('/admin/dashboard.html', fn() => redirect('/admin/dashboard'));
-Router::get('/admin/customers.html', fn() => redirect('/admin/customers'));
-Router::get('/admin/flights.html', fn() => redirect('/admin/flights'));
-Router::get('/admin/hotels.html', fn() => redirect('/admin/hotels'));
-Router::get('/admin/loans.html', fn() => redirect('/admin/loans'));
-Router::get('/admin/destinations.html', fn() => redirect('/admin/destinations'));
-Router::get('/admin/transactions.html', fn() => redirect('/admin/transactions'));
-Router::get('/admin/api.html', fn() => redirect('/admin/api'));
-Router::get('/admin/reports.html', fn() => redirect('/admin/reports'));
-Router::get('/admin/settings.html', fn() => redirect('/admin/settings'));
+Router::get('/index.php', fn() => redirect('/'));
+Router::get('/about.php', fn() => redirect('/about'));
+Router::get('/contact.php', fn() => redirect('/contact'));
+Router::get('/destinations.php', fn() => redirect('/destinations'));
+Router::get('/financing.php', fn() => redirect('/financing'));
+Router::get('/flights.php', fn() => redirect('/flights'));
+Router::get('/hotels.php', fn() => redirect('/hotels'));
+Router::get('/login.php', fn() => redirect('/login'));
+Router::get('/register.php', fn() => redirect('/register'));
 
-Router::get('/customer/dashboard.html', fn() => redirect('/customer/dashboard'));
-Router::get('/customer/overview.html', fn() => redirect('/customer/dashboard'));
-Router::get('/customer/flights.html', fn() => redirect('/customer/flights'));
-Router::get('/customer/hotels.html', fn() => redirect('/customer/hotels'));
-Router::get('/customer/financing.html', fn() => redirect('/customer/financing'));
-Router::get('/customer/payments.html', fn() => redirect('/customer/payments'));
-Router::get('/customer/profile.html', fn() => redirect('/customer/profile'));
-Router::get('/customer/settings.html', fn() => redirect('/customer/settings'));
+Router::get('/admin/dashboard.php', fn() => redirect('/admin/dashboard'));
+Router::get('/admin/customers.php', fn() => redirect('/admin/customers'));
+Router::get('/admin/flights.php', fn() => redirect('/admin/flights'));
+Router::get('/admin/hotels.php', fn() => redirect('/admin/hotels'));
+Router::get('/admin/loans.php', fn() => redirect('/admin/loans'));
+Router::get('/admin/destinations.php', fn() => redirect('/admin/destinations'));
+Router::get('/admin/transactions.php', fn() => redirect('/admin/transactions'));
+Router::get('/admin/api.php', fn() => redirect('/admin/api'));
+Router::get('/admin/reports.php', fn() => redirect('/admin/reports'));
+Router::get('/admin/settings.php', fn() => redirect('/admin/settings'));
+
+Router::get('/customer/dashboard.php', fn() => redirect('/customer/dashboard'));
+Router::get('/customer/overview.php', fn() => redirect('/customer/dashboard'));
+Router::get('/customer/flights.php', fn() => redirect('/customer/flights'));
+Router::get('/customer/hotels.php', fn() => redirect('/customer/hotels'));
+Router::get('/customer/financing.php', fn() => redirect('/customer/financing'));
+Router::get('/customer/payments.php', fn() => redirect('/customer/payments'));
+Router::get('/customer/profile.php', fn() => redirect('/customer/profile'));
+Router::get('/customer/settings.php', fn() => redirect('/customer/settings'));
 

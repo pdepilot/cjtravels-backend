@@ -53,6 +53,12 @@ class Response
 
     public static function redirect(string $url, int $statusCode = 302): self
     {
+        if (function_exists('base_subfolder')) {
+            $base = base_subfolder();
+            if ($base !== '' && str_starts_with($url, '/') && !str_starts_with($url, $base)) {
+                $url = $base . '/' . ltrim($url, '/');
+            }
+        }
         $response = new self('', $statusCode);
         $response->header('Location', $url);
         return $response;

@@ -1570,8 +1570,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -1600,9 +1600,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>
@@ -2118,7 +2118,7 @@
           amenitiesHTML += '<span class="amenity-pill amenity-more">+' + extras + ' more</span>';
         }
 
-        var detailsHref = 'hotel-details.html?id=' + encodeURIComponent(hotel.id) +
+        var detailsHref = 'hotel-details.php?id=' + encodeURIComponent(hotel.id) +
           '&checkin=' + encodeURIComponent(state.search.checkin) +
           '&checkout=' + encodeURIComponent(state.search.checkout) +
           '&guests=' + state.search.guests +

@@ -62,7 +62,7 @@ class Session
     public static function getFlash(string $key, mixed $default = null): mixed
     {
         self::start();
-        return $_SESSION['_flash']['now'][$key] ?? $default;
+        return $_SESSION['_flash']['now'][$key] ?? $_SESSION['_flash']['next'][$key] ?? $default;
     }
 
     public static function token(): string

@@ -4,7 +4,7 @@
           <div class="page-head">
             <div>
               <h1>Customers</h1>
-              <p>Search, filter and review demonstration customer records.</p>
+              <p>Real-time customer directory and verified user accounts synced with MySQL.</p>
             </div>
           </div>
           <div class="card-box">

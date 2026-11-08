@@ -20,11 +20,22 @@ class Request
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = parse_url($rawUri, PHP_URL_PATH) ?: '/';
 
-        // Strip subfolder if running in subfolder like /TravelBooking/public
-        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
-        $scriptDir = dirname($scriptName);
-        if ($scriptDir !== '/' && $scriptDir !== '\\' && strpos($path, $scriptDir) === 0) {
+        $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $scriptDir = rtrim(dirname($scriptName), '/');
+
+        // Check if path starts with script directory (e.g. /TravelBooking/public)
+        if ($scriptDir !== '' && $scriptDir !== '/' && strpos($path, $scriptDir) === 0) {
             $path = substr($path, strlen($scriptDir));
+        } else {
+            // Check base project folder (e.g. /TravelBooking)
+            $base = function_exists('base_subfolder') ? base_subfolder() : '';
+            if ($base === '' && (str_ends_with($scriptDir, '/public') || str_ends_with($scriptDir, '/admin'))) {
+                $parent = dirname($scriptDir);
+                $base = ($parent === '/' || $parent === '\\') ? '' : rtrim($parent, '/');
+            }
+            if ($base !== '' && strpos($path, $base) === 0) {
+                $path = substr($path, strlen($base));
+            }
         }
 
         $this->uri = '/' . trim($path, '/');
@@ -89,6 +100,18 @@ class Request
     public function userAgent(): string
     {
         return $this->server['HTTP_USER_AGENT'] ?? '';
+    }
+
+    public function header(string $key, ?string $default = null): ?string
+    {
+        $normalized = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
+        if (isset($this->server[$normalized])) {
+            return $this->server[$normalized];
+        }
+        if (isset($this->server[strtoupper($key)])) {
+            return $this->server[strtoupper($key)];
+        }
+        return $default;
     }
 }
 

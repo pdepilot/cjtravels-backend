@@ -1,10 +1,10 @@
 <?php
 
 return [
-    'name' => 'CJ Travels',
-    'env' => 'development',
-    'debug' => true,
-    'url' => 'http://127.0.0.1:8000',
+    'name' => env('APP_NAME', 'CJ Travels'),
+    'env' => env('APP_ENV', 'development'),
+    'debug' => env('APP_DEBUG', true),
+    'url' => env('APP_URL', 'http://localhost/TravelBooking'),
     'timezone' => 'Africa/Lagos',
     'locale' => 'en',
 ];

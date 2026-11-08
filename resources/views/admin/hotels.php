@@ -3,8 +3,8 @@
 <section class="view active" id="view-hotels" data-view="hotels">
           <div class="page-head">
             <div>
-              <h1>Hotel reservations</h1>
-              <p>All sample hotel reservations across the platform.</p>
+              <h1>Hotel Reservations</h1>
+              <p>Real-time accommodation bookings, properties and check-in schedules synced with MySQL.</p>
             </div>
           </div>
           <div class="card-box">

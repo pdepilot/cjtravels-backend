@@ -84,6 +84,9 @@
     </div>
   </div>
 
+  <script>
+    window.CJ_CUSTOMER_DATA = <?= json_encode($customerData ?? null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?= asset('js/customer.js') ?>"></script>
 </body>

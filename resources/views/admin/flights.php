@@ -3,8 +3,8 @@
 <section class="view active" id="view-flights" data-view="flights">
           <div class="page-head">
             <div>
-              <h1>Flight bookings</h1>
-              <p>All sample flight bookings across the platform.</p>
+              <h1>Flight Bookings</h1>
+              <p>Active flight bookings, passenger itineraries and tickets synced with MySQL.</p>
             </div>
           </div>
           <div class="card-box">

@@ -2173,7 +2173,7 @@
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="contact.html">Contact</a>
+          <a href="contact.php">Contact</a>
         </div>
       </div>
     </div>
@@ -2186,23 +2186,23 @@
     <div class="container">
       <div class="nav-inner">
 
-        <a class="brand" href="index.html" aria-label="CJ Travels home">
+        <a class="brand" href="index.php" aria-label="CJ Travels home">
           <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
         </a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.html" class="active" aria-current="page">Home</a>
-          <a href="flights.html">Flights</a>
-          <a href="hotels.html">Hotels</a>
-          <a href="destinations.html">Destinations</a>
-          <a href="financing.html">Financing</a>
-          <a href="about.html">About</a>
+          <a href="index.php" class="active" aria-current="page">Home</a>
+          <a href="flights.php">Flights</a>
+          <a href="hotels.php">Hotels</a>
+          <a href="destinations.php">Destinations</a>
+          <a href="financing.php">Financing</a>
+          <a href="about.php">About</a>
         
         </nav>
 
         <div class="nav-actions">
-          <a href="login.html" class="text-link">Sign in</a>
-          <a href="register.html" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="login.php" class="text-link">Sign in</a>
+          <a href="register.php" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -2221,7 +2221,7 @@
 
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="index.html" aria-label="CJ Travels home">
+      <a class="brand" href="index.php" aria-label="CJ Travels home">
           <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
@@ -2231,19 +2231,19 @@
 
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link active" href="index.html">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="flights.html">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="hotels.html">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="destinations.html">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="financing.html">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="about.html">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="contact.html">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="index.php">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="flights.php">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="hotels.php">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="destinations.php">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="financing.php">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="about.php">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="contact.php">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
 
     <div class="mobile-nav-cta">
-      <a href="login.html" class="btn-lux btn-lux-ghost">Sign in</a>
-      <a href="register.html" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="login.php" class="btn-lux btn-lux-ghost">Sign in</a>
+      <a href="register.php" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="mobile-nav-footer">
@@ -2422,13 +2422,13 @@
                   aria-controls="hotels-pane" aria-selected="false">
             <i class="bi bi-building"></i> Luxury Hotels
           </button>
-          <a href="destinations.html" class="terminal-tab-btn d-none d-md-inline-flex" style="text-decoration:none;">
+          <a href="destinations.php" class="terminal-tab-btn d-none d-md-inline-flex" style="text-decoration:none;">
             <i class="bi bi-compass"></i> Curated Escapes
           </a>
-          <a href="financing.html" class="terminal-tab-btn d-none d-lg-inline-flex" style="text-decoration:none;">
+          <a href="financing.php" class="terminal-tab-btn d-none d-lg-inline-flex" style="text-decoration:none;">
             <i class="bi bi-cash-coin"></i> Travel Financing
           </a>
-          <a href="flights.html" class="terminal-tab-link">
+          <a href="flights.php" class="terminal-tab-link">
             Explore All Fares <i class="bi bi-arrow-right"></i>
           </a>
         </div>
@@ -2683,19 +2683,19 @@
         </div>
 
         <div class="services-grid reveal">
-          <a href="flights.html" class="service">
+          <a href="flights.php" class="service">
             <span class="service-icon"><i class="bi bi-airplane"></i></span>
             <h3>Flight booking</h3>
             <p>Compare fares across local and international airlines, then book one-way, return or multi-city trips in minutes.</p>
             <span class="link-arrow">Find flights <i class="bi bi-arrow-right"></i></span>
           </a>
-          <a href="hotels.html" class="service">
+          <a href="hotels.php" class="service">
             <span class="service-icon"><i class="bi bi-building"></i></span>
             <h3>Hotel reservations</h3>
             <p>Browse verified hotels, apartments and resorts — from quiet boutique stays to premium international properties.</p>
             <span class="link-arrow">Find hotels <i class="bi bi-arrow-right"></i></span>
           </a>
-          <a href="financing.html" class="service">
+          <a href="financing.php" class="service">
             <span class="service-icon"><i class="bi bi-wallet2"></i></span>
             <h3>Travel financing</h3>
             <p>Spread the cost of your trip through our lending partners. Subject to eligibility and approval.</p>
@@ -2718,7 +2718,7 @@
 
         <div class="dest-grid reveal">
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Middle East</span>
               <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=85"
@@ -2731,7 +2731,7 @@
             </div>
           </a>
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Europe</span>
               <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=85"
@@ -2744,7 +2744,7 @@
             </div>
           </a>
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Europe</span>
               <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=85"
@@ -2757,7 +2757,7 @@
             </div>
           </a>
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Africa</span>
               <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=900&q=85"
@@ -2770,7 +2770,7 @@
             </div>
           </a>
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Eurasia</span>
               <img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=900&q=85"
@@ -2783,7 +2783,7 @@
             </div>
           </a>
 
-          <a href="destinations.html" class="dest-card">
+          <a href="destinations.php" class="dest-card">
             <div class="dest-media">
               <span class="dest-continent">Europe</span>
               <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=85"
@@ -2799,7 +2799,7 @@
         </div>
 
         <div class="text-center" style="margin-top: 56px;">
-          <a href="destinations.html" class="btn-lux btn-lux-ghost">
+          <a href="destinations.php" class="btn-lux btn-lux-ghost">
             View all destinations <i class="bi bi-arrow-right arrow"></i>
           </a>
         </div>
@@ -2856,7 +2856,7 @@
               </li>
             </ul>
 
-            <a href="about.html" class="link-arrow">Our story <i class="bi bi-arrow-right"></i></a>
+            <a href="about.php" class="link-arrow">Our story <i class="bi bi-arrow-right"></i></a>
           </div>
         </div>
       </div>
@@ -2883,7 +2883,7 @@
               <li><i class="bi bi-check2"></i> Covers flights, hotels and holiday packages</li>
             </ul>
 
-            <a href="financing.html" class="btn-lux btn-lux-gold">
+            <a href="financing.php" class="btn-lux btn-lux-gold">
               Explore financing <i class="bi bi-arrow-right arrow"></i>
             </a>
 
@@ -3041,10 +3041,10 @@
           travel financing when you need it.
         </p>
         <div class="cta-actions">
-          <a href="register.html" class="btn-lux btn-lux-gold">
+          <a href="register.php" class="btn-lux btn-lux-gold">
             Create free account <i class="bi bi-arrow-right arrow"></i>
           </a>
-          <a href="contact.html" class="btn-lux btn-lux-ghost">Talk to a consultant</a>
+          <a href="contact.php" class="btn-lux btn-lux-ghost">Talk to a consultant</a>
         </div>
       </div>
     </section>
@@ -3061,7 +3061,7 @@
       <div class="footer-grid">
 
         <div>
-          <a class="footer-brand" href="index.html" aria-label="CJ Travels home">
+          <a class="footer-brand" href="index.php" aria-label="CJ Travels home">
             <img src="/images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
@@ -3079,20 +3079,20 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="flights.html">Flights</a></li>
-            <li><a href="hotels.html">Hotels</a></li>
-            <li><a href="destinations.html">Destinations</a></li>
-            <li><a href="financing.html">Travel financing</a></li>
+            <li><a href="flights.php">Flights</a></li>
+            <li><a href="hotels.php">Hotels</a></li>
+            <li><a href="destinations.php">Destinations</a></li>
+            <li><a href="financing.php">Travel financing</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="about.html">About us</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="about.php">About us</a></li>
+            <li><a href="contact.php">Contact</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -3121,9 +3121,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>

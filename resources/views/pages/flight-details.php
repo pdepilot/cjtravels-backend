@@ -286,7 +286,7 @@
           <a href="/flights" class="active">Flights</a>
           <a href="/hotels">Hotels</a>
           <a href="/destinations">Destinations</a>
-          <a href="travel-loans.html">Financing</a>
+          <a href="travel-loans.php">Financing</a>
           <a href="/about">About</a>
         </nav>
         <div class="nav-actions">
@@ -318,7 +318,7 @@
         <li><a class="nav-link active" href="/flights">Flights <i class="bi bi-arrow-right"></i></a></li>
         <li><a class="nav-link" href="/hotels">Hotels <i class="bi bi-arrow-right"></i></a></li>
         <li><a class="nav-link" href="/destinations">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="travel-loans.html">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="travel-loans.php">Financing <i class="bi bi-arrow-right"></i></a></li>
         <li><a class="nav-link" href="/about">About <i class="bi bi-arrow-right"></i></a></li>
         <li><a class="nav-link" href="/contact">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
@@ -380,7 +380,7 @@
             <li><a href="/flights">Flights</a></li>
             <li><a href="/hotels">Hotels</a></li>
             <li><a href="/destinations">Destinations</a></li>
-            <li><a href="travel-loans.html">Travel financing</a></li>
+            <li><a href="travel-loans.php">Travel financing</a></li>
           </ul>
         </div>
         <div>
@@ -388,8 +388,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
         <div>
@@ -403,9 +403,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>

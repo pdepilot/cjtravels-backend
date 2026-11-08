@@ -9,7 +9,7 @@
               <p>Track your travel loan enquiries, repayment schedules, and partner financing status.</p>
             </div>
             <div class="page-head-actions">
-              <a href="../contact.html" class="btn btn-primary">
+              <a href="../contact.php" class="btn btn-primary">
                 <i class="bi bi-plus-lg"></i> New financing enquiry
               </a>
             </div>
@@ -24,6 +24,19 @@
             </div>
           </div>
 
+<?php
+  $inReviewAmount = 0;
+  $approvedAmount = 0;
+  foreach ($customerData['financing'] ?? [] as $fin) {
+      if (($fin['status'] ?? '') === 'In review') {
+          $inReviewAmount += (float)($fin['amount'] ?? 0);
+      } elseif (($fin['status'] ?? '') === 'Approved') {
+          $approvedAmount += (float)($fin['amount'] ?? 0);
+      }
+  }
+  $totalFinancingCount = count($customerData['financing'] ?? []);
+?>
+
           <!-- FINANCING SUMMARY STATS -->
           <div class="stat-grid stat-grid-3">
             <div class="stat-card">
@@ -31,33 +44,37 @@
                 <span class="stat-icon gold"><i class="bi bi-hourglass-split"></i></span>
                 <span class="stat-tag">In Review</span>
               </div>
-              <span class="stat-value">₦750,000</span>
+              <span class="stat-value">₦<?= number_format($inReviewAmount) ?></span>
               <span class="stat-label">Pending Partner Review</span>
               <div class="stat-foot">
-                <i class="bi bi-clock-history"></i> TBFIN-0452 · 6 months
+                <i class="bi bi-clock-history"></i> Active workflow review
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-top">
+                <span class="stat-icon green"><i class="bi bi-check-circle-fill"></i></span>
+                <span class="stat-tag">Approved</span>
+              </div>
+              <span class="stat-value">₦<?= number_format($approvedAmount) ?></span>
+              <span class="stat-label">Partner Approvals</span>
+              <div class="stat-foot">
+                <i class="bi bi-shield-check"></i> Verified partner credit
               </div>
             </div>
 
             <div class="stat-card">
               <div class="stat-top">
                 <span class="stat-icon navy"><i class="bi bi-file-earmark-text"></i></span>
-                <span class="stat-tag">Draft</span>
+                <span class="stat-tag">Total Enquiries</span>
               </div>
-              <span class="stat-value">₦1,200,000</span>
-              <span class="stat-label">Draft Enquiry</span>
-              <div class="stat-foot muted">
-                <i class="bi bi-pencil-square"></i> TBFIN-0453 · 12 months
+              <span class="stat-value"><?= $totalFinancingCount ?></span>
+              <span class="stat-label">Total Applications</span>
+              <div class="stat-foot">
+                <i class="bi bi-folder-check"></i> In your account
               </div>
             </div>
-
-            <div class="stat-card">
-              <div class="stat-top">
-                <span class="stat-icon green"><i class="bi bi-percent"></i></span>
-                <span class="stat-tag">Pre-approved</span>
-              </div>
-              <span class="stat-value">Up to ₦2.5M</span>
-              <span class="stat-label">Indicative Credit Limit</span>
-              <div class="stat-foot">
+          </div>
                 <i class="bi bi-shield-check"></i> Based on travel history
               </div>
             </div>

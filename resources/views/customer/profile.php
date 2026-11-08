@@ -12,14 +12,14 @@
 
           <!-- PROFILE HERO BANNER -->
           <div class="profile-card">
-            <span class="avatar-lg">AO</span>
+            <span class="avatar-lg"><?= e($user->initials ?? 'AO') ?></span>
             <div class="profile-meta">
-              <h2>Adaeze Okonkwo</h2>
-              <span class="email">adaeze.okonkwo@example.com</span>
+              <h2><?= e($user->name ?? 'Adaeze Okonkwo') ?></h2>
+              <span class="email"><?= e($user->email ?? 'adaeze.okonkwo@example.com') ?></span>
               <div class="profile-tags">
-                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> Gold Member</span>
-                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since Jan 2024</span>
-                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> Lagos, Nigeria</span>
+                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> <?= e($user->tier ?? 'Gold Member') ?></span>
+                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since <?= e($user->memberSince ?? 'Jan 2024') ?></span>
+                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> <?= e($user->city ?? 'Lagos') ?>, <?= e($user->country ?? 'Nigeria') ?></span>
               </div>
             </div>
           </div>
@@ -33,27 +33,27 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label" for="profFirstName">First name</label>
-                  <input type="text" class="form-control" id="profFirstName" value="Adaeze" />
+                  <input type="text" class="form-control" id="profFirstName" value="<?= e($user->firstName ?? 'Adaeze') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profLastName">Last name</label>
-                  <input type="text" class="form-control" id="profLastName" value="Okonkwo" />
+                  <input type="text" class="form-control" id="profLastName" value="<?= e($user->lastName ?? 'Okonkwo') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profEmail">Email address</label>
-                  <input type="email" class="form-control" id="profEmail" value="adaeze.okonkwo@example.com" />
+                  <input type="email" class="form-control" id="profEmail" value="<?= e($user->email ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profPhone">Phone number</label>
-                  <input type="tel" class="form-control" id="profPhone" value="+234 812 345 6789" />
+                  <input type="tel" class="form-control" id="profPhone" value="<?= e($user->phone ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profCountry">Country of residence</label>
-                  <input type="text" class="form-control" id="profCountry" value="Nigeria" />
+                  <input type="text" class="form-control" id="profCountry" value="<?= e($user->country ?? 'Nigeria') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profCity">City</label>
-                  <input type="text" class="form-control" id="profCity" value="Lagos" />
+                  <input type="text" class="form-control" id="profCity" value="<?= e($user->city ?? 'Lagos') ?>" />
                 </div>
               </div>
               <div class="mt-4">
@@ -73,7 +73,7 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label" for="profPassport">Passport number</label>
-                  <input type="text" class="form-control cell-mono" id="profPassport" value="A12984572" />
+                  <input type="text" class="form-control cell-mono" id="profPassport" value="<?= e($user->passport ?? 'A12984572') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profIssuing">Issuing country</label>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profExpiry">Expiration date</label>
-                  <input type="date" class="form-control" id="profExpiry" value="2031-08-14" />
+                  <input type="date" class="form-control" id="profExpiry" value="<?= e($user->passportExpiry ?? '2031-08-14') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profFrequentFlyer">Frequent flyer number</label>

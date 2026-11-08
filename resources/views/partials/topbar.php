@@ -1,5 +1,8 @@
 <header class="dash-topbar">
   <div class="topbar-left">
+    <a href="<?= route('home') ?>" class="topbar-brand-link" title="CJ Travels Home" style="display:inline-flex;align-items:center;text-decoration:none;margin-right:8px;">
+      <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" style="height:28px;width:auto;object-fit:contain;" onerror="this.onerror=null;this.src='<?= asset('images/logo.png') ?>';" />
+    </a>
     <div class="topbar-crumb">
       <i class="bi bi-house-door-fill"></i>
       <a href="<?= isset($isAdmin) && $isAdmin ? route('admin.dashboard') : route('customer.dashboard') ?>" style="color:var(--muted);text-decoration:none;">Dashboard</a>
@@ -16,8 +19,8 @@
       <i class="bi bi-question-lg"></i>
     </button>
     <div class="topbar-user">
-      <span class="avatar"><?= isset($isAdmin) && $isAdmin ? 'AD' : 'AO' ?></span>
-      <span><?= isset($isAdmin) && $isAdmin ? 'Admin' : 'Adaeze' ?></span>
+      <span class="avatar"><?= isset($isAdmin) && $isAdmin ? e($adminInitials ?? 'AD') : 'AO' ?></span>
+      <span><?= isset($isAdmin) && $isAdmin ? e($adminUser ?? 'Admin') : 'Adaeze' ?></span>
     </div>
   </div>
 </header>

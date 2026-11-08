@@ -968,8 +968,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -986,9 +986,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>
@@ -1000,7 +1000,7 @@
        HOTEL DATA (shared source of truth for details page)
        ========================================================= -->
   <script>
-    /* All hotel data lives here. This mirrors the sample data in hotels.html
+    /* All hotel data lives here. This mirrors the sample data in hotels.php
        and is the single source of truth for the details page. When you connect
        a real backend, replace this array with a fetch() call. */
     window.HOTEL_DATA = (function () {

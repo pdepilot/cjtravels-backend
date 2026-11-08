@@ -3,8 +3,8 @@
 <section class="view active" id="view-loans" data-view="loans">
           <div class="page-head">
             <div>
-              <h1>Travel loan applications</h1>
-              <p>Demonstration financing enquiries and their current process status.</p>
+              <h1>Travel Loan Applications</h1>
+              <p>Financing applications, loan status and lending workflows synced with MySQL.</p>
             </div>
           </div>
           <div class="info-note">

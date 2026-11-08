@@ -7,6 +7,23 @@ use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
 
+if (!function_exists('env')) {
+    function env(string $key, mixed $default = null): mixed
+    {
+        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+        if ($value === false || $value === null) {
+            return $default;
+        }
+        return match (strtolower((string)$value)) {
+            'true', '(true)' => true,
+            'false', '(false)' => false,
+            'empty', '(empty)' => '',
+            'null', '(null)' => null,
+            default => $value,
+        };
+    }
+}
+
 if (!function_exists('app')) {
     function app(): App
     {
@@ -35,9 +52,29 @@ if (!function_exists('response')) {
     }
 }
 
+if (!function_exists('base_subfolder')) {
+    function base_subfolder(): string
+    {
+        $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $dir = dirname($script);
+        if ($dir === '/' || $dir === '\\' || $dir === '.' || empty($dir)) {
+            return '';
+        }
+        if (str_ends_with($dir, '/public') || str_ends_with($dir, '/admin')) {
+            $parent = dirname($dir);
+            return ($parent === '/' || $parent === '\\') ? '' : rtrim($parent, '/');
+        }
+        return rtrim($dir, '/');
+    }
+}
+
 if (!function_exists('redirect')) {
     function redirect(string $url, int $status = 302): Response
     {
+        $base = base_subfolder();
+        if ($base !== '' && str_starts_with($url, '/') && !str_starts_with($url, $base)) {
+            $url = $base . '/' . ltrim($url, '/');
+        }
         return Response::redirect($url, $status);
     }
 }
@@ -45,7 +82,12 @@ if (!function_exists('redirect')) {
 if (!function_exists('route')) {
     function route(string $name, array $params = []): string
     {
-        return Router::route($name, $params);
+        $path = Router::route($name, $params);
+        $base = base_subfolder();
+        if ($base !== '' && !str_starts_with($path, $base)) {
+            $path = $base . '/' . ltrim($path, '/');
+        }
+        return $path;
     }
 }
 
@@ -69,7 +111,10 @@ if (!function_exists('asset')) {
     function asset(string $path): string
     {
         $clean = ltrim($path, '/');
-        // If running through web root, assets are relative to public / root
+        $base = base_subfolder();
+        if ($base !== '') {
+            return $base . '/' . $clean;
+        }
         return '/' . $clean;
     }
 }

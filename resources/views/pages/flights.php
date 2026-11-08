@@ -1338,7 +1338,7 @@
           <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
         </a>
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.html">Home</a>
+          <a href="index.php">Home</a>
           <a href="/flights" class="active">Flights</a>
           <a href="/hotels">Hotels</a>
           <a href="/destinations">Destinations</a>
@@ -1843,8 +1843,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
         <div>
@@ -1869,9 +1869,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>
@@ -2211,7 +2211,7 @@
         var dayOffset = Math.floor(arrivalTotal / 1440);
         var arrivalTime = formatMinutes(arrivalTotal);
 
-        var detailsHref = 'flights-details.html?id=' + encodeURIComponent(flight.id) +
+        var detailsHref = 'flights-details.php?id=' + encodeURIComponent(flight.id) +
           '&from=' + encodeURIComponent(state.search.from) +
           '&to=' + encodeURIComponent(state.search.to) +
           '&depart=' + encodeURIComponent(state.search.depart) +

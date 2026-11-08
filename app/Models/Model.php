@@ -21,6 +21,16 @@ abstract class Model
         $this->attributes[$name] = $value;
     }
 
+    public function __isset(string $name): bool
+    {
+        return isset($this->attributes[$name]);
+    }
+
+    public function __unset(string $name): void
+    {
+        unset($this->attributes[$name]);
+    }
+
     public function toArray(): array
     {
         return $this->attributes;

@@ -1182,7 +1182,7 @@
                 <input class="form-check-input" type="checkbox" id="acceptTerms"
                        aria-describedby="termsError" />
                 <label class="form-check-label" for="acceptTerms">
-                  I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>, and I understand this is a demonstration site where no real account is created.
+                  I agree to the <a href="terms.php" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.php" target="_blank" rel="noopener">Privacy Policy</a>, and I understand this is a demonstration site where no real account is created.
                 </label>
               </div>
               <div class="field-error" id="termsError">Please accept the terms to continue.</div>
@@ -1275,8 +1275,8 @@
     <footer class="foot">
       <span>&copy; <span data-year>2025</span> CJ Travels</span>
       <ul class="foot-links">
-        <li><a href="privacy.html">Privacy</a></li>
-        <li><a href="terms.html">Terms</a></li>
+        <li><a href="privacy.php">Privacy</a></li>
+        <li><a href="terms.php">Terms</a></li>
         <li><a href="/contact">Support</a></li>
       </ul>
     </footer>

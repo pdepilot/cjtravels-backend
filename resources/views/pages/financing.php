@@ -1754,7 +1754,7 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- =========================================================
-       TOPBAR — matched to index.html
+       TOPBAR — matched to index.php
        ========================================================= -->
   <div class="topbar d-none d-lg-block">
     <div class="container">
@@ -1772,7 +1772,7 @@
   </div>
 
   <!-- =========================================================
-       HEADER — matched to index.html
+       HEADER — matched to index.php
        ========================================================= -->
   <header class="site-header" id="siteHeader">
     <div class="container">
@@ -1805,7 +1805,7 @@
   </header>
 
   <!-- =========================================================
-       MOBILE DRAWER — matched to index.html
+       MOBILE DRAWER — matched to index.php
        ========================================================= -->
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
 
@@ -2589,7 +2589,7 @@
   </main>
 
   <!-- =========================================================
-       FOOTER — matched to index.html
+       FOOTER — matched to index.php
        ========================================================= -->
   <footer class="site-footer">
     <div class="footer-watermark" aria-hidden="true"></div>
@@ -2628,8 +2628,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -2658,9 +2658,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>

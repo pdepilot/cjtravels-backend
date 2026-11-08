@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title><?= e($title ?? 'Dashboard — CJ Travels Admin') ?></title>
@@ -26,11 +26,11 @@
 
     <?php $this->include('partials/admin-sidebar'); ?>
 
-    <div class="dash-main" id="adminMain">
+    <div class="admin-main" id="adminMain">
 
       <?php $this->include('partials/topbar', ['isAdmin' => true, 'title' => $title ?? 'Dashboard']); ?>
 
-      <div class="dash-content">
+      <div class="admin-content">
         <?= $content ?>
       </div>
 
@@ -48,20 +48,262 @@
     </div>
   </div>
 
-  <!-- ADMIN QUICK ACTION MODAL -->
-  <div class="modal fade" id="quickActionModal" tabindex="-1" aria-labelledby="quickActionModalLabel" aria-hidden="true">
+  <!-- MODALS -->
+  <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="detailModalTitle">
+            <i class="bi bi-file-earmark-text"></i> Record details
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detailModalBody"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalTitle">
+            <i class="bi bi-pencil-square"></i> Edit record
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>Changes are saved directly to the CJ Travels MySQL database in real time.</div>
+          </div>
+          <form id="editForm" novalidate>
+            <div id="editFields" class="row g-3"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-navy btn-sm" id="saveEditBtn">
+            <i class="bi bi-check2"></i> Save changes
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h2 class="modal-title h5 mb-0" id="quickActionModalLabel">Quick Action</h2>
+          <h5 class="modal-title" id="deleteModalTitle">
+            <i class="bi bi-trash3"></i> Delete record
+          </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="quickActionModalBody">
-          <p class="mb-0">Quick action modal body.</p>
+        <div class="modal-body">
+          <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;">
+            Are you sure you want to delete <strong id="deleteRecordLabel">this record</strong>?
+          </p>
+          <p class="modal-note mb-0" style="color:var(--error);">
+            <i class="bi bi-exclamation-triangle"></i>
+            This will permanently remove the record from the MySQL database.
+          </p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-          <button type="button" class="btn btn-primary" id="quickActionSubmit">Save Changes</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger-soft btn-sm" id="confirmDeleteBtn">
+            <i class="bi bi-trash3"></i> Delete record
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="destinationModal" tabindex="-1" aria-labelledby="destinationModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="destinationModalTitle">
+            <i class="bi bi-globe-americas"></i> Add destination
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>The new destination will be stored directly into the CJ Travels MySQL database.</div>
+          </div>
+          <form id="destinationForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="destCity">City</label>
+                <input type="text" class="form-control" id="destCity" placeholder="e.g. Lisbon" required />
+                <div class="invalid-feedback">Please enter a city name.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="destCountry">Country</label>
+                <input type="text" class="form-control" id="destCountry" placeholder="e.g. Portugal" required />
+                <div class="invalid-feedback">Please enter a country name.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="destContinent">Continent</label>
+                <select class="form-select" id="destContinent" required>
+                  <option value="" selected disabled>Select a continent</option>
+                  <option value="Africa">Africa</option>
+                  <option value="Europe">Europe</option>
+                  <option value="Asia">Asia</option>
+                  <option value="Middle East">Middle East</option>
+                  <option value="Americas">Americas</option>
+                  <option value="Oceania">Oceania</option>
+                </select>
+                <div class="invalid-feedback">Please select a continent.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="destCategories">Travel styles</label>
+                <select class="form-select" id="destCategories" multiple size="4" aria-describedby="destCategoriesHelp">
+                  <option value="Beaches">Beaches</option>
+                  <option value="Adventure">Adventure</option>
+                  <option value="Culture">Culture</option>
+                  <option value="Luxury">Luxury</option>
+                  <option value="City Breaks">City Breaks</option>
+                </select>
+                <div class="form-text" id="destCategoriesHelp" style="font-size:11px;color:var(--muted);margin-top:6px;">
+                  Hold Ctrl / Cmd to select more than one.
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="destImage">Image URL (optional)</label>
+                <input type="url" class="form-control" id="destImage" placeholder="https://images.unsplash.com/…" />
+                <div class="form-text" style="font-size:11px;color:var(--muted);margin-top:6px;">Leave blank to use a neutral gradient placeholder.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="destBlurb">Short description</label>
+                <input type="text" class="form-control" id="destBlurb" placeholder="One line that captures the destination" />
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="destinationToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveDestinationBtn">
+            <i class="bi bi-plus-lg"></i> Add destination
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="apiProviderModal" tabindex="-1" aria-labelledby="apiProviderModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="apiProviderModalTitle">
+            <i class="bi bi-plug-fill"></i> Add API provider
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="api-security-note" style="margin-bottom:16px;">
+            <i class="bi bi-shield-lock"></i>
+            <div>
+              <strong>Credentials are never stored in this browser.</strong> In this demonstration,
+              keys and secrets are masked immediately after saving. The PHP backend will encrypt
+              them server-side and return only masked metadata to the admin UI.
+            </div>
+          </div>
+          <form id="apiProviderForm" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="apiName">Provider name</label>
+                <input type="text" class="form-control" id="apiName" placeholder="e.g. Amadeus" required />
+                <div class="invalid-feedback">Please enter a provider name.</div>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="apiBaseUrl">API base URL</label>
+                <input type="url" class="form-control" id="apiBaseUrl" placeholder="https://api.example.com/v1" required />
+                <div class="invalid-feedback">Please enter a valid HTTPS URL.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="apiKey">API key</label>
+                <div class="cred-row">
+                  <input type="password" class="form-control" id="apiKey" placeholder="Enter API key" autocomplete="new-password" required />
+                  <button type="button" class="cred-toggle" data-target="apiKey" aria-label="Show API key" aria-pressed="false">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+                </div>
+                <div class="cred-hint" id="apiKeyHint" hidden>
+                  <i class="bi bi-info-circle"></i>
+                  <span>Leave blank to keep the existing key.</span>
+                </div>
+                <div class="invalid-feedback">Please enter an API key.</div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="apiSecret">API secret <span style="font-weight:500;text-transform:none;letter-spacing:0;color:var(--muted);">(where applicable)</span></label>
+                <div class="cred-row">
+                  <input type="password" class="form-control" id="apiSecret" placeholder="Enter API secret" autocomplete="new-password" />
+                  <button type="button" class="cred-toggle" data-target="apiSecret" aria-label="Show API secret" aria-pressed="false">
+                    <i class="bi bi-eye-fill"></i>
+                  </button>
+                </div>
+                <div class="cred-hint" id="apiSecretHint" hidden>
+                  <i class="bi bi-info-circle"></i>
+                  <span>Leave blank to keep the existing secret.</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="apiEnv">Environment</label>
+                <select class="form-select" id="apiEnv" required>
+                  <option value="Sandbox" selected>Sandbox</option>
+                  <option value="Production">Production</option>
+                </select>
+              </div>
+              <div class="col-md-6 d-flex align-items-end">
+                <div class="form-check form-switch m-0 pb-2">
+                  <input class="form-check-input" type="checkbox" id="apiEnabled" checked />
+                  <label class="form-check-label" for="apiEnabled" style="font-size:12px;margin-left:8px;">Enable integration</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-navy btn-sm" id="apiSaveBtn">
+            <i class="bi bi-check2"></i> Save provider
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="apiDeleteModal" tabindex="-1" aria-labelledby="apiDeleteModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="apiDeleteModalTitle">
+            <i class="bi bi-trash3"></i> Remove API provider
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;">
+            Remove <strong id="apiDeleteName">this provider</strong> from the demonstration list?
+          </p>
+          <p class="modal-note mb-0">
+            <i class="bi bi-info-circle"></i>
+            This removes the sample provider from this page only. No server-side configuration is
+            changed because no backend is connected.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger-soft btn-sm" id="apiDeleteConfirm">
+            <i class="bi bi-trash3"></i> Remove provider
+          </button>
         </div>
       </div>
     </div>
@@ -80,12 +322,26 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-ghost" data-bs-dismiss="modal">Cancel</button>
-          <a href="<?= route('login') ?>" class="btn btn-primary">Sign Out</a>
+          <form method="POST" action="<?= route('admin.logout') ?>" style="display:inline;">
+            <?= csrf_field() ?>
+            <button type="submit" class="btn btn-primary">Sign Out</button>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
+  <script>
+    window.CJ_ADMIN_DATA = <?= json_encode($realtimeData ?? null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    window.CJ_CSRF_TOKEN = "<?= csrf_token() ?>";
+    window.CJ_BASE_URL = "<?= rtrim(url(''), '/') ?>";
+    window.CJ_API_URLS = {
+      liveData: "<?= route('admin.api.live-data') ?>",
+      updateRecord: "<?= route('admin.api.records.update') ?>",
+      deleteRecord: "<?= route('admin.api.records.delete') ?>",
+      createDestination: "<?= route('admin.api.destinations.create') ?>"
+    };
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?= asset('js/admin.js') ?>"></script>
 </body>

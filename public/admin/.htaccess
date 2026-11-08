@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /TravelBooking/public/admin/
+
+    # Serve static assets directly
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteCond %{REQUEST_URI} \.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf)$ [NC]
+    RewriteRule ^ - [L]
+
+    # Route all admin requests to the MVC front controller
+    RewriteRule ^(.*)$ ../index.php [L,QSA]
+</IfModule>

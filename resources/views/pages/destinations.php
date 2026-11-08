@@ -1459,7 +1459,7 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- =========================================================
-       TOPBAR — matched to index.html
+       TOPBAR — matched to index.php
        ========================================================= -->
   <div class="topbar d-none d-lg-block">
     <div class="container">
@@ -1477,7 +1477,7 @@
   </div>
 
   <!-- =========================================================
-       HEADER — matched to index.html
+       HEADER — matched to index.php
        ========================================================= -->
   <header class="site-header" id="siteHeader">
     <div class="container">
@@ -1510,7 +1510,7 @@
   </header>
 
   <!-- =========================================================
-       MOBILE DRAWER — matched to index.html
+       MOBILE DRAWER — matched to index.php
        ========================================================= -->
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
 
@@ -1665,7 +1665,7 @@
               <span class="inspo-kicker">City guide</span>
               <h3>48 hours in Istanbul: where two continents meet</h3>
               <p>Bosphorus ferries, hidden courtyards and the best time to visit Hagia Sophia without the crowds.</p>
-              <a class="inspo-link" href="destinations.html#explore" data-inspire="Istanbul">
+              <a class="inspo-link" href="destinations.php#explore" data-inspire="Istanbul">
                 Explore Istanbul <i class="bi bi-arrow-right"></i>
               </a>
             </div>
@@ -1678,7 +1678,7 @@
               <span class="inspo-kicker">First-timer's guide</span>
               <h3>Cape Town in a week: coast, wine and Table Mountain</h3>
               <p>How to plan the perfect first visit — including when to hike and which wine route to choose.</p>
-              <a class="inspo-link" href="destinations.html#explore" data-inspire="Cape Town">
+              <a class="inspo-link" href="destinations.php#explore" data-inspire="Cape Town">
                 Explore Cape Town <i class="bi bi-arrow-right"></i>
               </a>
             </div>
@@ -1691,7 +1691,7 @@
               <span class="inspo-kicker">Seasonal picks</span>
               <h3>Where to go when: the best months to travel</h3>
               <p>From dry-season safaris to shoulder-season city breaks, timing makes all the difference.</p>
-              <a class="inspo-link" href="destinations.html#explore" data-inspire="Maldives">
+              <a class="inspo-link" href="destinations.php#explore" data-inspire="Maldives">
                 Explore the Maldives <i class="bi bi-arrow-right"></i>
               </a>
             </div>
@@ -1742,7 +1742,7 @@
   </div>
 
   <!-- =========================================================
-       FOOTER — matched to index.html (Get in touch + newsletter)
+       FOOTER — matched to index.php (Get in touch + newsletter)
        ========================================================= -->
   <footer class="site-footer">
     <div class="footer-watermark" aria-hidden="true"></div>
@@ -1781,8 +1781,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -1811,9 +1811,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>
@@ -2316,12 +2316,12 @@
       }
 
       function flightLink(dest) {
-        return 'flights.html?to=' + encodeURIComponent(dest.flightCode || dest.city) +
+        return 'flights.php?to=' + encodeURIComponent(dest.flightCode || dest.city) +
                '&city=' + encodeURIComponent(dest.city);
       }
 
       function hotelLink(dest) {
-        return 'hotels.html?destination=' +
+        return 'hotels.php?destination=' +
                encodeURIComponent(dest.city + ', ' + dest.country);
       }
 
@@ -2673,7 +2673,7 @@
       });
 
       /* =====================================================
-         15. NEWSLETTER (matches index.html behaviour)
+         15. NEWSLETTER (matches index.php behaviour)
          ===================================================== */
       if (els.newsletterForm) {
         els.newsletterForm.addEventListener('submit', function (event) {

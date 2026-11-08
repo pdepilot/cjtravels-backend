@@ -9,11 +9,21 @@
               <p>View your upcoming and completed luxury hotel reservations and stay details.</p>
             </div>
             <div class="page-head-actions">
-              <a href="../hotels.html" class="btn btn-primary">
+              <a href="../hotels.php" class="btn btn-primary">
                 <i class="bi bi-search"></i> Book a hotel
               </a>
             </div>
           </div>
+
+<?php
+  $cCount = 0; $pCount = 0; $compCount = 0;
+  foreach ($customerData['hotels'] ?? [] as $ht) {
+      $st = $ht['status'] ?? '';
+      if ($st === 'Confirmed') $cCount++;
+      elseif ($st === 'Pending') $pCount++;
+      elseif ($st === 'Completed') $compCount++;
+  }
+?>
 
           <!-- HOTELS SUMMARY STATS -->
           <div class="stat-grid stat-grid-3">
@@ -22,10 +32,10 @@
                 <span class="stat-icon green"><i class="bi bi-check-circle-fill"></i></span>
                 <span class="stat-tag">Confirmed</span>
               </div>
-              <span class="stat-value">1</span>
+              <span class="stat-value"><?= $cCount ?></span>
               <span class="stat-label">Confirmed Stay</span>
               <div class="stat-foot">
-                <i class="bi bi-building"></i> The Wheatbaker, Lagos
+                <i class="bi bi-building"></i> Reserved accommodation
               </div>
             </div>
 
@@ -34,10 +44,10 @@
                 <span class="stat-icon gold"><i class="bi bi-clock-history"></i></span>
                 <span class="stat-tag">Pending</span>
               </div>
-              <span class="stat-value">1</span>
+              <span class="stat-value"><?= $pCount ?></span>
               <span class="stat-label">Awaiting Confirmation</span>
               <div class="stat-foot">
-                <i class="bi bi-hourglass-split"></i> Atlantis The Palm, Dubai
+                <i class="bi bi-hourglass-split"></i> Partner processing
               </div>
             </div>
 
@@ -46,10 +56,10 @@
                 <span class="stat-icon navy"><i class="bi bi-archive-fill"></i></span>
                 <span class="stat-tag">Completed</span>
               </div>
-              <span class="stat-value">1</span>
+              <span class="stat-value"><?= $compCount ?></span>
               <span class="stat-label">Completed Stays</span>
               <div class="stat-foot muted">
-                <i class="bi bi-check2"></i> The Hoxton, London
+                <i class="bi bi-check2"></i> Past stays
               </div>
             </div>
           </div>

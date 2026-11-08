@@ -3,16 +3,8 @@
 <section class="view active" id="view-transactions" data-view="transactions">
           <div class="page-head">
             <div>
-              <h1>Transactions</h1>
-              <p>Sample payment records. No real money movement occurs.</p>
-            </div>
-          </div>
-          <div class="info-note">
-            <i class="bi bi-credit-card-2-front-fill"></i>
-            <div>
-              <strong>Demonstration transactions.</strong> No payment gateway is connected. These
-              records illustrate how transaction management will look once the payment provider is
-              integrated.
+              <h1>Transactions &amp; Payments</h1>
+              <p>Real-time payment logs, gateway records and client settlements synced with MySQL.</p>
             </div>
           </div>
           <div class="card-box">

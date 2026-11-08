@@ -10,6 +10,20 @@
             </div>
           </div>
 
+<?php
+  $settledTotal = 0;
+  $settledCount = 0;
+  $pendingTotal = 0;
+  foreach ($customerData['payments'] ?? [] as $pm) {
+      if (($pm['status'] ?? '') === 'Paid') {
+          $settledTotal += (float)($pm['amount'] ?? 0);
+          $settledCount++;
+      } elseif (($pm['status'] ?? '') === 'Pending') {
+          $pendingTotal += (float)($pm['amount'] ?? 0);
+      }
+  }
+?>
+
           <!-- PAYMENTS STATS -->
           <div class="stat-grid stat-grid-3">
             <div class="stat-card">
@@ -17,10 +31,10 @@
                 <span class="stat-icon green"><i class="bi bi-check-circle-fill"></i></span>
                 <span class="stat-tag">Settled</span>
               </div>
-              <span class="stat-value">₦3,115,000</span>
+              <span class="stat-value">₦<?= number_format($settledTotal) ?></span>
               <span class="stat-label">Total Settled</span>
               <div class="stat-foot">
-                <i class="bi bi-receipt"></i> 3 transactions paid
+                <i class="bi bi-receipt"></i> <?= $settledCount ?> transactions paid
               </div>
             </div>
 
@@ -29,22 +43,22 @@
                 <span class="stat-icon gold"><i class="bi bi-clock-history"></i></span>
                 <span class="stat-tag">Pending</span>
               </div>
-              <span class="stat-value">₦980,000</span>
+              <span class="stat-value">₦<?= number_format($pendingTotal) ?></span>
               <span class="stat-label">Pending Invoices</span>
               <div class="stat-foot">
-                <i class="bi bi-hourglass-split"></i> Flight TBF-2202
+                <i class="bi bi-hourglass-split"></i> Awaiting gateway settlement
               </div>
             </div>
 
             <div class="stat-card">
               <div class="stat-top">
                 <span class="stat-icon navy"><i class="bi bi-credit-card"></i></span>
-                <span class="stat-tag">Default</span>
+                <span class="stat-tag">Records</span>
               </div>
-              <span class="stat-value" style="font-size:1.5rem;padding-top:8px;">Card ending 4821</span>
-              <span class="stat-label">Primary Card</span>
+              <span class="stat-value" style="font-size:1.5rem;padding-top:8px;"><?= count($customerData['payments'] ?? []) ?> Records</span>
+              <span class="stat-label">Total Transactions</span>
               <div class="stat-foot">
-                <i class="bi bi-shield-lock-fill"></i> Mastercard · Exp 08/28
+                <i class="bi bi-shield-lock-fill"></i> Live MySQL verified
               </div>
             </div>
           </div>

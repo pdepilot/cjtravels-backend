@@ -1881,7 +1881,7 @@
             <a href="/contact" class="btn-lux btn-lux-gold">
               Contact us <i class="bi bi-arrow-right arrow"></i>
             </a>
-            <a href="faq.html" class="btn-lux btn-lux-outline-light">
+            <a href="faq.php" class="btn-lux btn-lux-outline-light">
               Read the FAQ
             </a>
           </div>
@@ -1892,7 +1892,7 @@
   </main>
 
   <!-- =========================================================
-       FOOTER (matched to index.html)
+       FOOTER (matched to index.php)
        ========================================================= -->
   <footer class="site-footer">
     <div class="footer-watermark" aria-hidden="true"></div>
@@ -1931,8 +1931,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -1961,9 +1961,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>

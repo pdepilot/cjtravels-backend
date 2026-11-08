@@ -20,4 +20,7 @@ storage/views/*
 Thumbs.db
 [Ee]xcluded/
 .DS_Store
+*.sqlite
+*.sqlite-journal
+
 

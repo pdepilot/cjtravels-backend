@@ -195,7 +195,7 @@
     }
 
     /* =======================================================
-       TOPBAR — matched to index.html
+       TOPBAR — matched to index.php
        ======================================================= */
     .topbar {
       background: var(--navy);
@@ -251,7 +251,7 @@
     }
 
     /* =======================================================
-       NAVBAR — matched to index.html
+       NAVBAR — matched to index.php
        ======================================================= */
     .site-header {
       position: sticky;
@@ -377,7 +377,7 @@
     }
 
     /* =======================================================
-       MOBILE DRAWER — matched to index.html
+       MOBILE DRAWER — matched to index.php
        ======================================================= */
     .mobile-nav-overlay {
       position: fixed; inset: 0;
@@ -1028,7 +1028,7 @@
     }
 
     /* =======================================================
-       FOOTER — matched to index.html
+       FOOTER — matched to index.php
        ======================================================= */
     .site-footer {
       background: var(--navy-deep);
@@ -1263,7 +1263,7 @@
   <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- =========================================================
-       TOPBAR — matched to index.html
+       TOPBAR — matched to index.php
        ========================================================= -->
   <div class="topbar d-none d-lg-block">
     <div class="container">
@@ -1281,7 +1281,7 @@
   </div>
 
   <!-- =========================================================
-       HEADER — matched to index.html
+       HEADER — matched to index.php
        ========================================================= -->
   <header class="site-header" id="siteHeader">
     <div class="container">
@@ -1314,7 +1314,7 @@
   </header>
 
   <!-- =========================================================
-       MOBILE DRAWER — matched to index.html (Contact active)
+       MOBILE DRAWER — matched to index.php (Contact active)
        ========================================================= -->
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
 
@@ -1617,7 +1617,7 @@
                     <div>
                       <strong>Manage a booking</strong>
                       <span>Review or change an existing trip</span>
-                      <a href="manage-booking.html">Open booking management</a>
+                      <a href="manage-booking.php">Open booking management</a>
                     </div>
                   </li>
                 </ul>
@@ -1815,7 +1815,7 @@
   </main>
 
   <!-- =========================================================
-       FOOTER — matched to index.html
+       FOOTER — matched to index.php
        ========================================================= -->
   <footer class="site-footer">
     <div class="footer-watermark" aria-hidden="true"></div>
@@ -1854,8 +1854,8 @@
           <ul class="footer-links">
             <li><a href="/about">About us</a></li>
             <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.html">FAQ</a></li>
-            <li><a href="manage-booking.html">Manage booking</a></li>
+            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="manage-booking.php">Manage booking</a></li>
           </ul>
         </div>
 
@@ -1884,9 +1884,9 @@
       <div class="footer-bottom">
         <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.html">Privacy</a></li>
-          <li><a href="terms.html">Terms</a></li>
-          <li><a href="faq.html">Help</a></li>
+          <li><a href="privacy.php">Privacy</a></li>
+          <li><a href="terms.php">Terms</a></li>
+          <li><a href="faq.php">Help</a></li>
         </ul>
       </div>
     </div>

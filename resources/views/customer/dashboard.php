@@ -18,16 +18,28 @@
             </div>
           </div>
 
+<?php
+  $totalSpent = 0;
+  foreach ($customerData['payments'] ?? [] as $p) {
+      if (($p['status'] ?? '') === 'Paid') {
+          $totalSpent += (float)($p['amount'] ?? 0);
+      }
+  }
+  $flightsCount = count($customerData['flights'] ?? []);
+  $hotelsCount = count($customerData['hotels'] ?? []);
+  $financingCount = count($customerData['financing'] ?? []);
+?>
+
           <!-- PROFILE CARD BANNER -->
           <div class="profile-card">
-            <span class="avatar-lg">AO</span>
+            <span class="avatar-lg"><?= e($user->initials ?? 'AO') ?></span>
             <div class="profile-meta">
-              <h2>Adaeze Okonkwo</h2>
-              <span class="email">adaeze.okonkwo@example.com</span>
+              <h2><?= e($user->name ?? 'Adaeze Okonkwo') ?></h2>
+              <span class="email"><?= e($user->email ?? 'adaeze.okonkwo@example.com') ?></span>
               <div class="profile-tags">
-                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> Gold Member</span>
-                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since Jan 2024</span>
-                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> Lagos, Nigeria</span>
+                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> <?= e($user->tier ?? 'Gold Member') ?></span>
+                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since <?= e($user->memberSince ?? 'Jan 2024') ?></span>
+                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> <?= e($user->city ?? 'Lagos') ?>, <?= e($user->country ?? 'Nigeria') ?></span>
               </div>
             </div>
             <div class="profile-actions">
@@ -42,10 +54,10 @@
                 <span class="stat-icon gold"><i class="bi bi-wallet2"></i></span>
                 <span class="stat-tag">All-time</span>
               </div>
-              <span class="stat-value">₦3,595,000</span>
+              <span class="stat-value">₦<?= number_format($totalSpent) ?></span>
               <span class="stat-label">Total Bookings Spent</span>
               <div class="stat-foot">
-                <i class="bi bi-check-circle-fill"></i> Fully reconciled
+                <i class="bi bi-check-circle-fill"></i> Real-time MySQL sync
               </div>
             </div>
 
@@ -54,10 +66,10 @@
                 <span class="stat-icon green"><i class="bi bi-airplane-fill"></i></span>
                 <span class="stat-tag">Active</span>
               </div>
-              <span class="stat-value" id="statFlights">4</span>
+              <span class="stat-value" id="statFlights"><?= $flightsCount ?></span>
               <span class="stat-label">Flight Reservations</span>
               <div class="stat-foot">
-                <i class="bi bi-arrow-up-right"></i> 1 upcoming trip
+                <i class="bi bi-arrow-up-right"></i> Live itinerary
               </div>
             </div>
 
@@ -66,10 +78,10 @@
                 <span class="stat-icon navy"><i class="bi bi-building-fill"></i></span>
                 <span class="stat-tag">Luxury</span>
               </div>
-              <span class="stat-value" id="statHotels">3</span>
+              <span class="stat-value" id="statHotels"><?= $hotelsCount ?></span>
               <span class="stat-label">Hotel Bookings</span>
               <div class="stat-foot">
-                <i class="bi bi-calendar-check"></i> 1 upcoming stay
+                <i class="bi bi-calendar-check"></i> Live reservations
               </div>
             </div>
 
@@ -78,17 +90,17 @@
                 <span class="stat-icon gold"><i class="bi bi-cash-coin"></i></span>
                 <span class="stat-tag">Financing</span>
               </div>
-              <span class="stat-value" id="statFinancing">2</span>
+              <span class="stat-value" id="statFinancing"><?= $financingCount ?></span>
               <span class="stat-label">Travel Enquiries</span>
               <div class="stat-foot">
-                <i class="bi bi-clock-history"></i> 1 in partner review
+                <i class="bi bi-clock-history"></i> Live workflow
               </div>
             </div>
           </div>
 
           <!-- QUICK ACTIONS -->
           <div class="quick-grid">
-            <a href="../flights.html" class="quick-card">
+            <a href="../flights.php" class="quick-card">
               <span class="q-icon"><i class="bi bi-airplane-engines"></i></span>
               <span class="q-text">
                 <strong>Book a flight</strong>
@@ -97,7 +109,7 @@
               <i class="bi bi-chevron-right"></i>
             </a>
 
-            <a href="../hotels.html" class="quick-card">
+            <a href="../hotels.php" class="quick-card">
               <span class="q-icon"><i class="bi bi-building-check"></i></span>
               <span class="q-text">
                 <strong>Reserve luxury hotel</strong>
@@ -176,7 +188,7 @@
                 <i class="bi bi-shield-check"></i>
                 <div>
                   <strong>24/7 Dedicated Concierge Support</strong><br />
-                  Need assistance with seat selection, VIP airport lounge access, or special dietary requirements? Reach our travel concierge anytime via <a href="../contact.html" style="color:var(--navy);font-weight:600;">Support</a>.
+                  Need assistance with seat selection, VIP airport lounge access, or special dietary requirements? Reach our travel concierge anytime via <a href="../contact.php" style="color:var(--navy);font-weight:600;">Support</a>.
                 </div>
               </div>
             </div>

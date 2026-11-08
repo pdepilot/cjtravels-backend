@@ -792,7 +792,7 @@
               <input type="checkbox" id="rememberMe" name="remember" />
               <span>Remember me</span>
             </label>
-            <a href="forgot-password.html" class="link-muted">Forgot password?</a>
+            <a href="forgot-password.php" class="link-muted">Forgot password?</a>
           </div>
 
           <button type="submit" class="btn-submit" id="loginBtn">
@@ -872,8 +872,8 @@
     <footer class="foot">
       <span>&copy; <span data-year>2025</span> CJ Travels</span>
       <ul class="foot-links">
-        <li><a href="privacy.html">Privacy</a></li>
-        <li><a href="terms.html">Terms</a></li>
+        <li><a href="privacy.php">Privacy</a></li>
+        <li><a href="terms.php">Terms</a></li>
         <li><a href="/contact">Support</a></li>
       </ul>
     </footer>
