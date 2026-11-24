@@ -753,7 +753,7 @@
         if (event.key === 'Escape') setOpen(false);
       });
       window.addEventListener('resize', function () {
-        if (window.innerWidth >= 768) setOpen(false);
+        if (window.innerWidth >= 992) setOpen(false);
       });
     })();
   </script>

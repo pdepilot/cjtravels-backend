@@ -404,8 +404,8 @@
       border-color: var(--navy);
     }
 
-    /* EXPANDED HOVER STATE (Desktop & Tablets >= 768px) */
-    @media (min-width: 768px) {
+    /* EXPANDED HOVER STATE (Desktop >= 992px) */
+    @media (min-width: 992px) {
       .float-nav:hover,
       .float-nav:focus-within {
         width: 250px;
@@ -1628,17 +1628,100 @@
     }
 
     /* =======================================================
-       RESPONSIVE — 991 (tablet) — rail stays on side
+       RESPONSIVE — 991 and below: menu stays off-screen
+       until the hamburger is opened
        ======================================================= */
     @media (max-width: 991.98px) {
       :root {
-        --rail-w: 80px;
-        --rail-btn: 40px;
-        --rail-left: 12px;
+        --rail-w: 0px;
+        --rail-btn: 44px;
+        --rail-left: 0px;
       }
-      .float-nav { gap: 4px; padding: 8px 6px; }
-      .float-btn { font-size: 14px; }
-      .float-brand { font-size: 14px; }
+
+      .admin-nav-toggle { display: inline-flex; }
+      .dash-topbar { z-index: 1060; }
+
+      .admin-nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1040;
+        border: 0;
+        padding: 0;
+        background: rgba(6, 15, 33, .46);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity .25s ease, visibility .25s ease;
+      }
+
+      body.admin-nav-open { overflow: hidden; }
+      body.admin-nav-open .admin-nav-backdrop {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .float-nav {
+        top: 69px;
+        left: 0;
+        transform: translateX(-110%);
+        visibility: hidden;
+        pointer-events: none;
+        width: min(300px, 88vw);
+        height: calc(100dvh - 69px);
+        max-height: calc(100dvh - 69px);
+        align-items: stretch;
+        justify-content: flex-start;
+        gap: 4px;
+        padding: 14px 12px 24px;
+        border-radius: 0;
+        z-index: 1050;
+        transition: transform .28s ease, box-shadow .28s ease, visibility 0s linear .28s;
+      }
+      body.admin-nav-open .float-nav {
+        transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
+        box-shadow: 0 18px 48px rgba(6, 15, 33, .28);
+        transition: transform .28s ease, box-shadow .28s ease, visibility 0s;
+      }
+      .float-btn {
+        font-size: 16px;
+        height: 42px;
+        justify-content: flex-start;
+        padding: 0 12px;
+        gap: 12px;
+        border-radius: 2px;
+      }
+      .float-brand {
+        width: 100%;
+        height: 42px;
+        font-size: 16px;
+        border-radius: 2px;
+        justify-content: flex-start;
+        padding: 0 12px;
+        gap: 12px;
+      }
+      .float-nav-divider { width: calc(100% - 12px); margin: 6px auto; }
+      .float-btn-label,
+      .float-brand .float-btn-label {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        max-width: none;
+        font-size: 12px;
+        letter-spacing: .08em;
+        pointer-events: auto;
+      }
+      .float-badge {
+        position: static;
+        margin-left: auto;
+        min-width: 18px;
+        height: 18px;
+        font-size: 9px;
+        border-width: 1.5px;
+      }
 
       .topbar-user span:not(.avatar) { display: none; }
       .topbar-user { padding: 4px; }
@@ -1684,7 +1767,9 @@
       .float-nav {
         top: 69px;
         left: 0;
-        transform: translateX(-105%);
+        transform: translateX(-110%);
+        visibility: hidden;
+        pointer-events: none;
         width: min(300px, 88vw);
         height: calc(100dvh - 69px);
         max-height: calc(100dvh - 69px);
@@ -1694,11 +1779,14 @@
         padding: 14px 12px 24px;
         border-radius: 0;
         z-index: 1050;
-        transition: transform .28s ease, box-shadow .28s ease;
+        transition: transform .28s ease, box-shadow .28s ease, visibility 0s linear .28s;
       }
       body.admin-nav-open .float-nav {
         transform: translateX(0);
+        visibility: visible;
+        pointer-events: auto;
         box-shadow: 0 18px 48px rgba(6, 15, 33, .28);
+        transition: transform .28s ease, box-shadow .28s ease, visibility 0s;
       }
       .float-btn {
         font-size: 16px;
