@@ -58,11 +58,8 @@
   box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 50px var(--cj-promo-gold-glow);
   padding: clamp(24px, 4.5vw, 42px);
   margin: auto;
-  max-height: calc(100dvh - 32px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(201, 165, 91, 0.75) transparent;
+  max-height: none;
+  overflow: visible;
   transform: translateY(35px) scale(0.94);
   opacity: 0;
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
@@ -80,7 +77,7 @@
   position: relative;
   width: 100%;
   border-radius: 16px;
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 22px;
   border: 1px solid rgba(201, 165, 91, 0.45);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 25px rgba(201, 165, 91, 0.15);
@@ -91,7 +88,7 @@
 .cj-promo-flier-link {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   position: relative;
   text-decoration: none;
 }
@@ -103,23 +100,23 @@
   object-fit: contain;
   object-position: center;
   display: block;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+  border-radius: 16px 16px 0 0;
+  transition: filter 0.3s ease;
 }
 
 .cj-promo-flier-wrap:hover .cj-promo-flier-img {
-  transform: scale(1.03);
-  filter: brightness(1.05);
+  filter: brightness(1.04);
 }
 
 .cj-promo-flier-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(5, 14, 28, 0.45) 0%, transparent 40%, rgba(5, 14, 28, 0.65) 100%);
+  position: static;
+  pointer-events: auto;
+  background: transparent;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  padding: 12px 14px;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 12px;
 }
 
 .cj-promo-flier-badge {
@@ -140,8 +137,6 @@
 }
 
 .cj-promo-flier-zoom {
-  align-self: flex-end;
-  margin-top: auto;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -806,7 +801,8 @@
 
   .cj-promo-card {
     padding: 22px 18px 24px;
-    max-height: calc(100dvh - 20px);
+    max-height: none;
+    overflow: visible;
   }
 
   .cj-promo-features {
@@ -842,6 +838,65 @@
 
   .cj-voucher-code {
     font-size: 17px;
+  }
+}
+
+/* Wider screens scroll the whole offer instead of clipping it inside the card. */
+@media (min-width: 768px) {
+  .cj-promo-card {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
+/* Desktop: show the flier beside the offer so every action stays on screen. */
+@media (min-width: 992px) {
+  .cj-promo-backdrop {
+    align-items: flex-start;
+    padding: 28px 24px 36px;
+  }
+
+  .cj-promo-card {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .cj-promo-card.has-flier {
+    max-width: 1080px;
+  }
+
+  .cj-promo-card.has-flier .cj-promo-hero-body {
+    display: grid;
+    grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+    column-gap: 28px;
+    row-gap: 0;
+    align-items: start;
+  }
+
+  .cj-promo-card.has-flier .cj-promo-flier-wrap {
+    grid-column: 1;
+    grid-row: 1 / span 8;
+    margin: 0;
+  }
+
+  .cj-promo-card.has-flier .cj-promo-title,
+  .cj-promo-card.has-flier .cj-promo-sub,
+  .cj-promo-card.has-flier .cj-promo-features,
+  .cj-promo-card.has-flier .cj-promo-voucher-box,
+  .cj-promo-card.has-flier .cj-promo-actions,
+  .cj-promo-card.has-flier .cj-promo-foot {
+    grid-column: 2;
+  }
+
+  .cj-promo-card.has-flier .cj-promo-title {
+    margin-top: 0;
+  }
+
+  .cj-promo-card.has-flier #cjPromoFormView,
+  .cj-promo-card.has-flier #cjPromoSuccessView {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 

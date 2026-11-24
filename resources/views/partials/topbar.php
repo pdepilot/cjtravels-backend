@@ -1,5 +1,10 @@
 <header class="dash-topbar">
   <div class="topbar-left">
+    <?php if (!empty($isAdmin)): ?>
+    <button type="button" class="admin-nav-toggle" id="adminNavToggle" aria-controls="floatNav" aria-expanded="false" aria-label="Open navigation menu">
+      <i class="bi bi-list" aria-hidden="true"></i>
+    </button>
+    <?php endif; ?>
     <a href="<?= route('home') ?>" class="topbar-brand-link" title="CJ Travels Home" style="display:inline-flex;align-items:center;text-decoration:none;margin-right:8px;">
       <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" style="height:28px;width:auto;object-fit:contain;" onerror="this.onerror=null;this.src='<?= asset('images/logo.png') ?>';" />
     </a>

@@ -1,4 +1,5 @@
 <!-- FLOATING SIDE NAV -->
+<button type="button" class="admin-nav-backdrop" id="adminNavBackdrop" aria-label="Close navigation" tabindex="-1"></button>
 <nav class="float-nav" id="floatNav" aria-label="Admin navigation">
   <a class="float-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
         <img src="<?= asset('images/logo-mark.png') ?>" alt="CJ Travels" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" onerror="this.onerror=null;this.src='<?= asset('images/logo.png') ?>';" />
