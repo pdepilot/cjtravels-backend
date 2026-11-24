@@ -33,11 +33,7 @@
   }
 
   function saveData() {
-    try {
-      localStorage.setItem(STORAGE_KEY_DATA, JSON.stringify(DATA));
-    } catch (e) {
-      console.warn("Could not save customer data to localStorage:", e);
-    }
+    // Records are stored in MySQL. The page reloads them from the server.
   }
 
   var DATA = loadData();
@@ -64,6 +60,12 @@
       currency: "NGN",
       maximumFractionDigits: 0,
     }).format(value || 0);
+  }
+
+  function monthlyInstalment(principal, annualRate, months) {
+    if (!months || months <= 0) return principal;
+    var r = (annualRate / 100) / 12;
+    return (principal * r) / (1 - Math.pow(1 + r, -months));
   }
 
   function formatDate(iso) {
@@ -93,6 +95,10 @@
       Completed: { cls: "status-completed", icon: "bi-check2-all" },
       Cancelled: { cls: "status-cancelled", icon: "bi-x-circle-fill" },
       "In review": { cls: "status-inreview", icon: "bi-hourglass-split" },
+      Approved: { cls: "status-confirmed", icon: "bi-check-circle-fill" },
+      "Awaiting documents": { cls: "status-pending", icon: "bi-file-earmark-text" },
+      "Referred to partner": { cls: "status-inreview", icon: "bi-arrow-repeat" },
+      Rejected: { cls: "status-cancelled", icon: "bi-x-circle-fill" },
       Draft: { cls: "status-draft", icon: "bi-pencil-fill" },
       Paid: { cls: "status-paid", icon: "bi-check-circle-fill" },
       Upcoming: { cls: "status-upcoming", icon: "bi-calendar-event-fill" },
@@ -610,7 +616,8 @@
         detailItem("Repayment period", record.period) +
         detailItem("Purpose of travel", record.purpose) +
         detailItem("Submitted", formatDate(record.submitted)) +
-        detailItem("Status", record.status);
+        detailItem("Status", record.status) +
+        (record.note ? detailItem("Enquiry Details & Plan", escapeHTML(record.note)) : "");
     }
     if (kind === "payment") {
       detailTitle.textContent = "Payment details";
@@ -631,16 +638,15 @@
       extraNote =
         '<p class="modal-note">' +
         '<i class="bi bi-shield-exclamation"></i>' +
-        "This is a demonstration record only. Financing is provided by independent licensed " +
-        "lending partners and is subject to their eligibility assessment and approval. " +
-        "Travelbookings does not lend money or guarantee approval." +
+        "This enquiry is saved in your account. Financing is provided by independent licensed " +
+        "lending partners and is subject to their eligibility assessment. " +
+        "CJ Travels does not lend money or guarantee approval." +
         "</p>";
     } else {
       extraNote =
         '<p class="modal-note">' +
         '<i class="bi bi-info-circle-fill"></i>' +
-        "This is sample demonstration data. No real reservation, ticket or transaction exists " +
-        "for this record." +
+        "This record is loaded from your saved bookings and payments." +
         "</p>";
     }
 
@@ -684,9 +690,9 @@
         if (logoutModal)
           bootstrap.Modal.getOrCreateInstance(logoutModal).show();
       } else if (navName === "overview") {
-        window.location.href = "dashboard.php";
+        window.location.href = "dashboard";
       } else if (navName) {
-        window.location.href = navName + ".php";
+        window.location.href = navName + "";
       }
     }
   });
@@ -698,8 +704,7 @@
         "beforeend",
         '<p class="modal-note mt-3">' +
           '<i class="bi bi-info-circle-fill"></i>' +
-          "Booking management is not connected yet. Changes, cancellations and document " +
-          "downloads will be available once the backend is live." +
+          "Changes to this booking are made from the admin console." +
           "</p>",
       );
       modalAction.disabled = true;
@@ -713,38 +718,62 @@
     });
   }
 
+  function customerNotifications() {
+    var items = [];
+    (DATA.flights || []).slice(0, 3).forEach(function (flight) {
+      items.push({
+        icon: "bi-airplane-fill",
+        tone: "green",
+        title: "Flight " + (flight.status || "saved"),
+        text: (flight.ref || "") + " · " + (flight.route || ((flight.from || "") + " → " + (flight.to || ""))),
+        time: flight.date || flight.departure || ""
+      });
+    });
+    (DATA.payments || []).slice(0, 3).forEach(function (payment) {
+      items.push({
+        icon: "bi-credit-card-2-front-fill",
+        tone: "",
+        title: "Payment " + (payment.status || "saved"),
+        text: (payment.ref || "") + " · " + formatMoney(payment.amount),
+        time: payment.date || ""
+      });
+    });
+    (DATA.financing || []).slice(0, 2).forEach(function (loan) {
+      items.push({
+        icon: "bi-cash-coin",
+        tone: "grey",
+        title: "Financing " + (loan.status || "saved"),
+        text: (loan.ref || "") + " · " + formatMoney(loan.amount),
+        time: loan.submitted || ""
+      });
+    });
+    return items;
+  }
+
   if ($("notificationsBtn")) {
     $("notificationsBtn").addEventListener("click", function () {
       if (!detailModalEl || !detailTitle || !detailBody) return;
+      var items = customerNotifications();
       detailTitle.textContent = "Notifications";
-      detailBody.innerHTML =
-        '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;line-height:1.7;">' +
-        'You have <strong style="color:var(--navy);">3</strong> demonstration notifications:' +
-        "</p>" +
-        '<ul class="activity-list">' +
-        '<li class="activity-item">' +
-        '<span class="activity-icon green"><i class="bi bi-check2-circle"></i></span>' +
-        '<div class="activity-body"><strong>Flight booking confirmed</strong>' +
-        "<span>TBF-2201 · Lagos → London</span></div>" +
-        '<span class="activity-time">2h ago</span>' +
-        "</li>" +
-        '<li class="activity-item">' +
-        '<span class="activity-icon"><i class="bi bi-credit-card-2-front-fill"></i></span>' +
-        '<div class="activity-body"><strong>Payment received</strong>' +
-        "<span>PAY-9001 · ₦1,150,000</span></div>" +
-        '<span class="activity-time">1d ago</span>' +
-        "</li>" +
-        '<li class="activity-item">' +
-        '<span class="activity-icon grey"><i class="bi bi-cash-coin"></i></span>' +
-        '<div class="activity-body"><strong>Financing enquiry submitted</strong>' +
-        "<span>TBFIN-0452 · in review</span></div>" +
-        '<span class="activity-time">5d ago</span>' +
-        "</li>" +
-        "</ul>" +
-        '<p class="modal-note mt-4">' +
-        '<i class="bi bi-info-circle-fill"></i>' +
-        "Notifications are demonstration data and are not generated by real activity." +
-        "</p>";
+      detailBody.innerHTML = items.length
+        ? '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;line-height:1.7;">Activity from your saved bookings and payments.</p><ul class="activity-list">' +
+          items.map(function (item) {
+            return (
+              '<li class="activity-item"><span class="activity-icon ' +
+              escapeHTML(item.tone) +
+              '"><i class="bi ' +
+              escapeHTML(item.icon) +
+              '"></i></span><div class="activity-body"><strong>' +
+              escapeHTML(item.title) +
+              "</strong><span>" +
+              escapeHTML(item.text) +
+              "</span></div><span class=\"activity-time\">" +
+              escapeHTML(item.time) +
+              "</span></li>"
+            );
+          }).join("") +
+          "</ul>"
+        : '<p style="font-size:14px;color:var(--ink-soft);margin:0;">No bookings or payments are saved on this account yet.</p>';
       if (modalAction) modalAction.disabled = true;
       bootstrap.Modal.getOrCreateInstance(detailModalEl).show();
     });
@@ -752,7 +781,7 @@
 
   if ($("helpBtn")) {
     $("helpBtn").addEventListener("click", function () {
-      window.location.href = "../contact.php";
+      window.location.href = "../contact";
     });
   }
 
@@ -769,13 +798,211 @@
       if (!text.dataset.original) {
         text.dataset.original = text.textContent;
       }
-      if (toggle.checked) {
-        text.textContent = text.dataset.original;
-      } else {
-        text.textContent = "Currently turned off (demo setting).";
-      }
+      text.textContent = toggle.checked
+        ? text.dataset.original
+        : "Turned off for this browser session.";
     });
   });
+
+  function profileFields() {
+    return {
+      firstName: $("profFirstName") ? $("profFirstName").value.trim() : (DATA.customer.firstName || ""),
+      lastName: $("profLastName") ? $("profLastName").value.trim() : (DATA.customer.lastName || ""),
+      email: $("profEmail") ? $("profEmail").value.trim() : (DATA.customer.email || ""),
+      phone: $("profPhone") ? $("profPhone").value.trim() : (DATA.customer.phone || ""),
+      country: $("profCountry") ? $("profCountry").value.trim() : (DATA.customer.country || ""),
+      city: $("profCity") ? $("profCity").value.trim() : (DATA.customer.city || ""),
+      passport: $("profPassport") ? $("profPassport").value.trim() : (DATA.customer.passport || ""),
+      passportExpiry: $("profExpiry") ? $("profExpiry").value : (DATA.customer.passportExpiry || "")
+    };
+  }
+
+  function applyProfile(customer) {
+    if (!customer) return;
+    DATA.customer = Object.assign({}, DATA.customer || {}, customer);
+    var name = customer.name || ((customer.firstName || "") + " " + (customer.lastName || "")).trim();
+    var heroName = document.querySelector(".profile-card h2");
+    var heroEmail = document.querySelector(".profile-card .email");
+    var heroAvatar = document.querySelector(".profile-card .avatar-lg");
+    var topName = document.querySelector(".topbar-user span:last-child");
+    var topAvatar = document.querySelector(".topbar-user .avatar");
+    if (heroName && name) heroName.textContent = name;
+    if (heroEmail && customer.email) heroEmail.textContent = customer.email;
+    if (heroAvatar && customer.initials) heroAvatar.textContent = customer.initials;
+    if (topName && customer.firstName) topName.textContent = customer.firstName;
+    if (topAvatar && customer.initials) topAvatar.textContent = customer.initials;
+  }
+
+  function saveCustomerProfile(statusId, button) {
+    var status = $(statusId);
+    var url = (window.CJ_API_URLS && window.CJ_API_URLS.updateProfile) || "/customer/profile";
+    var token = window.CJ_CSRF_TOKEN || "";
+    if (button) button.disabled = true;
+    if (status) status.textContent = "Saving…";
+
+    fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-TOKEN": token,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(Object.assign({ _token: token }, profileFields()))
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (res) {
+        if (button) button.disabled = false;
+        if (res && res.success) {
+          applyProfile(res.customer);
+          if (status) status.textContent = res.message || "Saved.";
+          return;
+        }
+        if (status) status.textContent = (res && (res.error || res.message)) || "Could not save.";
+      })
+      .catch(function () {
+        if (button) button.disabled = false;
+        if (status) status.textContent = "Could not reach the server.";
+      });
+  }
+
+  if ($("saveProfileBtn")) {
+    $("saveProfileBtn").addEventListener("click", function () {
+      saveCustomerProfile("profileSaveStatus", $("saveProfileBtn"));
+    });
+  }
+  if ($("saveDocumentsBtn")) {
+    $("saveDocumentsBtn").addEventListener("click", function () {
+      saveCustomerProfile("documentsSaveStatus", $("saveDocumentsBtn"));
+    });
+  }
+
+  // Handle customer financing enquiry modal
+  var custFinForm = $("customerFinancingForm");
+  var custFinCost = $("custFinAmount");
+  var custFinPeriod = $("custFinPeriod");
+  var custFinMonthly = $("custFinMonthly");
+  var custFinTotal = $("custFinTotal");
+
+  function updateCustomerFinModalCalc() {
+    if (!custFinCost || !custFinMonthly) return;
+    var amount = Number(custFinCost.value) || 0;
+    var periodStr = custFinPeriod ? custFinPeriod.value : "6 months";
+    var months = parseInt(periodStr, 10) || 6;
+    var rate = 15; // 15% APR
+    var monthly = monthlyInstalment(amount, rate, months);
+    var total = monthly * months;
+    custFinMonthly.textContent = formatMoney(monthly) + " / mo";
+    if (custFinTotal) custFinTotal.textContent = formatMoney(total);
+  }
+
+  if (custFinCost) {
+    custFinCost.addEventListener("input", updateCustomerFinModalCalc);
+  }
+  if (custFinPeriod) {
+    custFinPeriod.addEventListener("change", updateCustomerFinModalCalc);
+  }
+
+  if (custFinForm) {
+    custFinForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var status = $("customerFinancingStatus");
+      var submitBtn = $("submitCustFinBtn");
+      var amount = Number(custFinCost.value) || 0;
+      var period = custFinPeriod ? custFinPeriod.value : "6 months";
+      var purpose = $("custFinPurpose") ? $("custFinPurpose").value : "Leisure / holiday";
+      var notes = $("custFinNotes") ? $("custFinNotes").value.trim() : "";
+
+      if (amount < 100000 || amount > 10000000) {
+        if (status) {
+          status.className = "alert alert-danger py-2 mt-3";
+          status.textContent = "Please enter an amount between ₦100,000 and ₦10,000,000.";
+          status.style.display = "block";
+        }
+        return;
+      }
+
+      var customer = DATA.customer || {};
+      var fullName = customer.name || ((customer.firstName || "Valued") + " " + (customer.lastName || "Customer")).trim();
+      var email = customer.email || "customer@example.com";
+      var phone = customer.phone || "";
+      var country = customer.country || "Nigeria";
+      var token = window.CJ_CSRF_TOKEN || "";
+      var basePath = (window.CJ_API_URLS && window.CJ_API_URLS.updateProfile ? window.CJ_API_URLS.updateProfile.replace(/\/customer.*$/i, '') : window.location.pathname.replace(/\/customer.*$/i, ''));
+      var applyUrl = basePath + "/api/loans/apply";
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (status) {
+        status.className = "alert alert-info py-2 mt-3";
+        status.textContent = "Submitting your travel financing enquiry…";
+        status.style.display = "block";
+      }
+
+      fetch(applyUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "X-CSRF-TOKEN": token
+        },
+        body: JSON.stringify({
+          fullName: fullName,
+          email: email,
+          phone: phone,
+          country: country,
+          amount: amount,
+          period: period,
+          purpose: purpose,
+          notes: notes,
+          userId: customer.id || 0
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          if (submitBtn) submitBtn.disabled = false;
+          if (res && res.success && res.loan) {
+            if (status) {
+              status.className = "alert alert-success py-2 mt-3";
+              status.textContent = "Enquiry submitted! Reference: " + res.loan.ref;
+            }
+            var newFin = {
+              id: res.loan.id || ("fin" + Date.now()),
+              ref: res.loan.ref,
+              amount: res.loan.amount || amount,
+              period: res.loan.period || period,
+              purpose: res.loan.purpose || purpose,
+              submitted: res.loan.submitted || new Date().toISOString().slice(0, 10),
+              status: res.loan.status || "In review",
+              note: res.loan.note || notes
+            };
+            DATA.financing = [newFin].concat(DATA.financing || []);
+            renderFinancingTable();
+            renderCounts();
+            setTimeout(function () {
+              var modalEl = $("customerFinancingModal");
+              if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                var modalInstance = window.bootstrap.Modal.getInstance(modalEl);
+                if (modalInstance) modalInstance.hide();
+              }
+              custFinForm.reset();
+              if (status) status.style.display = "none";
+              window.location.reload();
+            }, 1200);
+            return;
+          }
+          if (status) {
+            status.className = "alert alert-danger py-2 mt-3";
+            status.textContent = (res && (res.error || res.message)) || "Could not submit enquiry.";
+          }
+        })
+        .catch(function () {
+          if (submitBtn) submitBtn.disabled = false;
+          if (status) {
+            status.className = "alert alert-danger py-2 mt-3";
+            status.textContent = "Could not connect to the server.";
+          }
+        });
+    });
+  }
 
   function initPage() {
     if ($("year")) $("year").textContent = new Date().getFullYear();

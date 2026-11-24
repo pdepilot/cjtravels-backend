@@ -15,6 +15,8 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <link href="<?= asset('css/style.css') ?>" rel="stylesheet" />
   <link href="<?= asset('css/responsive.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -27,9 +29,13 @@
   </main>
 
   <?php $this->include('partials/footer'); ?>
+  <?php $this->include('partials/cookie-banner'); ?>
+  <?php $this->include('partials/promo-modal'); ?>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?= asset('js/main.js') ?>"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
 </body>
 </html>
 

@@ -4,7 +4,12 @@
           <div class="page-head">
             <div>
               <h1>Hotel Reservations</h1>
-              <p>Real-time accommodation bookings, properties and check-in schedules synced with MySQL.</p>
+              <p>Inventory and bookings. Selections made on the public hotel search appear here automatically.</p>
+            </div>
+            <div class="page-head-actions">
+              <button type="button" class="btn btn-gold" id="addHotelBtn">
+                <i class="bi bi-plus-lg"></i> Add hotel
+              </button>
             </div>
           </div>
           <div class="card-box">

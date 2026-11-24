@@ -4,7 +4,12 @@
           <div class="page-head">
             <div>
               <h1>Customers</h1>
-              <p>Real-time customer directory and verified user accounts synced with MySQL.</p>
+              <p>Add, update, and remove customer accounts. Changes appear in this directory and on the customer portal.</p>
+            </div>
+            <div class="page-head-actions">
+              <button type="button" class="btn btn-gold" id="addCustomerBtn">
+                <i class="bi bi-person-plus-fill"></i> Add customer
+              </button>
             </div>
           </div>
           <div class="card-box">

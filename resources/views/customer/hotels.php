@@ -9,7 +9,7 @@
               <p>View your upcoming and completed luxury hotel reservations and stay details.</p>
             </div>
             <div class="page-head-actions">
-              <a href="../hotels.php" class="btn btn-primary">
+              <a href="<?= route('hotels') ?>" class="btn btn-primary">
                 <i class="bi bi-search"></i> Book a hotel
               </a>
             </div>

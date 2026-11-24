@@ -21,6 +21,31 @@ class Response
         return $this;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function getStatus(): int
+    {
+        return $this->statusCode;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[$name] ?? null;
+    }
+
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
+
     public function header(string $name, string $value): self
     {
         $this->headers[$name] = $value;
@@ -56,7 +81,7 @@ class Response
         if (function_exists('base_subfolder')) {
             $base = base_subfolder();
             if ($base !== '' && str_starts_with($url, '/') && !str_starts_with($url, $base)) {
-                $url = $base . '/' . ltrim($url, '/');
+                $url = $url === '/' ? $base : ($base . '/' . ltrim($url, '/'));
             }
         }
         $response = new self('', $statusCode);

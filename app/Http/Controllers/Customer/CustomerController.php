@@ -11,6 +11,7 @@ abstract class CustomerController extends Controller
 {
     protected function customerView(string $view, array $data = []): Response
     {
+        RealtimeDataService::ensureUserSchema();
         $user = User::current();
         $customerData = RealtimeDataService::getCustomerData($user->id ?? 1);
 

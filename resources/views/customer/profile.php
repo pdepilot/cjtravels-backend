@@ -12,14 +12,14 @@
 
           <!-- PROFILE HERO BANNER -->
           <div class="profile-card">
-            <span class="avatar-lg"><?= e($user->initials ?? 'AO') ?></span>
+            <span class="avatar-lg"><?= e($user->initials ?? '') ?></span>
             <div class="profile-meta">
-              <h2><?= e($user->name ?? 'Adaeze Okonkwo') ?></h2>
-              <span class="email"><?= e($user->email ?? 'adaeze.okonkwo@example.com') ?></span>
+              <h2><?= e($user->name ?? '') ?></h2>
+              <span class="email"><?= e($user->email ?? '') ?></span>
               <div class="profile-tags">
-                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> <?= e($user->tier ?? 'Gold Member') ?></span>
-                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since <?= e($user->memberSince ?? 'Jan 2024') ?></span>
-                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> <?= e($user->city ?? 'Lagos') ?>, <?= e($user->country ?? 'Nigeria') ?></span>
+                <span class="profile-tag gold"><i class="bi bi-award-fill"></i> <?= e($user->tier ?? '') ?></span>
+                <span class="profile-tag"><i class="bi bi-calendar-check"></i> Member since <?= e($user->memberSince ?? '') ?></span>
+                <span class="profile-tag"><i class="bi bi-geo-alt-fill"></i> <?= e(trim(($user->city ?? '') . ', ' . ($user->country ?? ''), ' ,')) ?></span>
               </div>
             </div>
           </div>
@@ -33,11 +33,11 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label" for="profFirstName">First name</label>
-                  <input type="text" class="form-control" id="profFirstName" value="<?= e($user->firstName ?? 'Adaeze') ?>" />
+                  <input type="text" class="form-control" id="profFirstName" value="<?= e($user->firstName ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profLastName">Last name</label>
-                  <input type="text" class="form-control" id="profLastName" value="<?= e($user->lastName ?? 'Okonkwo') ?>" />
+                  <input type="text" class="form-control" id="profLastName" value="<?= e($user->lastName ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profEmail">Email address</label>
@@ -49,17 +49,18 @@
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profCountry">Country of residence</label>
-                  <input type="text" class="form-control" id="profCountry" value="<?= e($user->country ?? 'Nigeria') ?>" />
+                  <input type="text" class="form-control" id="profCountry" value="<?= e($user->country ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profCity">City</label>
-                  <input type="text" class="form-control" id="profCity" value="<?= e($user->city ?? 'Lagos') ?>" />
+                  <input type="text" class="form-control" id="profCity" value="<?= e($user->city ?? '') ?>" />
                 </div>
               </div>
-              <div class="mt-4">
-                <button type="button" class="btn btn-primary" onclick="alert('Profile details updated successfully (demo).')">
+              <div class="mt-4 d-flex align-items-center gap-3 flex-wrap">
+                <button type="button" class="btn btn-primary" id="saveProfileBtn">
                   Save personal information
                 </button>
+                <span id="profileSaveStatus" class="text-muted" style="font-size:0.9rem;"></span>
               </div>
             </div>
           </div>
@@ -73,25 +74,26 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label" for="profPassport">Passport number</label>
-                  <input type="text" class="form-control cell-mono" id="profPassport" value="<?= e($user->passport ?? 'A12984572') ?>" />
+                  <input type="text" class="form-control cell-mono" id="profPassport" value="<?= e($user->passport ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profIssuing">Issuing country</label>
-                  <input type="text" class="form-control" id="profIssuing" value="Nigeria (NGA)" />
+                  <input type="text" class="form-control" id="profIssuing" value="<?= e($user->issuingCountry ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profExpiry">Expiration date</label>
-                  <input type="date" class="form-control" id="profExpiry" value="<?= e($user->passportExpiry ?? '2031-08-14') ?>" />
+                  <input type="date" class="form-control" id="profExpiry" value="<?= e($user->passportExpiry ?? '') ?>" />
                 </div>
                 <div class="col-md-6">
                   <label class="form-label" for="profFrequentFlyer">Frequent flyer number</label>
-                  <input type="text" class="form-control cell-mono" id="profFrequentFlyer" value="BA-78923410" placeholder="e.g. BA-12345678" />
+                  <input type="text" class="form-control cell-mono" id="profFrequentFlyer" value="<?= e($user->frequentFlyer ?? '') ?>" placeholder="e.g. BA-12345678" />
                 </div>
               </div>
-              <div class="mt-4">
-                <button type="button" class="btn btn-primary" onclick="alert('Travel documents updated successfully (demo).')">
+              <div class="mt-4 d-flex align-items-center gap-3 flex-wrap">
+                <button type="button" class="btn btn-primary" id="saveDocumentsBtn">
                   Update travel documents
                 </button>
+                <span id="documentsSaveStatus" class="text-muted" style="font-size:0.9rem;"></span>
               </div>
             </div>
           </div>

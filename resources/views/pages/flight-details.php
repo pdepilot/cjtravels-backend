@@ -1,7 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flight details — CJ Travels</title>
@@ -12,6 +27,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
 
   <style>
     :root {
@@ -264,12 +280,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="/contact">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -279,19 +295,18 @@
   <header class="site-header" id="siteHeader">
     <div class="container">
       <div class="nav-inner">
-        <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="/flights" class="active">Flights</a>
-          <a href="/hotels">Hotels</a>
-          <a href="/destinations">Destinations</a>
-          <a href="travel-loans.php">Financing</a>
-          <a href="/about">About</a>
+          <a href="<?= route('flights') ?>" class="active">Flights</a>
+          <a href="<?= route('hotels') ?>">Hotels</a>
+          <a href="<?= route('destinations') ?>">Destinations</a>
+          <a href="travel-loans">Financing</a>
+          <a href="<?= route('about') ?>">About</a>
         </nav>
         <div class="nav-actions">
-          <a href="/login" class="text-link">Sign in</a>
-          <a href="/register" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
         <button class="navbar-toggler" type="button" id="mobileToggle"
                 aria-controls="mobileNav" aria-expanded="false" aria-label="Open menu">
@@ -305,8 +320,8 @@
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -314,22 +329,21 @@
     </div>
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="/">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="/flights">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/hotels">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/destinations">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="travel-loans.php">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/about">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/contact">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="travel-loans">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
     <div class="mobile-nav-cta">
-      <a href="/login" class="btn btn-ghost">Sign in</a>
-      <a href="/register" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
     <div class="mobile-nav-footer">
       <p style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Reach the concierge</p>
-      <a href="tel:+2348080452890" style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);padding:6px 0;"><i class="bi bi-telephone" style="color:var(--gold);"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>" style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);padding:6px 0;"><i class="bi bi-telephone" style="color:var(--gold);"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com" style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-soft);padding:6px 0;"><i class="bi bi-envelope" style="color:var(--gold);"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -340,9 +354,9 @@
     <section class="breadcrumb-bar">
       <div class="container">
         <div class="breadcrumb-inner">
-          <a href="/">Home</a>
+          <a href="<?= route('home') ?>">Home</a>
           <span class="sep">/</span>
-          <a href="/flights">Flights</a>
+          <a href="<?= route('flights') ?>">Flights</a>
           <span class="sep">/</span>
           <span class="current" id="crumbFlight">Flight</span>
         </div>
@@ -360,8 +374,8 @@
     <div class="container footer-inner">
       <div class="footer-grid">
         <div>
-          <a class="footer-brand" href="/" aria-label="CJ Travels home">
-            <img src="/images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -377,56 +391,51 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="/flights">Flights</a></li>
-            <li><a href="/hotels">Hotels</a></li>
-            <li><a href="/destinations">Destinations</a></li>
-            <li><a href="travel-loans.php">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="travel-loans">Travel financing</a></li>
           </ul>
         </div>
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="/about">About us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
 
   <!-- Flight data (single source of truth) -->
   <script>
-    window.FLIGHT_DATA = [
-      { id: 'f1', airline: 'Air Peace', flightNo: 'P4 7102', depTime: '08:15', duration: 390, stops: 0, price: 1150000, aircraft: 'Boeing 787-9', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-      { id: 'f2', airline: 'British Airways', flightNo: 'BA 074', depTime: '23:10', duration: 400, stops: 0, price: 1420000, aircraft: 'Airbus A350-1000', baggage: '2 × 23kg checked bags', fareType: 'Standard' },
-      { id: 'f3', airline: 'Emirates', flightNo: 'EK 782', depTime: '17:25', duration: 720, stops: 1, price: 980000, aircraft: 'Boeing 777-300ER', baggage: '1 × 30kg checked bag', fareType: 'Saver' },
-      { id: 'f4', airline: 'Qatar Airways', flightNo: 'QR 1406', depTime: '13:05', duration: 660, stops: 1, price: 1050000, aircraft: 'Airbus A330-900', baggage: '1 × 23kg checked bag', fareType: 'Standard' },
-      { id: 'f5', airline: 'Ethiopian Airlines', flightNo: 'ET 900', depTime: '11:40', duration: 865, stops: 1, price: 890000, aircraft: 'Boeing 737-800', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-      { id: 'f6', airline: 'KLM', flightNo: 'KL 588', depTime: '22:30', duration: 615, stops: 1, price: 1320000, aircraft: 'Boeing 787-10', baggage: '1 × 23kg checked bag', fareType: 'Flex' },
-      { id: 'f7', airline: 'Turkish Airlines', flightNo: 'TK 626', depTime: '19:55', duration: 1015, stops: 2, price: 940000, aircraft: 'Airbus A321neo', baggage: '1 × 20kg checked bag', fareType: 'Saver' },
-      { id: 'f8', airline: 'Kenya Airways', flightNo: 'KQ 533', depTime: '05:20', duration: 805, stops: 1, price: 875000, aircraft: 'Boeing 737 MAX 8', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-      { id: 'f9', airline: 'Air Peace', flightNo: 'P4 7204', depTime: '02:40', duration: 420, stops: 0, price: 1090000, aircraft: 'Boeing 787-9', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-      { id: 'f10', airline: 'Virgin Atlantic', flightNo: 'VS 652', depTime: '14:50', duration: 395, stops: 0, price: 1560000, aircraft: 'Airbus A350-1000', baggage: '2 × 23kg checked bags', fareType: 'Flex' }
-    ];
+    window.FLIGHT_DATA = [];
     window.AIRLINE_COLORS = ['#0b1e3d', '#1e3657', '#a8842c', '#2e7d5b', '#6b4bc9', '#a3452e', '#0f6f8c'];
   </script>
 
@@ -477,7 +486,8 @@
       var children = parseInt(params.get('children'), 10) || 0;
       var cabin = params.get('cabin') || 'Economy';
 
-      var flight = window.FLIGHT_DATA.filter(function (f) { return f.id === flightId; })[0];
+      function showFlight() {
+      var flight = (window.FLIGHT_DATA || []).filter(function (f) { return f.id === flightId; })[0];
 
       var root = $('detailsRoot');
 
@@ -486,8 +496,8 @@
           '<div class="not-found">' +
             '<span style="display:inline-block;font-size:10.5px;font-weight:500;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Flight</span>' +
             '<h1>We couldn\'t find that flight.</h1>' +
-            '<p>The flight you\'re looking for isn\'t in our demonstration catalogue. Head back to the search to browse sample fares.</p>' +
-            '<a href="/flights" class="btn btn-navy">Back to flight search <i class="bi bi-arrow-right"></i></a>' +
+            '<p>That flight is not in the current inventory. Go back to search to see the saved flights.</p>' +
+            '<a href="<?= route('flights') ?>" class="btn btn-navy">Back to flight search <i class="bi bi-arrow-right"></i></a>' +
           '</div>';
         return;
       }
@@ -504,13 +514,7 @@
 
       var isRound = !!ret;
       var tripLabel = isRound ? 'Round-trip' : 'One-way';
-      var adultFare = flight.price;
-      var childFare = Math.round(flight.price * 0.75);
-      var adultsTotal = adultFare * adults;
-      var childrenTotal = childFare * children;
-      var subtotal = adultsTotal + childrenTotal;
-      var taxes = Math.round(subtotal * 0.12);
-      var total = subtotal + taxes;
+      var total = flight.price;
 
       var stopsClass = flight.stops === 0 ? '' : ' has-stops';
 
@@ -601,7 +605,7 @@
                         '<span class="marker">1</span>' +
                         '<div>' +
                           '<h3>Stopover</h3>' +
-                          '<p>Intermediate stop (illustrative schedule — details will appear once connected to the airline).</p>' +
+                          '<p>This itinerary includes a stop. Times shown are the stored schedule.</p>' +
                         '</div>' +
                       '</li>' : '') +
                     '<li>' +
@@ -630,7 +634,7 @@
                   '<h2>Travel <em>notes</em></h2>' +
                   '<ul style="list-style:none;padding:0;margin:0;display:grid;gap:14px;">' +
                     '<li style="display:flex;gap:14px;font-size:14px;color:var(--ink-soft);line-height:1.6;"><i class="bi bi-check2" style="color:var(--gold);font-size:13px;margin-top:3px;flex-shrink:0;"></i><span>All times shown are local to each airport. Please confirm the check-in cut-off for your specific flight with the airline.</span></li>' +
-                    '<li style="display:flex;gap:14px;font-size:14px;color:var(--ink-soft);line-height:1.6;"><i class="bi bi-check2" style="color:var(--gold);font-size:13px;margin-top:3px;flex-shrink:0;"></i><span>Fares shown are illustrative sample data. The final fare, taxes and fees will be confirmed at the time of ticketing.</span></li>' +
+                    '<li style="display:flex;gap:14px;font-size:14px;color:var(--ink-soft);line-height:1.6;"><i class="bi bi-check2" style="color:var(--gold);font-size:13px;margin-top:3px;flex-shrink:0;"></i><span>The fare shown is the amount stored for this flight.</span></li>' +
                     '<li style="display:flex;gap:14px;font-size:14px;color:var(--ink-soft);line-height:1.6;"><i class="bi bi-check2" style="color:var(--gold);font-size:13px;margin-top:3px;flex-shrink:0;"></i><span>CJ Travels has not contacted the airline and cannot reserve this flight from this page.</span></li>' +
                   '</ul>' +
                 '</section>' +
@@ -652,19 +656,17 @@
                   '</div>' +
 
                   '<div class="price-breakdown">' +
-                    '<div class="row"><span>Adults (' + adults + ' × ' + formatMoney(adultFare) + ')</span><span>' + formatMoney(adultsTotal) + '</span></div>' +
-                    (children > 0 ? '<div class="row"><span>Children (' + children + ' × ' + formatMoney(childFare) + ')</span><span>' + formatMoney(childrenTotal) + '</span></div>' : '') +
-                    '<div class="row"><span>Taxes &amp; fees (est.)</span><span>' + formatMoney(taxes) + '</span></div>' +
-                    '<div class="price-total"><span>Total<small>Sample estimate</small></span><span>' + formatMoney(total) + '</span></div>' +
+                    '<div class="row"><span>Stored fare</span><span>' + formatMoney(total) + '</span></div>' +
+                    '<div class="price-total"><span>Total</span><span>' + formatMoney(total) + '</span></div>' +
                   '</div>' +
 
-                  '<button type="button" class="btn btn-navy btn-block" id="selectBtn">Select this flight <i class="bi bi-arrow-right"></i></button>' +
+                  '<button type="button" class="btn btn-navy btn-block" id="selectBtn">Reserve on WhatsApp <i class="bi bi-whatsapp"></i></button>' +
 
                   '<div class="booking-status" id="bookingStatus"></div>' +
 
                   '<p class="booking-note">' +
                     '<i class="bi bi-info-circle"></i>' +
-                    'Illustrative sample data. No payment will be taken and no reservation is created.' +
+                    'Continuing saves this flight as a pending booking.' +
                   '</p>' +
                 '</div>' +
               '</aside>' +
@@ -676,12 +678,28 @@
       var selectBtn = $('selectBtn');
       var statusBox = $('bookingStatus');
       selectBtn.addEventListener('click', function () {
-        statusBox.className = 'booking-status show';
-        statusBox.innerHTML =
-          '<strong>Demonstration only.</strong> Passenger details, payment and ticketing are not available from this page yet. ' +
-          'Real bookings will be enabled when the booking engine goes live. ' +
-          '<a href="/flights" style="color:var(--navy);font-weight:500;border-bottom:1px solid var(--hairline);">Back to search</a>';
+        window.location.href = 'https://wa.me/<?= e(cj_whatsapp_number()) ?>?text=' + encodeURIComponent([
+          'Hello CJ Travels, I would like to reserve this flight.',
+          '',
+          'Airline: ' + flight.airline + ' ' + flight.flightNo,
+          'From: ' + from,
+          'To: ' + to,
+          'Departure: ' + depart,
+          ret ? 'Return: ' + ret : '',
+          'Travellers: ' + adults + ' adult' + (adults === 1 ? '' : 's') + (children ? ', ' + children + ' child' + (children === 1 ? '' : 'ren') : ''),
+          'Cabin: ' + cabin,
+          'Listed fare: ' + formatMoney(flight.price)
+        ].filter(Boolean).join('\n'));
       });
+      }
+
+      fetch(window.location.pathname.replace(/\/flights-details(\.php)?$/i, '') + '/api/flights', { headers: { 'Accept': 'application/json' } })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          window.FLIGHT_DATA = (res && res.success && res.data) || [];
+          showFlight();
+        })
+        .catch(function () { showFlight(); });
 
     })();
   </script>

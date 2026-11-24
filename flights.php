@@ -1,8 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="images/logo-mark.png" />
-
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flights — CJ Travels</title>
@@ -13,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -1320,12 +1336,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="contact.php">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -1335,21 +1351,20 @@
   <header class="site-header" id="siteHeader">
     <div class="container">
       <div class="nav-inner">
-        <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.php">Home</a>
-          <a href="flights.php" class="active">Flights</a>
-          <a href="hotels.php">Hotels</a>
-          <a href="destinations.php">Destinations</a>
-          <a href="financing.php">Financing</a>
-          <a href="about.php">About</a>
+          <a href="<?= route('home') ?>">Home</a>
+          <a href="<?= route('flights') ?>" class="active">Flights</a>
+          <a href="<?= route('hotels') ?>">Hotels</a>
+          <a href="<?= route('destinations') ?>">Destinations</a>
+          <a href="<?= route('financing') ?>">Financing</a>
+          <a href="<?= route('about') ?>">About</a>
         
         </nav>
         <div class="nav-actions">
-          <a href="login.php" class="text-link">Sign in</a>
-          <a href="register.php" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
         <button class="navbar-toggler" type="button" id="mobileToggle"
                 aria-controls="mobileNav" aria-expanded="false" aria-label="Open menu">
@@ -1363,8 +1378,8 @@
   <div class="mobile-nav-overlay" id="mobileOverlay"></div>
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -1372,22 +1387,21 @@
     </div>
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="index.php">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="flights.php">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="hotels.php">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="destinations.php">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="financing.php">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="about.php">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="contact.php">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('financing') ?>">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
     <div class="mobile-nav-cta">
-      <a href="login.php" class="btn btn-ghost">Sign in</a>
-      <a href="register.php" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
     <div class="mobile-nav-footer">
       <p>Reach the concierge</p>
-      <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -1462,27 +1476,21 @@
           <div class="flight-chips-scroll">
             <button type="button" class="flight-chip-btn" data-from="Lagos (LOS)" data-to="London (LHR)">
               <span class="chip-cities">Lagos → London</span>
-              <span class="chip-price">₦940k</span>
             </button>
             <button type="button" class="flight-chip-btn" data-from="Abuja (ABV)" data-to="London (LHR)">
               <span class="chip-cities">Abuja → London</span>
-              <span class="chip-price">₦980k</span>
             </button>
             <button type="button" class="flight-chip-btn" data-from="Lagos (LOS)" data-to="Dubai (DXB)">
               <span class="chip-cities">Lagos → Dubai</span>
-              <span class="chip-price">₦780k</span>
             </button>
             <button type="button" class="flight-chip-btn" data-from="Lagos (LOS)" data-to="New York (JFK)">
               <span class="chip-cities">Lagos → New York</span>
-              <span class="chip-price">₦1.25m</span>
             </button>
             <button type="button" class="flight-chip-btn" data-from="Lagos (LOS)" data-to="Paris (CDG)">
               <span class="chip-cities">Lagos → Paris</span>
-              <span class="chip-price">₦910k</span>
             </button>
             <button type="button" class="flight-chip-btn" data-from="Owerri (QOW)" data-to="Lagos (LOS)">
               <span class="chip-cities">Owerri → Lagos</span>
-              <span class="chip-price">₦110k</span>
             </button>
           </div>
         </div>
@@ -1593,7 +1601,7 @@
             <div class="col-lg-5 col-md-4">
               <button type="submit" class="btn-flight-search-cta">
                 <span>Find Flights Now</span>
-                <i class="bi bi-arrow-right"></i>
+                <i class="bi bi-whatsapp"></i>
               </button>
             </div>
           </div>
@@ -1650,8 +1658,8 @@
         <div class="demo-banner">
           <i class="bi bi-info-circle"></i>
           <div>
-            <strong>Sample flight data.</strong> These results are for demonstration only. The airlines,
-            flight numbers, times and prices shown are illustrative — they are not live fares and cannot be booked.
+            <strong>Live flight inventory.</strong> Confirmed flights are loaded from CJ Travels.
+            Selecting a flight and continuing saves a pending booking in the admin flight list.
           </div>
         </div>
 
@@ -1753,21 +1761,20 @@
               <span class="eyebrow">Step 1 of 3</span>
               <h2>Review your <em style="font-style: italic; color: var(--gold);">flight</em></h2>
               <p>
-                Check the details below before continuing. This is a frontend preview — no reservation,
-                payment or ticket is created.
+                Check the details below. Reserve on WhatsApp sends this request to CJ Travels.
               </p>
               <div class="review-flight" id="reviewFlight"></div>
               <div class="review-grid" id="reviewDetails"></div>
               <div class="demo-banner mb-0">
                 <i class="bi bi-info-circle"></i>
                 <div>
-                  <strong>Demonstration only.</strong> CJ Travels has not contacted any airline, and the
-                  fare shown is sample data. Real bookings will be enabled when our booking engine goes live.
+                  <strong>Live inventory.</strong> These fares come from the CJ Travels flight list.
+                  Reserve on WhatsApp sends this itinerary to CJ Travels on <?= e(cj_phone_display()) ?>.
                 </div>
               </div>
               <div class="d-flex flex-wrap gap-2 mt-4">
                 <button type="button" class="btn btn-navy" id="proceedBtn">
-                  Continue to passenger details <i class="bi bi-arrow-right"></i>
+                  Reserve on WhatsApp <i class="bi bi-whatsapp"></i>
                 </button>
                 <button type="button" class="btn btn-ghost" id="backToResults2">
                   Change flight
@@ -1816,8 +1823,8 @@
     <div class="container footer-inner">
       <div class="footer-grid">
         <div>
-          <a class="footer-brand" href="index.php" aria-label="CJ Travels home">
-            <img src="images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -1833,25 +1840,25 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="flights.php">Flights</a></li>
-            <li><a href="hotels.php">Hotels</a></li>
-            <li><a href="destinations.php">Destinations</a></li>
-            <li><a href="financing.php">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="<?= route('financing') ?>">Travel financing</a></li>
           </ul>
         </div>
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
           <div class="footer-newsletter">
@@ -1868,17 +1875,28 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <?php if (file_exists(__DIR__ . '/../partials/promo-modal.php')): ?>
+    <?php include __DIR__ . '/../partials/promo-modal.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
 
   <script>
     (function () {
@@ -1915,24 +1933,22 @@
       function timeBucket(minutes) { if (minutes < 360) return 'early'; if (minutes < 720) return 'morning'; if (minutes < 1080) return 'afternoon'; return 'evening'; }
 
       /* DATA */
-      var SAMPLE_FLIGHTS = [
-        { id: 'f1', airline: 'Air Peace', flightNo: 'P4 7102', depTime: '08:15', duration: 390, stops: 0, price: 1150000, aircraft: 'Boeing 787-9', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-        { id: 'f2', airline: 'British Airways', flightNo: 'BA 074', depTime: '23:10', duration: 400, stops: 0, price: 1420000, aircraft: 'Airbus A350-1000', baggage: '2 × 23kg checked bags', fareType: 'Standard' },
-        { id: 'f3', airline: 'Emirates', flightNo: 'EK 782', depTime: '17:25', duration: 720, stops: 1, price: 980000, aircraft: 'Boeing 777-300ER', baggage: '1 × 30kg checked bag', fareType: 'Saver' },
-        { id: 'f4', airline: 'Qatar Airways', flightNo: 'QR 1406', depTime: '13:05', duration: 660, stops: 1, price: 1050000, aircraft: 'Airbus A330-900', baggage: '1 × 23kg checked bag', fareType: 'Standard' },
-        { id: 'f5', airline: 'Ethiopian Airlines', flightNo: 'ET 900', depTime: '11:40', duration: 865, stops: 1, price: 890000, aircraft: 'Boeing 737-800', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-        { id: 'f6', airline: 'KLM', flightNo: 'KL 588', depTime: '22:30', duration: 615, stops: 1, price: 1320000, aircraft: 'Boeing 787-10', baggage: '1 × 23kg checked bag', fareType: 'Flex' },
-        { id: 'f7', airline: 'Turkish Airlines', flightNo: 'TK 626', depTime: '19:55', duration: 1015, stops: 2, price: 940000, aircraft: 'Airbus A321neo', baggage: '1 × 20kg checked bag', fareType: 'Saver' },
-        { id: 'f8', airline: 'Kenya Airways', flightNo: 'KQ 533', depTime: '05:20', duration: 805, stops: 1, price: 875000, aircraft: 'Boeing 737 MAX 8', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-        { id: 'f9', airline: 'Air Peace', flightNo: 'P4 7204', depTime: '02:40', duration: 420, stops: 0, price: 1090000, aircraft: 'Boeing 787-9', baggage: '1 × 23kg checked bag', fareType: 'Saver' },
-        { id: 'f10', airline: 'Virgin Atlantic', flightNo: 'VS 652', depTime: '14:50', duration: 395, stops: 0, price: 1560000, aircraft: 'Airbus A350-1000', baggage: '2 × 23kg checked bags', fareType: 'Flex' }
-      ];
+      var SAMPLE_FLIGHTS = [];
       var AIRLINE_COLORS = ['#0b1e3d', '#1e3657', '#a8842c', '#2e7d5b', '#6b4bc9', '#a3452e', '#0f6f8c'];
 
       /* STATE */
+      var routeQuery = new URLSearchParams(window.location.search);
       var state = {
         tripType: 'round',
-        search: { from: 'Lagos (LOS)', to: 'London (LHR)', depart: daysFromNow(14), ret: daysFromNow(21), adults: 1, children: 0, cabin: 'Economy' },
+        search: {
+          from: routeQuery.get('from') || 'Lagos (LOS)',
+          to: routeQuery.get('to') || routeQuery.get('city') || 'London (LHR)',
+          depart: routeQuery.get('depart') || daysFromNow(14),
+          ret: routeQuery.get('return') || daysFromNow(21),
+          adults: Number(routeQuery.get('travellers') || 1) || 1,
+          children: 0,
+          cabin: routeQuery.get('cabin') || 'Economy'
+        },
         filters: { stops: 'any', maxPrice: 2000000, airlines: new Set(), times: new Set(['early', 'morning', 'afternoon', 'evening']) },
         sort: 'recommended',
         selectedFlightId: null
@@ -1988,8 +2004,8 @@
       } else { revealEls.forEach(function (el) { el.classList.add('is-visible'); }); }
 
       /* PRICE RANGE */
-      var PRICE_MIN = Math.min.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; }));
-      var PRICE_MAX = Math.max.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; }));
+      var PRICE_MIN = SAMPLE_FLIGHTS.length ? Math.min.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; })) : 0;
+      var PRICE_MAX = SAMPLE_FLIGHTS.length ? Math.max.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; })) : 0;
       els.priceRange.min = String(PRICE_MIN);
       els.priceRange.max = String(PRICE_MAX);
       els.priceRange.step = '10000';
@@ -2097,8 +2113,10 @@
 
       els.leg1Date.min = todayISO();
       els.leg1Return.min = todayISO();
-      els.leg1Date.value = daysFromNow(14);
-      els.leg1Return.value = daysFromNow(21);
+      els.leg1Date.value = state.search.depart || daysFromNow(14);
+      els.leg1Return.value = state.search.ret || daysFromNow(21);
+      if (els.leg1From && routeQuery.get('from')) els.leg1From.value = state.search.from;
+      if (els.leg1To && (routeQuery.get('to') || routeQuery.get('city'))) els.leg1To.value = state.search.to;
       els.leg1Date.addEventListener('change', function () {
         if (!els.leg1Date.value) return;
         els.leg1Return.min = els.leg1Date.value;
@@ -2140,25 +2158,28 @@
         return null;
       }
 
+      function openWhatsApp(lines) {
+        var text = lines.filter(Boolean).join('\n');
+        window.location.href = 'https://wa.me/<?= e(cj_whatsapp_number()) ?>?text=' + encodeURIComponent(text);
+      }
+
       els.form.addEventListener('submit', function (event) {
         event.preventDefault();
         var err = validateSearch();
         if (err) { showFormStatus(err, 'error'); return; }
         clearFormStatus();
-        state.search = {
-          from: els.leg1From.value.trim(),
-          to: els.leg1To.value.trim(),
-          depart: els.leg1Date.value,
-          ret: state.tripType === 'round' ? els.leg1Return.value : '',
-          adults: Number(els.adults.value),
-          children: Number(els.children.value),
-          cabin: els.cabin.value
-        };
-        updateResultsHeading();
-        renderResults();
-        els.reviewSection.classList.add('d-none');
-        els.resultsSection.classList.remove('d-none');
-        els.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var tripLabel = state.tripType === 'round' ? 'Round-trip' : state.tripType === 'oneway' ? 'One-way' : 'Multi-city';
+        openWhatsApp([
+          'Hello CJ Travels, I would like to book a flight.',
+          '',
+          'Trip: ' + tripLabel,
+          'From: ' + els.leg1From.value.trim(),
+          'To: ' + els.leg1To.value.trim(),
+          'Departure: ' + els.leg1Date.value,
+          state.tripType === 'round' ? 'Return: ' + els.leg1Return.value : '',
+          'Travellers: ' + travellerSummary(Number(els.adults.value), Number(els.children.value)),
+          'Cabin: ' + els.cabin.value
+        ]);
       });
 
       function travellerSummary(a, c) {
@@ -2175,9 +2196,18 @@
         els.resultsSummary.textContent = tripLabel + ' · ' + dateLabel + ' · ' + s.cabin + ' · ' + travellerSummary(s.adults, s.children);
       }
 
+      function placeKey(value) {
+        return String(value || '').split('(')[0].trim().toLowerCase();
+      }
+      function routeMatches(flight) {
+        if (!flight.from || !flight.to || !state.search || !state.search.from || !state.search.to) return true;
+        return placeKey(flight.from) === placeKey(state.search.from) && placeKey(flight.to) === placeKey(state.search.to);
+      }
+
       function getVisibleFlights() {
         var f = state.filters;
         var filtered = SAMPLE_FLIGHTS.filter(function (flight) {
+          if (!routeMatches(flight)) return false;
           if (f.stops === 'direct' && flight.stops !== 0) return false;
           if (f.stops === 'one' && flight.stops !== 1) return false;
           if (f.stops === 'two' && flight.stops < 2) return false;
@@ -2212,7 +2242,7 @@
         var dayOffset = Math.floor(arrivalTotal / 1440);
         var arrivalTime = formatMinutes(arrivalTotal);
 
-        var detailsHref = 'flights-details.php?id=' + encodeURIComponent(flight.id) +
+        var detailsHref = 'flights-details?id=' + encodeURIComponent(flight.id) +
           '&from=' + encodeURIComponent(state.search.from) +
           '&to=' + encodeURIComponent(state.search.to) +
           '&depart=' + encodeURIComponent(state.search.depart) +
@@ -2234,7 +2264,7 @@
             '</div>' +
             '<div class="fc-price">' +
               '<span class="amount">' + formatMoney(flight.price) + '</span>' +
-              '<span class="per">per adult · sample</span>' +
+              '<span class="per">per adult</span>' +
               '<div class="fc-actions">' +
                 '<a href="' + detailsHref + '" class="btn btn-ghost btn-sm">Details</a>' +
                 '<button type="button" class="btn btn-navy btn-sm js-select" data-flight-id="' + flight.id + '">Select flight</button>' +
@@ -2295,21 +2325,11 @@
           '<div class="detail-item"><span>Travellers</span><strong>' + escapeHTML(travellerSummary(s.adults, s.children)) + '</strong></div>' +
           '<div class="detail-item"><span>Baggage</span><strong>' + escapeHTML(flight.baggage) + '</strong></div>';
 
-        var adultFare = flight.price;
-        var childFare = Math.round(flight.price * 0.75);
-        var adultsTotal = adultFare * s.adults;
-        var childrenTotal = childFare * s.children;
-        var subtotal = adultsTotal + childrenTotal;
-        var taxes = Math.round(subtotal * 0.12);
-        var total = subtotal + taxes;
-
         els.priceSummary.innerHTML =
           '<h3>Price summary</h3>' +
-          '<div class="summary-row"><span>Adults (' + s.adults + ' × ' + formatMoney(adultFare) + ')</span><span>' + formatMoney(adultsTotal) + '</span></div>' +
-          (s.children > 0 ? '<div class="summary-row"><span>Children (' + s.children + ' × ' + formatMoney(childFare) + ')</span><span>' + formatMoney(childrenTotal) + '</span></div>' : '') +
-          '<div class="summary-row"><span>Taxes &amp; fees (estimated)</span><span>' + formatMoney(taxes) + '</span></div>' +
-          '<div class="summary-total"><span>Total<small>Sample estimate</small></span><span>' + formatMoney(total) + '</span></div>' +
-          '<p class="modal-note" style="font-size:11px; color:var(--muted); margin-top:16px;">Prices are illustrative sample data. No payment will be taken and no reservation is created.</p>';
+          '<div class="summary-row"><span>Stored fare</span><span>' + formatMoney(flight.price) + '</span></div>' +
+          '<div class="summary-total"><span>Total</span><span>' + formatMoney(flight.price) + '</span></div>' +
+          '<p class="modal-note" style="font-size:11px; color:var(--muted); margin-top:16px;">Reserve on WhatsApp sends this fare request to CJ Travels.</p>';
 
         els.resultsSection.classList.add('d-none');
         els.reviewSection.classList.remove('d-none');
@@ -2326,9 +2346,67 @@
       els.backToResults.addEventListener('click', returnToResults);
       els.backToResults2.addEventListener('click', returnToResults);
 
+      function catalogBase() {
+        return window.location.pathname.replace(/\/[^\/]*$/, '');
+      }
+
+      function rebuildAirlineFilters() {
+        var airlines = [];
+        state.filters.airlines = new Set();
+        SAMPLE_FLIGHTS.forEach(function (f) { if (airlines.indexOf(f.airline) === -1) airlines.push(f.airline); });
+        airlines.sort();
+        els.airlineFilters.innerHTML = airlines.map(function (name, i) {
+          state.filters.airlines.add(name);
+          return '<div class="form-check"><input class="form-check-input airline-check" type="checkbox" id="airline-' + i + '" value="' + escapeHTML(name) + '" checked /><label class="form-check-label" for="airline-' + i + '">' + escapeHTML(name) + '</label></div>';
+        }).join('');
+        airlineChecks = Array.prototype.slice.call(document.querySelectorAll('.airline-check'));
+        airlineChecks.forEach(function (cb) {
+          cb.addEventListener('change', function () {
+            if (cb.checked) state.filters.airlines.add(cb.value); else state.filters.airlines.delete(cb.value);
+            renderResults();
+          });
+        });
+      }
+
+      function applyLiveFlights(list) {
+        if (!list || !list.length) return;
+        SAMPLE_FLIGHTS = list;
+        PRICE_MIN = Math.min.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; }));
+        PRICE_MAX = Math.max.apply(null, SAMPLE_FLIGHTS.map(function (f) { return f.price; }));
+        els.priceRange.min = String(PRICE_MIN);
+        els.priceRange.max = String(PRICE_MAX);
+        els.priceRange.value = String(PRICE_MAX);
+        els.priceMinHint.textContent = formatMoney(PRICE_MIN);
+        els.priceMaxHint.textContent = formatMoney(PRICE_MAX);
+        state.filters.maxPrice = PRICE_MAX;
+        updatePriceLabel();
+        rebuildAirlineFilters();
+        if (!els.resultsSection.classList.contains('d-none')) renderResults();
+      }
+
+      fetch(catalogBase() + '/api/flights', { headers: { 'Accept': 'application/json' } })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          if (res && res.success && res.data) applyLiveFlights(res.data);
+        })
+        .catch(function () {});
+
       els.proceedBtn.addEventListener('click', function () {
-        els.reviewStatus.className = 'review-status show info';
-        els.reviewStatus.textContent = 'This is a frontend demonstration. Passenger details, payment and ticketing are not available on this page yet — they will be added when the booking engine is connected.';
+        var flight = getFlightById(state.selectedFlightId);
+        if (!flight) return;
+        var s = state.search;
+        openWhatsApp([
+          'Hello CJ Travels, I would like to reserve this flight.',
+          '',
+          'Airline: ' + flight.airline + ' ' + flight.flightNo,
+          'From: ' + s.from,
+          'To: ' + s.to,
+          'Departure: ' + s.depart,
+          s.ret ? 'Return: ' + s.ret : '',
+          'Travellers: ' + travellerSummary(s.adults, s.children),
+          'Cabin: ' + s.cabin,
+          'Listed fare: ' + formatMoney(flight.price)
+        ]);
       });
 
       

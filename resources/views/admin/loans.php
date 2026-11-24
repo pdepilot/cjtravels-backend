@@ -4,7 +4,12 @@
           <div class="page-head">
             <div>
               <h1>Travel Loan Applications</h1>
-              <p>Financing applications, loan status and lending workflows synced with MySQL.</p>
+              <p>Enquiries submitted on the public financing page appear here automatically.</p>
+            </div>
+            <div class="page-head-actions">
+              <button type="button" class="btn btn-gold" id="addLoanBtn">
+                <i class="bi bi-plus-lg"></i> Add enquiry
+              </button>
             </div>
           </div>
           <div class="info-note">
@@ -30,6 +35,7 @@
                 <option value="Awaiting documents">Awaiting documents</option>
                 <option value="Referred to partner">Referred to partner</option>
                 <option value="Draft">Draft</option>
+                <option value="Approved">Approved</option>
               </select>
               <span class="toolbar-count"><strong id="loanCount">0</strong> records</span>
             </div>

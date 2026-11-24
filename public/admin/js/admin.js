@@ -2,7 +2,6 @@
   "use strict";
 
   var STORAGE_KEY_DATA = "travelbookings_admin_data_v1";
-  var STORAGE_KEY_API = "travelbookings_admin_api_v1";
 
   var INITIAL_DATA = {
     customers: [],
@@ -16,113 +15,7 @@
     counts: {},
   };
 
-  var INITIAL_state = {
-    providers: [
-      {
-        id: "fl-amadeus",
-        name: "Amadeus",
-        category: "Flight",
-        baseUrl: "https://test.travel.api.amadeus.com/v2",
-        env: "Sandbox",
-        apiKeyMasked: "••••••••3f9a",
-        secretMasked: "••••••••7b2c",
-        enabled: true,
-        status: "Connected",
-        lastTest: "2025-11-28T09:12:00",
-      },
-      {
-        id: "fl-sabre",
-        name: "Sabre",
-        category: "Flight",
-        baseUrl: "https://api.sabre.com/v2",
-        env: "Production",
-        apiKeyMasked: "••••••••c412",
-        secretMasked: "••••••••9d81",
-        enabled: false,
-        status: "Error",
-        lastTest: "2025-11-25T14:30:00",
-      },
-      {
-        id: "fl-travelport",
-        name: "Travelport",
-        category: "Flight",
-        baseUrl: "https://api.travelport.com/v1",
-        env: "Sandbox",
-        apiKeyMasked: "••••••••ab7d",
-        secretMasked: "",
-        enabled: true,
-        status: "Untested",
-        lastTest: null,
-      },
-      {
-        id: "ht-hotelbeds",
-        name: "Hotelbeds",
-        category: "Hotel",
-        baseUrl: "https://api.test.hotelbeds.com",
-        env: "Sandbox",
-        apiKeyMasked: "••••••••5e21",
-        secretMasked: "••••••••fa63",
-        enabled: true,
-        status: "Connected",
-        lastTest: "2025-11-28T08:45:00",
-      },
-      {
-        id: "ht-expedia",
-        name: "Expedia Rapid",
-        category: "Hotel",
-        baseUrl: "https://test.api.expedia.com",
-        env: "Sandbox",
-        apiKeyMasked: "••••••••7c9d",
-        secretMasked: "••••••••2b4e",
-        enabled: false,
-        status: "Untested",
-        lastTest: null,
-      },
-    ],
-    logs: [
-      {
-        ts: "2025-11-28T09:12:00",
-        provider: "Amadeus",
-        service: "Flight",
-        activity: "Connection test",
-        status: "Success",
-      },
-      {
-        ts: "2025-11-28T08:45:00",
-        provider: "Hotelbeds",
-        service: "Hotel",
-        activity: "Connection test",
-        status: "Success",
-      },
-      {
-        ts: "2025-11-27T16:20:00",
-        provider: "Sabre",
-        service: "Flight",
-        activity: "Provider updated",
-        status: "Success",
-      },
-      {
-        ts: "2025-11-25T14:30:00",
-        provider: "Sabre",
-        service: "Flight",
-        activity: "Connection test",
-        status: "Failed",
-      },
-      {
-        ts: "2025-11-24T11:05:00",
-        provider: "Expedia Rapid",
-        service: "Hotel",
-        activity: "Provider added",
-        status: "Success",
-      },
-    ],
-    editingId: null,
-    editingCategory: "Flight",
-    deleteId: null,
-    testing: {},
-  };
-
-    function loadData() {
+  function loadData() {
     try {
       localStorage.removeItem(STORAGE_KEY_DATA);
     } catch (e) {}
@@ -157,41 +50,17 @@
     });
   }
 
-  function loadApiState() {
-    try {
-      var stored = localStorage.getItem(STORAGE_KEY_API);
-      if (stored) {
-        var parsed = JSON.parse(stored);
-        if (parsed && parsed.providers && parsed.logs) {
-          parsed.editingId = null;
-          parsed.editingCategory = "Flight";
-          parsed.deleteId = null;
-          parsed.testing = {};
-          return parsed;
-        }
-      }
-    } catch (e) {
-      console.warn("Could not read API state from localStorage:", e);
-    }
-    var copy = JSON.parse(JSON.stringify(INITIAL_state));
-    copy.testing = {};
-    return copy;
-  }
-
-  function saveApiState() {
-    try {
-      var toStore = {
-        providers: apiState.providers,
-        logs: apiState.logs,
-      };
-      localStorage.setItem(STORAGE_KEY_API, JSON.stringify(toStore));
-    } catch (e) {
-      console.warn("Could not save API state to localStorage:", e);
-    }
-  }
-
   var DATA = loadData();
-  var apiState = loadApiState();
+  var apiState = {
+    editingId: null,
+    editingCategory: "Flight",
+    deleteId: null,
+    testing: {},
+  };
+
+  try {
+    localStorage.removeItem("travelbookings_admin_api_v1");
+  } catch (e) {}
 
   function $(id) {
     return document.getElementById(id);
@@ -321,7 +190,7 @@
       loans: DATA.loans.length,
       destinations: DATA.destinations.length,
       transactions: DATA.transactions.length,
-      api: apiState.providers.length,
+      api: (DATA.apiProviders || []).length,
     };
     var badges = {
       customers: $("badgeCustomers"),
@@ -393,6 +262,8 @@
         detailItem("Email", record.email) +
         detailItem("Phone", record.phone) +
         detailItem("Country", record.country) +
+        detailItem("City", record.city || "—") +
+        detailItem("Membership", record.tier || "—") +
         detailItem("Joined", formatDate(record.joined)) +
         detailItem("Total bookings", String(record.bookings)) +
         detailItem("Account status", record.status);
@@ -427,6 +298,7 @@
         detailItem("Location", record.location) +
         detailItem("Room type", record.roomType) +
         detailItem("Check-in", formatDate(record.checkIn)) +
+        detailItem("Check-out", formatDate(record.checkOut)) +
         detailItem("Nights", record.nights + " nights") +
         detailItem("Guests", record.guests) +
         detailItem("Amount", formatMoney(record.amount)) +
@@ -445,6 +317,7 @@
         detailItem("Repayment period", record.period) +
         detailItem("Purpose of travel", record.purpose) +
         detailItem("Submitted", formatDate(record.submitted)) +
+        detailItem("Note", record.note || "—") +
         detailItem("Workflow status", record.status);
       note =
         '<p class="modal-note mt-3"><i class="bi bi-shield-exclamation"></i>Travelbookings is not a lender. This status reflects the enquiry workflow only and is not an approval or decline. All financing decisions belong to the independent licensed lending partner.</p>';
@@ -509,6 +382,32 @@
   var editTitle = $("editModalTitle");
   var activeEdit = { kind: null, id: null };
 
+  function customerSelectHTML(id, value) {
+    var options = (DATA.customers || [])
+      .map(function (customer) {
+        var label = (customer.firstName + " " + customer.lastName).trim();
+        return (
+          '<option value="' +
+          escapeHTML(customer.id) +
+          '"' +
+          (customer.id === value ? " selected" : "") +
+          ">" +
+          escapeHTML(label) +
+          "</option>"
+        );
+      })
+      .join("");
+    return (
+      '<div class="col-md-6"><label class="form-label" for="' +
+      id +
+      '">Customer</label><select class="form-select" id="' +
+      id +
+      '">' +
+      options +
+      "</select></div>"
+    );
+  }
+
   function fieldHTML(id, label, value, type) {
     type = type || "text";
     return (
@@ -564,8 +463,15 @@
         fieldHTML("editFirst", "First name", record.firstName) +
         fieldHTML("editLast", "Last name", record.lastName) +
         fieldHTML("editEmail", "Email", record.email, "email") +
-        fieldHTML("editPhone", "Phone", record.phone) +
+        fieldHTML("editPhone", "Phone", record.phone === "—" ? "" : record.phone) +
         fieldHTML("editCountry", "Country", record.country) +
+        fieldHTML("editCity", "City", record.city || "") +
+        selectHTML("editTier", "Membership", record.tier || "Gold member", [
+          "Standard member",
+          "Silver member",
+          "Gold member",
+          "Platinum member",
+        ]) +
         selectHTML("editStatus", "Status", record.status, [
           "Active",
           "Inactive",
@@ -580,7 +486,13 @@
         fieldHTML("editFrom", "From", record.from) +
         fieldHTML("editTo", "To", record.to) +
         fieldHTML("editDate", "Departure date", record.date, "date") +
+        fieldHTML("editTime", "Departure time", record.time || "", "time") +
+        fieldHTML("editArrival", "Arrival time", record.arrival || "", "time") +
+        fieldHTML("editDuration", "Duration", record.duration || "") +
+        fieldHTML("editStops", "Stops", record.stops || "Direct") +
+        fieldHTML("editCabin", "Cabin", record.cabin || "Economy") +
         fieldHTML("editAmount", "Amount (₦)", record.amount, "number") +
+        customerSelectHTML("editFlightCustomer", record.customerId) +
         selectHTML("editStatus", "Status", record.status, [
           "Confirmed",
           "Pending",
@@ -594,9 +506,13 @@
       editFields.innerHTML =
         fieldHTML("editProperty", "Property", record.property) +
         fieldHTML("editLocation", "Location", record.location) +
+        fieldHTML("editRoomType", "Room type", record.roomType || "") +
+        fieldHTML("editGuests", "Guests", record.guests || "") +
         fieldHTML("editCheckIn", "Check-in date", record.checkIn, "date") +
+        fieldHTML("editCheckOut", "Check-out date", record.checkOut || "", "date") +
         fieldHTML("editNights", "Nights", record.nights, "number") +
-        fieldHTML("editAmount", "Amount (₦)", record.amount, "number") +
+        fieldHTML("editAmount", "Total amount (₦)", record.amount, "number") +
+        customerSelectHTML("editHotelCustomer", record.customerId) +
         selectHTML("editStatus", "Status", record.status, [
           "Confirmed",
           "Pending",
@@ -615,11 +531,34 @@
         ) +
         fieldHTML("editPeriod", "Repayment period", record.period) +
         fieldHTML("editPurpose", "Purpose of travel", record.purpose) +
+        fieldHTML("editNote", "Note", record.note || "") +
+        customerSelectHTML("editLoanCustomer", record.customerId) +
         selectHTML("editStatus", "Workflow status", record.status, [
           "In review",
           "Awaiting documents",
           "Referred to partner",
           "Draft",
+          "Approved",
+        ]);
+    }
+    if (kind === "transaction") {
+      editTitle.innerHTML =
+        '<i class="bi bi-credit-card-2-front-fill"></i> Edit transaction';
+      editFields.innerHTML =
+        customerSelectHTML("editTxnCustomer", record.customerId) +
+        fieldHTML("editRelated", "Related booking", record.related === "—" ? "" : record.related) +
+        selectHTML("editMethod", "Payment method", record.method, (function () {
+          var methods = ["Card", "Paystack / Card", "Bank Transfer", "Cash"];
+          if (record.method && methods.indexOf(record.method) === -1) methods.unshift(record.method);
+          return methods;
+        })()) +
+        fieldHTML("editDate", "Date", String(record.date || "").slice(0, 10), "date") +
+        fieldHTML("editAmount", "Amount (₦)", record.amount, "number") +
+        selectHTML("editStatus", "Status", record.status, [
+          "Paid",
+          "Pending",
+          "Refunded",
+          "Failed",
         ]);
     }
     if (kind === "destination") {
@@ -640,6 +579,12 @@
           "Active",
           "Inactive",
         ]) +
+        '<div class="col-12"><label class="form-label" for="editCategories">Travel styles</label><input type="text" class="form-control" id="editCategories" value="' +
+        escapeHTML((record.categories || []).join(", ")) +
+        '" /></div>' +
+        '<div class="col-12"><label class="form-label" for="editImage">Image URL</label><input type="url" class="form-control" id="editImage" value="' +
+        escapeHTML(record.image || "") +
+        '" /></div>' +
         '<div class="col-12"><label class="form-label" for="editBlurb">Short description</label><input type="text" class="form-control" id="editBlurb" value="' +
         escapeHTML(record.blurb || "") +
         '" /></div>';
@@ -661,6 +606,8 @@
         record.email = $("editEmail").value.trim() || record.email;
         record.phone = $("editPhone").value.trim() || record.phone;
         record.country = $("editCountry").value.trim() || record.country;
+        if ($("editCity")) record.city = $("editCity").value.trim() || record.city;
+        if ($("editTier")) record.tier = $("editTier").value;
         if (statusEl) record.status = statusEl.value;
       }
       if (kind === "flight") {
@@ -669,14 +616,28 @@
         record.from = $("editFrom").value.trim() || record.from;
         record.to = $("editTo").value.trim() || record.to;
         record.date = $("editDate").value || record.date;
+        if ($("editTime")) record.time = $("editTime").value || record.time;
+        if ($("editArrival")) record.arrival = $("editArrival").value || record.arrival;
+        if ($("editDuration")) record.duration = $("editDuration").value.trim() || record.duration;
+        if ($("editStops")) record.stops = $("editStops").value.trim() || record.stops;
+        if ($("editCabin")) record.cabin = $("editCabin").value.trim() || record.cabin;
+        if ($("editFlightCustomer")) record.customerId = $("editFlightCustomer").value;
         record.amount = Number($("editAmount").value) || record.amount;
         if (statusEl) record.status = statusEl.value;
       }
       if (kind === "hotel") {
         record.property = $("editProperty").value.trim() || record.property;
         record.location = $("editLocation").value.trim() || record.location;
+        if ($("editRoomType")) record.roomType = $("editRoomType").value.trim() || record.roomType;
+        if ($("editGuests")) record.guests = $("editGuests").value.trim() || record.guests;
         record.checkIn = $("editCheckIn").value || record.checkIn;
+        if ($("editCheckOut")) record.checkOut = $("editCheckOut").value || record.checkOut;
         record.nights = Number($("editNights").value) || record.nights;
+        if (record.checkIn && record.checkOut) {
+          var stayNights = Math.round((new Date(record.checkOut + "T00:00:00") - new Date(record.checkIn + "T00:00:00")) / 86400000);
+          if (stayNights > 0) record.nights = stayNights;
+        }
+        if ($("editHotelCustomer")) record.customerId = $("editHotelCustomer").value;
         record.amount = Number($("editAmount").value) || record.amount;
         if (statusEl) record.status = statusEl.value;
       }
@@ -684,6 +645,16 @@
         record.amount = Number($("editAmount").value) || record.amount;
         record.period = $("editPeriod").value.trim() || record.period;
         record.purpose = $("editPurpose").value.trim() || record.purpose;
+        if ($("editNote")) record.note = $("editNote").value.trim();
+        if ($("editLoanCustomer")) record.customerId = $("editLoanCustomer").value;
+        if (statusEl) record.status = statusEl.value;
+      }
+      if (kind === "transaction") {
+        if ($("editTxnCustomer")) record.customerId = $("editTxnCustomer").value;
+        if ($("editRelated")) record.related = $("editRelated").value.trim() || "—";
+        if ($("editMethod")) record.method = $("editMethod").value;
+        if ($("editDate") && $("editDate").value) record.date = $("editDate").value;
+        record.amount = Number($("editAmount").value) || record.amount;
         if (statusEl) record.status = statusEl.value;
       }
       if (kind === "destination") {
@@ -691,6 +662,13 @@
         record.country = $("editCountry").value.trim() || record.country;
         if ($("editContinent")) record.continent = $("editContinent").value;
         if (statusEl) record.status = statusEl.value;
+        if ($("editCategories")) {
+          record.categories = $("editCategories").value.split(",").map(function (item) {
+            return item.trim();
+          }).filter(Boolean);
+          if (!record.categories.length) record.categories = ["City Breaks"];
+        }
+        if ($("editImage")) record.image = $("editImage").value.trim();
         record.blurb = $("editBlurb").value.trim();
       }
 
@@ -709,6 +687,8 @@
           email: record.email,
           phone: record.phone,
           country: record.country,
+          city: record.city,
+          tier: record.tier,
           status: record.status
         };
       } else if (kind === "flight") {
@@ -718,6 +698,12 @@
           from: record.from,
           to: record.to,
           date: record.date,
+          time: record.time,
+          arrival: record.arrival,
+          duration: record.duration,
+          stops: record.stops,
+          cabin: record.cabin,
+          customerId: record.customerId,
           amount: record.amount,
           status: record.status
         };
@@ -725,8 +711,12 @@
         fieldsToSync = {
           property: record.property,
           location: record.location,
+          roomType: record.roomType,
+          guests: record.guests,
           checkIn: record.checkIn,
+          checkOut: record.checkOut,
           nights: record.nights,
+          customerId: record.customerId,
           amount: record.amount,
           status: record.status
         };
@@ -735,6 +725,17 @@
           amount: record.amount,
           period: record.period,
           purpose: record.purpose,
+          note: record.note,
+          customerId: record.customerId,
+          status: record.status
+        };
+      } else if (kind === "transaction") {
+        fieldsToSync = {
+          customerId: record.customerId,
+          related: record.related === "—" ? "" : record.related,
+          method: record.method,
+          date: String(record.date || "").slice(0, 10),
+          amount: record.amount,
           status: record.status
         };
       } else if (kind === "destination") {
@@ -742,6 +743,8 @@
           city: record.city,
           country: record.country,
           continent: record.continent,
+          categories: record.categories,
+          image: record.image,
           status: record.status,
           blurb: record.blurb
         };
@@ -763,9 +766,12 @@
       })
       .then(function(res) { return res.json(); })
       .then(function(res) {
-        if (res && res.success && res.data) {
+        if (res && res.data) {
           DATA = res.data;
           refreshAfterChange();
+        }
+        if (!res || !res.success) {
+          window.alert((res && (res.error || res.message)) || "Could not save this record.");
         }
       })
       .catch(function(err) {
@@ -789,6 +795,8 @@
       label = record.ref + " · " + record.from + " → " + record.to;
     if (kind === "hotel") label = record.ref + " · " + record.property;
     if (kind === "loan")
+      label = record.ref + " · " + formatMoney(record.amount);
+    if (kind === "transaction")
       label = record.ref + " · " + formatMoney(record.amount);
     if (kind === "destination") label = record.city + ", " + record.country;
     deleteLabel.textContent = label;
@@ -814,6 +822,10 @@
       if (kind === "loan")
         DATA.loans = DATA.loans.filter(function (l) {
           return l.id !== id;
+        });
+      if (kind === "transaction")
+        DATA.transactions = DATA.transactions.filter(function (t) {
+          return t.id !== id;
         });
       if (kind === "destination")
         DATA.destinations = DATA.destinations.filter(function (d) {
@@ -854,6 +866,15 @@
   }
 
   document.addEventListener("click", function (event) {
+    var pagerBtn = event.target.closest("[data-txn-page]");
+    if (pagerBtn && !pagerBtn.disabled) {
+      var targetPage = pagerBtn.getAttribute("data-txn-page");
+      if (targetPage === "prev") txnState.page -= 1;
+      else if (targetPage === "next") txnState.page += 1;
+      else txnState.page = Number(targetPage) || 1;
+      renderTransactions();
+      return;
+    }
     var viewBtn = event.target.closest(".js-view");
     if (viewBtn) {
       openDetail(viewBtn.dataset.kind, viewBtn.dataset.id);
@@ -877,7 +898,7 @@
         if (logoutModal)
           bootstrap.Modal.getOrCreateInstance(logoutModal).show();
       } else if (navName) {
-        window.location.href = navName + ".php";
+        window.location.href = navName + "";
       }
     }
   });
@@ -1066,6 +1087,10 @@
   function renderActivity() {
     var host = $("activityList");
     if (!host) return;
+    if (!DATA.activities || !DATA.activities.length) {
+      host.innerHTML = '<li class="text-muted p-3">No activity recorded yet.</li>';
+      return;
+    }
     host.innerHTML = DATA.activities
       .map(function (item) {
         var tone = item.tone ? " " + item.tone : "";
@@ -1188,6 +1213,8 @@
         " " +
         c.country +
         " " +
+        (c.city || "") +
+        " " +
         c.phone
       ).toLowerCase();
       return hay.indexOf(q) !== -1;
@@ -1217,6 +1244,8 @@
           "</span></td>" +
           '<td data-label="Country"><span class="cell-strong">' +
           escapeHTML(c.country) +
+          '</span><span class="cell-sub">' +
+          escapeHTML(c.city || "") +
           "</span></td>" +
           '<td data-label="Bookings"><span class="cell-mono">' +
           c.bookings +
@@ -1649,20 +1678,37 @@
           DATA = res.data;
           renderDestinations();
           refreshCounts();
+          if (destinationToast) {
+            destinationToast.className = "toast-inline show";
+            destinationToast.innerHTML =
+              '<i class="bi bi-check-circle-fill"></i> ' +
+              escapeHTML(res.message || "Destination added.");
+          }
+          window.setTimeout(function () {
+            var modal = bootstrap.Modal.getInstance(destinationModalEl);
+            if (modal) modal.hide();
+          }, 600);
+          return;
+        }
+        if (destinationToast) {
+          destinationToast.className = "toast-inline error show";
+          destinationToast.innerHTML =
+            '<i class="bi bi-exclamation-circle-fill"></i> ' +
+            escapeHTML((res && (res.error || res.message)) || "Could not add this destination.");
         }
       })
-      .catch(function(err) {
-        console.warn("MySQL sync destination error:", err);
+      .catch(function() {
+        if (destinationToast) {
+          destinationToast.className = "toast-inline error show";
+          destinationToast.innerHTML =
+            '<i class="bi bi-exclamation-circle-fill"></i> Could not reach the server.';
+        }
       });
       if (destinationToast) {
         destinationToast.className = "toast-inline show";
         destinationToast.innerHTML =
-          '<i class="bi bi-check-circle-fill"></i> Destination added successfully!';
+          '<i class="bi bi-check-circle-fill"></i> Saving destination…';
       }
-      window.setTimeout(function () {
-        if (destinationModalEl)
-          bootstrap.Modal.getInstance(destinationModalEl).hide();
-      }, 700);
     });
   }
 
@@ -1677,10 +1723,462 @@
     });
   });
 
+  var customerModalEl = $("customerModal");
+  var customerForm = $("customerForm");
+  var customerToast = $("customerToast");
+
+  function showCustomerToast(type, message) {
+    if (!customerToast) return;
+    customerToast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    customerToast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function openAddCustomer() {
+    if (!customerModalEl || !customerForm) return;
+    customerForm.reset();
+    if ($("custCountry") && !$("custCountry").value) $("custCountry").value = "Nigeria";
+    if ($("custCity") && !$("custCity").value) $("custCity").value = "Lagos";
+    if (customerToast) {
+      customerToast.className = "toast-inline";
+      customerToast.innerHTML = "";
+    }
+    bootstrap.Modal.getOrCreateInstance(customerModalEl).show();
+  }
+
+  if ($("addCustomerBtn")) {
+    $("addCustomerBtn").addEventListener("click", openAddCustomer);
+  }
+
+  var flightModalEl = $("flightModal");
+  var flightToast = $("flightToast");
+
+  function showFlightToast(type, message) {
+    if (!flightToast) return;
+    flightToast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    flightToast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function fillFlightCustomers() {
+    var select = $("flightCustomer");
+    if (!select) return;
+    select.innerHTML = (DATA.customers || [])
+      .map(function (customer) {
+        return (
+          '<option value="' +
+          escapeHTML(customer.id) +
+          '">' +
+          escapeHTML((customer.firstName + " " + customer.lastName).trim()) +
+          "</option>"
+        );
+      })
+      .join("");
+  }
+
+  function openAddFlight() {
+    if (!flightModalEl) return;
+    var form = $("flightForm");
+    if (form) form.reset();
+    fillFlightCustomers();
+    if ($("flightTime") && !$("flightTime").value) $("flightTime").value = "09:00";
+    if ($("flightArrival") && !$("flightArrival").value) $("flightArrival").value = "16:00";
+    if ($("flightDuration") && !$("flightDuration").value) $("flightDuration").value = "7h 00m";
+    if (flightToast) {
+      flightToast.className = "toast-inline";
+      flightToast.innerHTML = "";
+    }
+    bootstrap.Modal.getOrCreateInstance(flightModalEl).show();
+  }
+
+  if ($("addFlightBtn")) {
+    $("addFlightBtn").addEventListener("click", openAddFlight);
+  }
+
+  if ($("saveFlightBtn")) {
+    $("saveFlightBtn").addEventListener("click", function () {
+      var airline = $("flightAirline") ? $("flightAirline").value.trim() : "";
+      var from = $("flightFrom") ? $("flightFrom").value.trim() : "";
+      var to = $("flightTo") ? $("flightTo").value.trim() : "";
+      var date = $("flightDate") ? $("flightDate").value : "";
+      var amount = $("flightAmount") ? Number($("flightAmount").value) : 0;
+      if (!airline || !from || !to || !date || !amount) {
+        showFlightToast("error", "Airline, route, date, and amount are required.");
+        return;
+      }
+
+      var button = $("saveFlightBtn");
+      button.disabled = true;
+      var createUrl = (window.CJ_API_URLS && window.CJ_API_URLS.createFlight) || "/admin/api/flights/create";
+      var token = window.CJ_CSRF_TOKEN || "";
+
+      fetch(createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({
+          _token: token,
+          customerId: $("flightCustomer") ? $("flightCustomer").value : "",
+          airline: airline,
+          flightNo: $("flightNumber") ? $("flightNumber").value.trim() : "",
+          cabin: $("flightCabin") ? $("flightCabin").value : "Economy",
+          from: from,
+          to: to,
+          date: date,
+          time: $("flightTime") ? $("flightTime").value : "",
+          arrival: $("flightArrival") ? $("flightArrival").value : "",
+          duration: $("flightDuration") ? $("flightDuration").value.trim() : "",
+          stops: $("flightStops") ? $("flightStops").value : "Direct",
+          amount: amount,
+          status: $("flightStatus") ? $("flightStatus").value : "Confirmed"
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          button.disabled = false;
+          if (res && res.success && res.data) {
+            DATA = res.data;
+            refreshAfterChange();
+            showFlightToast("success", res.message || "Flight added.");
+            window.setTimeout(function () {
+              var modal = bootstrap.Modal.getInstance(flightModalEl);
+              if (modal) modal.hide();
+            }, 600);
+            return;
+          }
+          showFlightToast("error", (res && (res.error || res.message)) || "Could not add this flight.");
+        })
+        .catch(function () {
+          button.disabled = false;
+          showFlightToast("error", "Could not reach the server.");
+        });
+    });
+  }
+
+  var hotelModalEl = $("hotelModal");
+  var hotelToast = $("hotelToast");
+
+  function showHotelToast(type, message) {
+    if (!hotelToast) return;
+    hotelToast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    hotelToast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function fillHotelCustomers() {
+    var select = $("hotelCustomer");
+    if (!select) return;
+    select.innerHTML = (DATA.customers || [])
+      .map(function (customer) {
+        return (
+          '<option value="' +
+          escapeHTML(customer.id) +
+          '">' +
+          escapeHTML((customer.firstName + " " + customer.lastName).trim()) +
+          "</option>"
+        );
+      })
+      .join("");
+  }
+
+  function openAddHotel() {
+    if (!hotelModalEl) return;
+    var form = $("hotelForm");
+    if (form) form.reset();
+    fillHotelCustomers();
+    if ($("hotelRoomType") && !$("hotelRoomType").value) $("hotelRoomType").value = "Deluxe Room";
+    if ($("hotelGuests")) $("hotelGuests").value = "2";
+    if (hotelToast) {
+      hotelToast.className = "toast-inline";
+      hotelToast.innerHTML = "";
+    }
+    bootstrap.Modal.getOrCreateInstance(hotelModalEl).show();
+  }
+
+  if ($("addHotelBtn")) {
+    $("addHotelBtn").addEventListener("click", openAddHotel);
+  }
+
+  if ($("saveHotelBtn")) {
+    $("saveHotelBtn").addEventListener("click", function () {
+      var property = $("hotelProperty") ? $("hotelProperty").value.trim() : "";
+      var location = $("hotelLocation") ? $("hotelLocation").value.trim() : "";
+      var checkIn = $("hotelCheckIn") ? $("hotelCheckIn").value : "";
+      var checkOut = $("hotelCheckOut") ? $("hotelCheckOut").value : "";
+      var amount = $("hotelAmount") ? Number($("hotelAmount").value) : 0;
+      if (!property || !location || !checkIn || !checkOut || !amount) {
+        showHotelToast("error", "Property, location, dates, and amount are required.");
+        return;
+      }
+      if (checkOut <= checkIn) {
+        showHotelToast("error", "Check-out must be after check-in.");
+        return;
+      }
+
+      var button = $("saveHotelBtn");
+      button.disabled = true;
+      var createUrl = (window.CJ_API_URLS && window.CJ_API_URLS.createHotel) || "/admin/api/hotels/create";
+      var token = window.CJ_CSRF_TOKEN || "";
+
+      fetch(createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({
+          _token: token,
+          customerId: $("hotelCustomer") ? $("hotelCustomer").value : "",
+          property: property,
+          location: location,
+          roomType: $("hotelRoomType") ? $("hotelRoomType").value.trim() : "",
+          guests: $("hotelGuests") ? $("hotelGuests").value : "2",
+          checkIn: checkIn,
+          checkOut: checkOut,
+          amount: amount,
+          status: $("hotelStatus") ? $("hotelStatus").value : "Confirmed"
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          button.disabled = false;
+          if (res && res.success && res.data) {
+            DATA = res.data;
+            refreshAfterChange();
+            showHotelToast("success", res.message || "Hotel added.");
+            window.setTimeout(function () {
+              var modal = bootstrap.Modal.getInstance(hotelModalEl);
+              if (modal) modal.hide();
+            }, 600);
+            return;
+          }
+          showHotelToast("error", (res && (res.error || res.message)) || "Could not add this hotel.");
+        })
+        .catch(function () {
+          button.disabled = false;
+          showHotelToast("error", "Could not reach the server.");
+        });
+    });
+  }
+
+  var loanModalEl = $("loanModal");
+  var loanToast = $("loanToast");
+
+  function showLoanToast(type, message) {
+    if (!loanToast) return;
+    loanToast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    loanToast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function fillLoanCustomers() {
+    var select = $("loanCustomer");
+    if (!select) return;
+    select.innerHTML = (DATA.customers || [])
+      .map(function (customer) {
+        return (
+          '<option value="' +
+          escapeHTML(customer.id) +
+          '">' +
+          escapeHTML((customer.firstName + " " + customer.lastName).trim()) +
+          "</option>"
+        );
+      })
+      .join("");
+  }
+
+  function openAddLoan() {
+    if (!loanModalEl) return;
+    var form = $("loanForm");
+    if (form) form.reset();
+    fillLoanCustomers();
+    if ($("loanPeriod")) $("loanPeriod").value = "6 months";
+    if (loanToast) {
+      loanToast.className = "toast-inline";
+      loanToast.innerHTML = "";
+    }
+    bootstrap.Modal.getOrCreateInstance(loanModalEl).show();
+  }
+
+  if ($("addLoanBtn")) {
+    $("addLoanBtn").addEventListener("click", openAddLoan);
+  }
+
+  if ($("saveLoanBtn")) {
+    $("saveLoanBtn").addEventListener("click", function () {
+      var amount = $("loanAmount") ? Number($("loanAmount").value) : 0;
+      var purpose = $("loanPurpose") ? $("loanPurpose").value.trim() : "";
+      var period = $("loanPeriod") ? $("loanPeriod").value : "";
+      if (!amount || !purpose || !period) {
+        showLoanToast("error", "Amount, period, and purpose are required.");
+        return;
+      }
+
+      var button = $("saveLoanBtn");
+      button.disabled = true;
+      var createUrl = (window.CJ_API_URLS && window.CJ_API_URLS.createLoan) || "/admin/api/loans/create";
+      var token = window.CJ_CSRF_TOKEN || "";
+
+      fetch(createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({
+          _token: token,
+          customerId: $("loanCustomer") ? $("loanCustomer").value : "",
+          amount: amount,
+          period: period,
+          purpose: purpose,
+          note: $("loanNote") ? $("loanNote").value.trim() : "",
+          status: $("loanStatus") ? $("loanStatus").value : "In review"
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          button.disabled = false;
+          if (res && res.success && res.data) {
+            DATA = res.data;
+            refreshAfterChange();
+            showLoanToast("success", res.message || "Enquiry added.");
+            window.setTimeout(function () {
+              var modal = bootstrap.Modal.getInstance(loanModalEl);
+              if (modal) modal.hide();
+            }, 600);
+            return;
+          }
+          showLoanToast("error", (res && (res.error || res.message)) || "Could not add this enquiry.");
+        })
+        .catch(function () {
+          button.disabled = false;
+          showLoanToast("error", "Could not reach the server.");
+        });
+    });
+  }
+
+  if ($("saveCustomerBtn")) {
+    $("saveCustomerBtn").addEventListener("click", function () {
+      var first = $("custFirst") ? $("custFirst").value.trim() : "";
+      var last = $("custLast") ? $("custLast").value.trim() : "";
+      var email = $("custEmail") ? $("custEmail").value.trim() : "";
+      if (!first || !last || !email) {
+        showCustomerToast("error", "First name, last name, and email are required.");
+        return;
+      }
+
+      var button = $("saveCustomerBtn");
+      button.disabled = true;
+      var createUrl = (window.CJ_API_URLS && window.CJ_API_URLS.createCustomer) || "/admin/api/customers/create";
+      var token = window.CJ_CSRF_TOKEN || "";
+
+      fetch(createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({
+          _token: token,
+          firstName: first,
+          lastName: last,
+          email: email,
+          phone: $("custPhone") ? $("custPhone").value.trim() : "",
+          country: $("custCountry") ? $("custCountry").value.trim() : "",
+          city: $("custCity") ? $("custCity").value.trim() : "",
+          tier: $("custTier") ? $("custTier").value : "Standard member",
+          status: $("custStatus") ? $("custStatus").value : "Active"
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          button.disabled = false;
+          if (res && res.success && res.data) {
+            DATA = res.data;
+            refreshAfterChange();
+            showCustomerToast("success", res.message || "Customer added.");
+            window.setTimeout(function () {
+              var modal = bootstrap.Modal.getInstance(customerModalEl);
+              if (modal) modal.hide();
+            }, 600);
+            return;
+          }
+          showCustomerToast("error", (res && (res.error || res.message)) || "Could not add this customer.");
+        })
+        .catch(function () {
+          button.disabled = false;
+          showCustomerToast("error", "Could not reach the server.");
+        });
+    });
+  }
+
   /* =========================================================
      PAGE 7: TRANSACTIONS
      ========================================================= */
-  var txnState = { query: "", status: "" };
+  var txnPageSize = 5;
+  var txnState = { query: "", status: "", page: 1 };
+
+  function renderTxnPager(total, pages) {
+    var host = $("txnPager");
+    if (!host) return;
+    if (!total) {
+      host.hidden = true;
+      host.innerHTML = "";
+      return;
+    }
+    host.hidden = false;
+    var start = (txnState.page - 1) * txnPageSize + 1;
+    var end = Math.min(total, txnState.page * txnPageSize);
+    var buttons =
+      '<button type="button" class="pager-btn" data-txn-page="prev"' +
+      (txnState.page <= 1 ? " disabled" : "") +
+      ">Previous</button>";
+    for (var i = 1; i <= pages; i++) {
+      buttons +=
+        '<button type="button" class="pager-btn' +
+        (i === txnState.page ? " active" : "") +
+        '" data-txn-page="' +
+        i +
+        '"' +
+        (i === txnState.page ? ' aria-current="page"' : "") +
+        ">" +
+        i +
+        "</button>";
+    }
+    buttons +=
+      '<button type="button" class="pager-btn" data-txn-page="next"' +
+      (txnState.page >= pages ? " disabled" : "") +
+      ">Next</button>";
+    host.innerHTML =
+      '<span class="pager-meta">Showing ' +
+      start +
+      "–" +
+      end +
+      " of " +
+      total +
+      "</span>" +
+      '<div class="pager-controls">' +
+      buttons +
+      "</div>";
+  }
 
   function renderTransactions() {
     var host = $("transactionsBody");
@@ -1701,12 +2199,20 @@
       return hay.indexOf(q) !== -1;
     });
     if ($("txnCount")) $("txnCount").textContent = String(filtered.length);
-    if (!filtered.length) {
+    var pages = Math.max(1, Math.ceil(filtered.length / txnPageSize));
+    if (txnState.page > pages) txnState.page = pages;
+    if (txnState.page < 1) txnState.page = 1;
+    var pageRows = filtered.slice(
+      (txnState.page - 1) * txnPageSize,
+      txnState.page * txnPageSize
+    );
+    renderTxnPager(filtered.length, pages);
+    if (!pageRows.length) {
       host.innerHTML = emptyRow(8, "No transactions match this search.");
       return;
     }
 
-    host.innerHTML = filtered
+    host.innerHTML = pageRows
       .map(function (t) {
         return (
           "<tr>" +
@@ -1731,13 +2237,124 @@
           '<td data-label="Status">' +
           statusPill(t.status) +
           "</td>" +
-          '<td class="text-end"><div class="row-actions"><button type="button" class="btn btn-ghost btn-icon js-view" data-kind="transaction" data-id="' +
+          '<td class="text-end"><div class="row-actions">' +
+          '<button type="button" class="btn btn-ghost btn-icon js-view" data-kind="transaction" data-id="' +
           escapeHTML(t.id) +
-          '" aria-label="View transaction"><i class="bi bi-eye"></i></button></div></td>' +
+          '" aria-label="View transaction"><i class="bi bi-eye"></i></button>' +
+          '<button type="button" class="btn btn-soft btn-icon js-edit" data-kind="transaction" data-id="' +
+          escapeHTML(t.id) +
+          '" aria-label="Edit transaction"><i class="bi bi-pencil"></i></button>' +
+          '<button type="button" class="btn btn-danger-soft btn-icon js-delete" data-kind="transaction" data-id="' +
+          escapeHTML(t.id) +
+          '" aria-label="Delete transaction"><i class="bi bi-trash3"></i></button>' +
+          "</div></td>" +
           "</tr>"
         );
       })
       .join("");
+  }
+
+  var transactionModalEl = $("transactionModal");
+  var txnToast = $("txnToast");
+
+  function showTxnToast(type, message) {
+    if (!txnToast) return;
+    txnToast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    txnToast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function fillTxnCustomers() {
+    var select = $("txnCustomer");
+    if (!select) return;
+    select.innerHTML = (DATA.customers || [])
+      .map(function (customer) {
+        return (
+          '<option value="' +
+          escapeHTML(customer.id) +
+          '">' +
+          escapeHTML((customer.firstName + " " + customer.lastName).trim()) +
+          "</option>"
+        );
+      })
+      .join("");
+  }
+
+  function openAddTransaction() {
+    if (!transactionModalEl) return;
+    var form = $("transactionForm");
+    if (form) form.reset();
+    fillTxnCustomers();
+    if ($("txnDate")) $("txnDate").value = new Date().toISOString().slice(0, 10);
+    if ($("txnMethod")) $("txnMethod").value = "Card";
+    if ($("txnStatus")) $("txnStatus").value = "Paid";
+    if (txnToast) {
+      txnToast.className = "toast-inline";
+      txnToast.innerHTML = "";
+    }
+    bootstrap.Modal.getOrCreateInstance(transactionModalEl).show();
+  }
+
+  if ($("addTransactionBtn")) {
+    $("addTransactionBtn").addEventListener("click", openAddTransaction);
+  }
+
+  if ($("saveTransactionBtn")) {
+    $("saveTransactionBtn").addEventListener("click", function () {
+      var amount = $("txnAmount") ? Number($("txnAmount").value) : 0;
+      var method = $("txnMethod") ? $("txnMethod").value : "";
+      var customerId = $("txnCustomer") ? $("txnCustomer").value : "";
+      if (!customerId || !amount || !method) {
+        showTxnToast("error", "Customer, amount, and payment method are required.");
+        return;
+      }
+
+      var button = $("saveTransactionBtn");
+      button.disabled = true;
+      var createUrl = (window.CJ_API_URLS && window.CJ_API_URLS.createTransaction) || "/admin/api/transactions/create";
+      var token = window.CJ_CSRF_TOKEN || "";
+
+      fetch(createUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": token,
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: JSON.stringify({
+          _token: token,
+          customerId: customerId,
+          amount: amount,
+          method: method,
+          date: $("txnDate") ? $("txnDate").value : "",
+          status: $("txnStatus") ? $("txnStatus").value : "Paid",
+          related: $("txnRelated") ? $("txnRelated").value.trim() : ""
+        })
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          button.disabled = false;
+          if (res && res.success && res.data) {
+            DATA = res.data;
+            txnState.page = 1;
+            refreshAfterChange();
+            showTxnToast("success", res.message || "Transaction added.");
+            window.setTimeout(function () {
+              var modal = bootstrap.Modal.getInstance(transactionModalEl);
+              if (modal) modal.hide();
+            }, 600);
+            return;
+          }
+          showTxnToast("error", (res && (res.error || res.message)) || "Could not add this transaction.");
+        })
+        .catch(function () {
+          button.disabled = false;
+          showTxnToast("error", "Could not reach the server.");
+        });
+    });
   }
 
   /* =========================================================
@@ -1764,8 +2381,19 @@
       $("reportRevenue").textContent = shortMoney(paidRevenue);
     if ($("reportLoanValue"))
       $("reportLoanValue").textContent = shortMoney(loanValue);
+    if ($("reportUpdated")) {
+      $("reportUpdated").textContent =
+        " Last refreshed " +
+        new Date().toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }) +
+        ".";
+    }
 
     renderBookingChart("reportChart", "reportChartLabels");
+    renderReportPayments();
 
     var counts = {};
     DATA.flights.forEach(function (f) {
@@ -1831,47 +2459,50 @@
       .join("");
   }
 
-  if ($("exportDemoBtn")) {
-    $("exportDemoBtn").addEventListener("click", function () {
-      if (!detailModalEl || !detailTitle || !detailBody) return;
-      detailTitle.innerHTML = '<i class="bi bi-download"></i> Export report';
-      detailBody.innerHTML =
-        '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;">Report exports are not available in this demonstration console.</p>' +
-        '<p class="modal-note mb-0"><i class="bi bi-info-circle"></i>CSV and PDF export will be enabled once reporting is connected to the backend. No file has been generated.</p>';
-      bootstrap.Modal.getOrCreateInstance(detailModalEl).show();
+  function renderReportPayments() {
+    var host = $("reportPaymentsBody");
+    if (!host) return;
+    var totals = {};
+    ["Paid", "Pending", "Refunded", "Failed"].forEach(function (status) {
+      totals[status] = { count: 0, amount: 0 };
     });
+    (DATA.transactions || []).forEach(function (transaction) {
+      var status = totals[transaction.status] ? transaction.status : "Other";
+      if (!totals[status]) totals[status] = { count: 0, amount: 0 };
+      totals[status].count += 1;
+      totals[status].amount += Number(transaction.amount) || 0;
+    });
+    var statuses = Object.keys(totals).filter(function (status) {
+      return totals[status].count > 0;
+    });
+    if (!statuses.length) {
+      host.innerHTML = emptyRow(3, "No payments have been recorded yet.");
+      return;
+    }
+    host.innerHTML = statuses
+      .map(function (status) {
+        return (
+          "<tr>" +
+          '<td data-label="Status">' +
+          statusPill(status) +
+          "</td>" +
+          '<td data-label="Transactions"><span class="cell-strong">' +
+          totals[status].count +
+          "</span></td>" +
+          '<td data-label="Amount"><span class="cell-mono">' +
+          escapeHTML(formatMoney(totals[status].amount)) +
+          "</span></td>" +
+          "</tr>"
+        );
+      })
+      .join("");
   }
 
-  /* =========================================================
-     PAGE 9: WEBSITE SETTINGS
-     ========================================================= */
-  if ($("saveSettingsBtn")) {
-    $("saveSettingsBtn").addEventListener("click", function () {
-      var toast = $("settingsToast");
-      if (toast) {
-        toast.className = "toast-inline show";
-        toast.innerHTML =
-          '<i class="bi bi-info-circle"></i> Demonstration only — settings were not saved anywhere.';
-      }
-    });
-  }
-
-  if ($("resetSettingsBtn")) {
-    $("resetSettingsBtn").addEventListener("click", function () {
-      if ($("setSiteName")) $("setSiteName").value = "Travelbookings";
-      if ($("setSupportEmail"))
-        $("setSupportEmail").value = "hello@travelbookings.ng";
-      if ($("setSupportPhone"))
-        $("setSupportPhone").value = "+234 812 345 6789";
-      if ($("setCurrency")) $("setCurrency").value = "NGN";
-      if ($("setTagline"))
-        $("setTagline").value = "Your next journey, beautifully booked.";
-      var toast = $("settingsToast");
-      if (toast) {
-        toast.className = "toast-inline show";
-        toast.innerHTML =
-          '<i class="bi bi-arrow-counterclockwise"></i> Fields reset to their default values (demo).';
-      }
+  if ($("exportReportBtn")) {
+    $("exportReportBtn").addEventListener("click", function () {
+      window.location.href =
+        (window.CJ_API_URLS && window.CJ_API_URLS.exportReport) ||
+        "/admin/reports/export";
     });
   }
 
@@ -1905,11 +2536,41 @@
     badge: $("badgeApi"),
   };
 
+  function apiProviders() {
+    return DATA.apiProviders || [];
+  }
+
   function getProvider(id) {
-    for (var i = 0; i < apiState.providers.length; i++) {
-      if (apiState.providers[i].id === id) return apiState.providers[i];
+    var providers = apiProviders();
+    for (var i = 0; i < providers.length; i++) {
+      if (providers[i].id === id) return providers[i];
     }
     return null;
+  }
+
+  function showApiToast(type, message) {
+    var toast = $("apiToast");
+    if (!toast) return;
+    toast.className = "toast-inline show" + (type === "error" ? " error" : "");
+    toast.innerHTML =
+      '<i class="bi ' +
+      (type === "error" ? "bi-exclamation-circle-fill" : "bi-check-circle-fill") +
+      '"></i> ' +
+      escapeHTML(message);
+  }
+
+  function postApi(url, payload) {
+    var token = window.CJ_CSRF_TOKEN || "";
+    return fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-CSRF-TOKEN": token,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(Object.assign({ _token: token }, payload))
+    }).then(function (res) { return res.json(); });
   }
 
   function maskValue(raw) {
@@ -1976,7 +2637,7 @@
       escapeHTML(p.category) +
       "</span></td>" +
       '<td data-label="Environment"><span class="api-env-pill api-env-' +
-      p.env.toLowerCase() +
+      escapeHTML(String(p.env || "Sandbox").toLowerCase()) +
       '">' +
       escapeHTML(p.env) +
       "</span></td>" +
@@ -2009,10 +2670,10 @@
   }
 
   function renderProviders() {
-    var flights = apiState.providers.filter(function (p) {
+    var flights = apiProviders().filter(function (p) {
       return p.category === "Flight";
     });
-    var hotels = apiState.providers.filter(function (p) {
+    var hotels = apiProviders().filter(function (p) {
       return p.category === "Hotel";
     });
     if (apiEls.flightBody)
@@ -2030,12 +2691,12 @@
       apiEls.hotelCount.textContent =
         hotels.length + (hotels.length === 1 ? " provider" : " providers");
     if (apiEls.badge)
-      apiEls.badge.textContent = String(apiState.providers.length);
+      apiEls.badge.textContent = String(apiProviders().length);
   }
 
   function renderLogs() {
     if (!apiEls.logBody) return;
-    var sorted = apiState.logs.slice().sort(function (a, b) {
+    var sorted = (DATA.apiLogs || []).slice().sort(function (a, b) {
       return new Date(b.ts) - new Date(a.ts);
     });
     if (apiEls.logCount)
@@ -2094,18 +2755,6 @@
     refreshCounts();
   }
 
-  function addLog(providerName, service, activity, status) {
-    apiState.logs.unshift({
-      ts: new Date().toISOString(),
-      provider: providerName,
-      service: service,
-      activity: activity,
-      status: status,
-    });
-    if (apiState.logs.length > 60) apiState.logs.length = 60;
-    saveApiState();
-  }
-
   function openAdd(category) {
     if (!apiEls.modalEl) return;
     apiState.editingId = null;
@@ -2129,6 +2778,10 @@
     if (apiEls.enabledCheck) apiEls.enabledCheck.checked = true;
     if (apiEls.keyHint) apiEls.keyHint.hidden = true;
     if (apiEls.secretHint) apiEls.secretHint.hidden = true;
+    if ($("apiToast")) {
+      $("apiToast").className = "toast-inline";
+      $("apiToast").innerHTML = "";
+    }
     clearApiErrors();
     resetApiToggles();
     bootstrap.Modal.getOrCreateInstance(apiEls.modalEl).show();
@@ -2158,6 +2811,10 @@
     if (apiEls.enabledCheck) apiEls.enabledCheck.checked = p.enabled;
     if (apiEls.keyHint) apiEls.keyHint.hidden = false;
     if (apiEls.secretHint) apiEls.secretHint.hidden = false;
+    if ($("apiToast")) {
+      $("apiToast").className = "toast-inline";
+      $("apiToast").innerHTML = "";
+    }
     clearApiErrors();
     resetApiToggles();
     bootstrap.Modal.getOrCreateInstance(apiEls.modalEl).show();
@@ -2209,37 +2866,39 @@
     } else if (apiEls.keyInput) apiEls.keyInput.classList.remove("is-invalid");
     if (!valid) return;
 
-    if (isEdit) {
-      var p = getProvider(apiState.editingId);
-      if (p) {
-        p.name = name;
-        p.baseUrl = url;
-        p.env = env;
-        p.enabled = enabled;
-        if (key) p.apiKeyMasked = maskValue(key);
-        if (secret) p.secretMasked = maskValue(secret);
-        addLog(p.name, p.category, "Provider updated", "Success");
-      }
-    } else {
-      apiState.providers.push({
-        id: "api-" + Date.now(),
-        name: name,
-        category: apiState.editingCategory,
-        baseUrl: url,
-        env: env,
-        apiKeyMasked: maskValue(key),
-        secretMasked: secret ? maskValue(secret) : "",
-        enabled: enabled,
-        status: "Untested",
-        lastTest: null,
+    var saveUrl = (window.CJ_API_URLS && window.CJ_API_URLS.saveProvider) || "/admin/api/providers/save";
+    if (apiEls.saveBtn) apiEls.saveBtn.disabled = true;
+    postApi(saveUrl, {
+      id: isEdit ? apiState.editingId : "",
+      name: name,
+      category: isEdit && getProvider(apiState.editingId)
+        ? getProvider(apiState.editingId).category
+        : apiState.editingCategory,
+      baseUrl: url,
+      env: env,
+      enabled: enabled,
+      apiKey: key,
+      apiSecret: secret
+    })
+      .then(function (res) {
+        if (apiEls.saveBtn) apiEls.saveBtn.disabled = false;
+        key = "";
+        secret = "";
+        if (res && res.success && res.data) {
+          DATA = res.data;
+          refreshAfterChange();
+          if (apiEls.modalEl) {
+            var modal = bootstrap.Modal.getInstance(apiEls.modalEl);
+            if (modal) modal.hide();
+          }
+          return;
+        }
+        showApiToast("error", (res && (res.error || res.message)) || "Could not save this provider.");
+      })
+      .catch(function () {
+        if (apiEls.saveBtn) apiEls.saveBtn.disabled = false;
+        showApiToast("error", "Could not reach the server.");
       });
-      addLog(name, apiState.editingCategory, "Provider added", "Success");
-    }
-    key = null;
-    secret = null;
-    saveApiState();
-    if (apiEls.modalEl) bootstrap.Modal.getInstance(apiEls.modalEl).hide();
-    renderAllApi();
   }
 
   function testConnection(id) {
@@ -2247,20 +2906,21 @@
     if (!p || apiState.testing[id]) return;
     apiState.testing[id] = true;
     renderProviders();
-    window.setTimeout(function () {
-      var success = Math.random() < 0.7;
-      p.status = success ? "Connected" : "Error";
-      p.lastTest = new Date().toISOString();
-      addLog(
-        p.name,
-        p.category,
-        "Connection test",
-        success ? "Success" : "Failed",
-      );
-      delete apiState.testing[id];
-      saveApiState();
-      renderAllApi();
-    }, 1200);
+    var testUrl = (window.CJ_API_URLS && window.CJ_API_URLS.testProvider) || "/admin/api/providers/test";
+    postApi(testUrl, { id: id })
+      .then(function (res) {
+        delete apiState.testing[id];
+        if (res && res.data) {
+          DATA = res.data;
+          refreshAfterChange();
+        } else {
+          renderAllApi();
+        }
+      })
+      .catch(function () {
+        delete apiState.testing[id];
+        renderAllApi();
+      });
   }
 
   function openDeleteApi(id) {
@@ -2274,17 +2934,28 @@
   function confirmDeleteApi() {
     var id = apiState.deleteId;
     if (!id) return;
-    var p = getProvider(id);
-    if (p) {
-      addLog(p.name, p.category, "Provider removed", "Success");
-      apiState.providers = apiState.providers.filter(function (x) {
-        return x.id !== id;
+    var deleteUrl = (window.CJ_API_URLS && window.CJ_API_URLS.deleteProvider) || "/admin/api/providers/delete";
+    var button = apiEls.deleteConfirm;
+    if (button) button.disabled = true;
+    postApi(deleteUrl, { id: id })
+      .then(function (res) {
+        if (button) button.disabled = false;
+        apiState.deleteId = null;
+        if (res && res.success && res.data) {
+          DATA = res.data;
+          if (apiEls.deleteEl) {
+            var modal = bootstrap.Modal.getInstance(apiEls.deleteEl);
+            if (modal) modal.hide();
+          }
+          refreshAfterChange();
+          return;
+        }
+        window.alert((res && (res.error || res.message)) || "Could not remove this provider.");
+      })
+      .catch(function () {
+        if (button) button.disabled = false;
+        window.alert("Could not reach the server.");
       });
-      saveApiState();
-    }
-    apiState.deleteId = null;
-    if (apiEls.deleteEl) bootstrap.Modal.getInstance(apiEls.deleteEl).hide();
-    renderAllApi();
   }
 
   document.addEventListener("click", function (event) {
@@ -2344,8 +3015,7 @@
   var refreshBtn = document.getElementById("apiRefreshBtn");
   if (refreshBtn)
     refreshBtn.addEventListener("click", function () {
-      apiState.testing = {};
-      renderAllApi();
+      syncLiveMySQLData();
     });
 
   /* =========================================================
@@ -2357,11 +3027,13 @@
     if (input)
       input.addEventListener("input", function () {
         stateObj.query = input.value;
+        if (typeof stateObj.page === "number") stateObj.page = 1;
         renderFn();
       });
     if (filter)
       filter.addEventListener("change", function () {
         stateObj.status = filter.value;
+        if (typeof stateObj.page === "number") stateObj.page = 1;
         renderFn();
       });
   }
@@ -2391,22 +3063,36 @@
   if ($("notificationsBtn")) {
     $("notificationsBtn").addEventListener("click", function () {
       if (!detailModalEl || !detailTitle || !detailBody) return;
+      var items = DATA.activities || [];
       detailTitle.innerHTML = '<i class="bi bi-bell-fill"></i> Notifications';
-      detailBody.innerHTML =
-        '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;line-height:1.7;">Three demonstration alerts:</p>' +
-        '<ul class="activity-list">' +
-        '<li class="activity-item"><span class="activity-icon green"><i class="bi bi-check2-circle"></i></span><div class="activity-body"><strong>Flight booking confirmed</strong><span>TBF-2201 · Adaeze Okonkwo</span></div><span class="activity-time">18m</span></li>' +
-        '<li class="activity-item"><span class="activity-icon gold"><i class="bi bi-credit-card-2-front-fill"></i></span><div class="activity-body"><strong>Payment received</strong><span>PAY-9005 · ₦875,000</span></div><span class="activity-time">1h</span></li>' +
-        '<li class="activity-item"><span class="activity-icon violet"><i class="bi bi-cash-coin"></i></span><div class="activity-body"><strong>Financing enquiry submitted</strong><span>TBLN-0454 · Fatima Al-Hassan</span></div><span class="activity-time">3h</span></li>' +
-        "</ul>" +
-        '<p class="modal-note mt-3"><i class="bi bi-info-circle"></i>Alerts are demonstration data and are not generated by real activity.</p>';
+      detailBody.innerHTML = items.length
+        ? '<p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;line-height:1.7;">Latest activity saved in the database.</p>' +
+          '<ul class="activity-list">' +
+          items.map(function (item) {
+            var tone = item.tone ? " " + item.tone : "";
+            return (
+              '<li class="activity-item"><span class="activity-icon' +
+              tone +
+              '"><i class="bi ' +
+              escapeHTML(item.icon || "bi-bell-fill") +
+              '"></i></span><div class="activity-body"><strong>' +
+              escapeHTML(item.title) +
+              "</strong><span>" +
+              escapeHTML(item.text) +
+              "</span></div><span class=\"activity-time\">" +
+              escapeHTML(item.time) +
+              "</span></li>"
+            );
+          }).join("") +
+          "</ul>"
+        : '<p style="font-size:14px;color:var(--ink-soft);margin:0;">No activity has been recorded yet.</p>';
       bootstrap.Modal.getOrCreateInstance(detailModalEl).show();
     });
   }
 
   if ($("helpBtn")) {
     $("helpBtn").addEventListener("click", function () {
-      window.location.href = "../contact.php";
+      window.location.href = "../contact";
     });
   }
 
@@ -2424,6 +3110,7 @@
     if ($("destinationsGrid")) renderDestinations();
     if ($("transactionsBody")) renderTransactions();
     if ($("reportChart")) renderReports();
+    if ($("flightProvidersBody") || $("hotelProvidersBody")) renderAllApi();
   }
 
   function initPage() {
@@ -2463,6 +3150,12 @@
 
     // API Integrations page
     if (apiEls.flightBody || apiEls.hotelBody) renderAllApi();
+
+    if (window.CJ_API_URLS && window.CJ_API_URLS.liveData) {
+      window.setInterval(function () {
+        if (!document.hidden) syncLiveMySQLData();
+      }, 8000);
+    }
   }
 
   if (document.readyState === "loading") {

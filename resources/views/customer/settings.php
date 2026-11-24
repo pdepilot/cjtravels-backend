@@ -99,26 +99,7 @@
                 </div>
               </div>
 
-              <div class="row g-3 mt-2">
-                <div class="col-md-4">
-                  <label class="form-label" for="currentPass">Current password</label>
-                  <input type="password" class="form-control" id="currentPass" placeholder="••••••••" />
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label" for="newPass">New password</label>
-                  <input type="password" class="form-control" id="newPass" placeholder="••••••••" />
-                </div>
-                <div class="col-md-4">
-                  <label class="form-label" for="confirmPass">Confirm new password</label>
-                  <input type="password" class="form-control" id="confirmPass" placeholder="••••••••" />
-                </div>
-              </div>
-
-              <div class="mt-4">
-                <button type="button" class="btn btn-primary" onclick="alert('Security preferences saved (demo).')">
-                  Update security settings
-                </button>
-              </div>
+              <p class="text-muted mb-0" style="font-size:0.9rem;">Customer sign-in is not stored on this account. Contact details and passport fields on the profile page are the records saved in the database.</p>
             </div>
           </div>
         </section>

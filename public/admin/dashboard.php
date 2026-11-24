@@ -26,57 +26,57 @@
 
     <!-- FLOATING SIDE NAV -->
     <nav class="float-nav" id="floatNav" aria-label="Admin navigation">
-      <a class="float-brand" href="../index.php" aria-label="CJ Travels home">
+      <a class="float-brand" href="../" aria-label="CJ Travels home">
         <img src="../images/logo-mark.png" alt="CJ Travels" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" />
         <span class="float-btn-label">CJ Travels Admin</span>
       </a>
       <div class="float-nav-divider" aria-hidden="true"></div>
-      <a class="float-btn active" href="dashboard.php" aria-current="page" aria-label="Dashboard">
+      <a class="float-btn active" href="dashboard" aria-current="page" aria-label="Dashboard">
         <i class="bi bi-speedometer2"></i>
         <span class="float-btn-label">Dashboard</span>
       </a>
       <div class="float-nav-divider" aria-hidden="true"></div>
-      <a class="float-btn " href="customers.php"  aria-label="Customers">
+      <a class="float-btn " href="customers"  aria-label="Customers">
         <i class="bi bi-people-fill"></i>
         <span class="float-btn-label">Customers</span>
         <span class="float-badge" id="badgeCustomers">0</span>
       </a>
-      <a class="float-btn " href="flights.php"  aria-label="Flight bookings">
+      <a class="float-btn " href="flights"  aria-label="Flight bookings">
         <i class="bi bi-airplane-fill"></i>
         <span class="float-btn-label">Flight Bookings</span>
         <span class="float-badge" id="badgeFlights">0</span>
       </a>
-      <a class="float-btn " href="hotels.php"  aria-label="Hotel reservations">
+      <a class="float-btn " href="hotels"  aria-label="Hotel reservations">
         <i class="bi bi-building-fill"></i>
         <span class="float-btn-label">Hotel Reservations</span>
         <span class="float-badge" id="badgeHotels">0</span>
       </a>
-      <a class="float-btn " href="loans.php"  aria-label="Travel loan applications">
+      <a class="float-btn " href="loans"  aria-label="Travel loan applications">
         <i class="bi bi-cash-coin"></i>
         <span class="float-btn-label">Travel Loans</span>
         <span class="float-badge" id="badgeLoans">0</span>
       </a>
-      <a class="float-btn " href="destinations.php"  aria-label="Destinations">
+      <a class="float-btn " href="destinations"  aria-label="Destinations">
         <i class="bi bi-globe-americas"></i>
         <span class="float-btn-label">Destinations</span>
         <span class="float-badge" id="badgeDestinations">0</span>
       </a>
-      <a class="float-btn " href="transactions.php"  aria-label="Transactions">
+      <a class="float-btn " href="transactions"  aria-label="Transactions">
         <i class="bi bi-credit-card-2-front-fill"></i>
         <span class="float-btn-label">Transactions</span>
         <span class="float-badge" id="badgeTransactions">0</span>
       </a>
       <div class="float-nav-divider" aria-hidden="true"></div>
-      <a class="float-btn " href="api.php"  aria-label="API integrations">
+      <a class="float-btn " href="api"  aria-label="API integrations">
         <i class="bi bi-plug-fill"></i>
         <span class="float-btn-label">API Integrations</span>
         <span class="float-badge" id="badgeApi">0</span>
       </a>
-      <a class="float-btn " href="reports.php"  aria-label="Reports">
+      <a class="float-btn " href="reports"  aria-label="Reports">
         <i class="bi bi-bar-chart-line-fill"></i>
         <span class="float-btn-label">Reports</span>
       </a>
-      <a class="float-btn " href="settings.php"  aria-label="Website settings">
+      <a class="float-btn " href="settings"  aria-label="Website settings">
         <i class="bi bi-gear-fill"></i>
         <span class="float-btn-label">Website Settings</span>
       </a>
@@ -85,7 +85,7 @@
         <span class="float-btn-label">Logout</span>
       </button>
     
-      <a class="float-btn" href="../index.php" aria-label="Website Home" title="Back to Public Website">
+      <a class="float-btn" href="../" aria-label="Website Home" title="Back to Public Website">
         <i class="bi bi-house-door"></i>
         <span class="float-btn-label">Public Website</span>
       </a>
@@ -97,7 +97,7 @@
         <div class="topbar-left">
           <div class="topbar-crumb">
             <i class="bi bi-shield-lock-fill"></i>
-            <a href="dashboard.php" style="color:var(--muted);text-decoration:none;">Admin</a>
+            <a href="dashboard" style="color:var(--muted);text-decoration:none;">Admin</a>
             <span class="sep">/</span>
             <span class="current" id="crumbCurrent">Dashboard</span>
           </div>
@@ -125,7 +125,7 @@
               <p>Overview of customers, bookings and platform activity.</p>
             </div>
             <div class="page-head-actions">
-              <a href="reports.php" class="btn btn-ghost">
+              <a href="reports" class="btn btn-ghost">
                 <i class="bi bi-bar-chart-line"></i> View reports
               </a>
               <button type="button" class="btn btn-gold" id="addDestinationBtnTop">
@@ -235,7 +235,7 @@
               <div class="card-box h-100">
                 <div class="card-box-head">
                   <h2><i class="bi bi-wallet2"></i> Transaction overview</h2>
-                  <a href="transactions.php" class="btn-link-soft">
+                  <a href="transactions" class="btn-link-soft">
                     All transactions <i class="bi bi-arrow-right"></i>
                   </a>
                 </div>
@@ -270,8 +270,8 @@
             <div class="card-box-head">
               <h2><i class="bi bi-clock-history"></i> Recent bookings</h2>
               <div class="d-flex gap-2">
-                <a href="flights.php" class="btn-link-soft">Flights</a>
-                <a href="hotels.php" class="btn-link-soft">Hotels</a>
+                <a href="flights" class="btn-link-soft">Flights</a>
+                <a href="hotels" class="btn-link-soft">Hotels</a>
               </div>
             </div>
             <div class="table-responsive">
@@ -299,9 +299,9 @@
           &copy; <span id="year">2025</span> CJ Travels admin console — demonstration only.
         </p>
         <ul>
-          <li><a href="../index.php">Public site</a></li>
-          <li><a href="../contact.php">Support</a></li>
-          <li><a href="../privacy.php">Privacy</a></li>
+          <li><a href="../">Public site</a></li>
+          <li><a href="../contact">Support</a></li>
+          <li><a href="../privacy">Privacy</a></li>
         </ul>
       </footer>
 
@@ -594,7 +594,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Stay here</button>
-          <a href="../login.php" class="btn btn-navy btn-sm">Go to sign in</a>
+          <a href="../login" class="btn btn-navy btn-sm">Go to sign in</a>
         </div>
       </div>
     </div>

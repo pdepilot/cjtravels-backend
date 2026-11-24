@@ -1,8 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="images/logo-mark.png" />
-
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>About Us — CJ Travels</title>
@@ -13,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -1280,12 +1296,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="contact.php">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -1298,23 +1314,20 @@
     <div class="container">
       <div class="nav-inner">
 
-        <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.php">Home</a>
-          <a href="flights.php">Flights</a>
-          <a href="hotels.php">Hotels</a>
-          <a href="destinations.php">Destinations</a>
-          <a href="financing.php">Financing</a>
-          <a href="about.php" class="active" aria-current="page">About</a>
-        
+          <a href="<?= route('flights') ?>">Flights</a>
+          <a href="<?= route('hotels') ?>">Hotels</a>
+          <a href="<?= route('destinations') ?>">Destinations</a>
+          <a href="<?= route('financing') ?>">Financing</a>
+          <a href="<?= route('about') ?>" class="active" aria-current="page">About</a>
         </nav>
 
         <div class="nav-actions">
-          <a href="login.php" class="text-link">Sign in</a>
-          <a href="register.php" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -1333,8 +1346,8 @@
 
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -1343,24 +1356,23 @@
 
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="index.php">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="flights.php">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="hotels.php">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="destinations.php">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="financing.php">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="about.php">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="contact.php">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('financing') ?>">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
 
     <div class="mobile-nav-cta">
-      <a href="login.php" class="btn-lux btn-lux-ghost">Sign in</a>
-      <a href="register.php" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="mobile-nav-footer">
       <p>Reach the concierge</p>
-      <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -1376,12 +1388,12 @@
           <span class="eyebrow">About CJ Travels</span>
           <h1>A travel agency built<br />around the <em>traveller</em>.</h1>
           <p class="hero-sub">
-            CJ Travels is a premier luxury travel agency serving customers in Nigeria and internationally.
+            CJ Travels is an online travel agency serving customers in Nigeria and internationally.
             We bring flights, hotels, destination guidance and travel financing into one clear place —
             with real people behind it when you need them.
           </p>
           <div class="hero-actions">
-            <a href="contact.php" class="btn-lux btn-lux-navy">
+            <a href="<?= route('contact') ?>" class="btn-lux btn-lux-navy">
               Talk to our team <i class="bi bi-arrow-right arrow"></i>
             </a>
             <a href="#services" class="btn-lux btn-lux-ghost">Explore our services</a>
@@ -1421,7 +1433,7 @@
       <div class="container">
         <div class="split reveal">
           <div class="split-media">
-            <img src="images/cj-travels.jpg"
+            <img src="<?= asset('images/cj-travels.jpg') ?>"
                  alt="CJ Travels founder and team leader" style="object-position: center 20%;" loading="lazy" decoding="async"
                  onerror="this.style.opacity=0" />
             <div class="split-badge">
@@ -1631,7 +1643,7 @@
 
         <div class="services-grid reveal">
 
-          <a class="service" href="flights.php">
+          <a class="service" href="<?= route('flights') ?>">
             <span class="service-icon"><i class="bi bi-airplane"></i></span>
             <h3>Flights</h3>
             <p>
@@ -1641,7 +1653,7 @@
             <span class="link-arrow">Search flights <i class="bi bi-arrow-right"></i></span>
           </a>
 
-          <a class="service" href="hotels.php">
+          <a class="service" href="<?= route('hotels') ?>">
             <span class="service-icon"><i class="bi bi-building"></i></span>
             <h3>Hotels</h3>
             <p>
@@ -1651,7 +1663,7 @@
             <span class="link-arrow">Search hotels <i class="bi bi-arrow-right"></i></span>
           </a>
 
-          <a class="service" href="financing.php">
+          <a class="service" href="<?= route('financing') ?>">
             <span class="service-icon"><i class="bi bi-wallet2"></i></span>
             <h3>Travel financing</h3>
             <p>
@@ -1876,15 +1888,15 @@
               and financing enquiries. There is no obligation — just a conversation.
             </p>
             <div class="cta-contact-list">
-              <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+              <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
               <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
             </div>
           </div>
           <div class="cta-actions">
-            <a href="contact.php" class="btn-lux btn-lux-gold">
+            <a href="<?= route('contact') ?>" class="btn-lux btn-lux-gold">
               Contact us <i class="bi bi-arrow-right arrow"></i>
             </a>
-            <a href="faq.php" class="btn-lux btn-lux-outline-light">
+            <a href="<?= route('about') ?>#faq" class="btn-lux btn-lux-outline-light">
               Read the FAQ
             </a>
           </div>
@@ -1904,8 +1916,8 @@
       <div class="footer-grid">
 
         <div>
-          <a class="footer-brand" href="index.php" aria-label="CJ Travels home">
-            <img src="images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -1922,27 +1934,27 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="flights.php">Flights</a></li>
-            <li><a href="hotels.php">Hotels</a></li>
-            <li><a href="destinations.php">Destinations</a></li>
-            <li><a href="financing.php">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="<?= route('financing') ?>">Travel financing</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
 
@@ -1962,17 +1974,28 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <?php if (file_exists(__DIR__ . '/../partials/promo-modal.php')): ?>
+    <?php include __DIR__ . '/../partials/promo-modal.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
 
   <script>
     (function () {

@@ -33,10 +33,8 @@
       <div>
         <h4 class="footer-heading">Portals</h4>
         <ul class="footer-links">
-          <li><a href="<?= route('customer.dashboard') ?>">Customer Dashboard</a></li>
+          <li><a href="<?= route('contact') ?>">Contact</a></li>
           <li><a href="<?= route('admin.dashboard') ?>">Admin Console</a></li>
-          <li><a href="<?= route('login') ?>">Sign in</a></li>
-          <li><a href="<?= route('register') ?>">Create account</a></li>
         </ul>
       </div>
 
@@ -54,8 +52,9 @@
     <div class="footer-bottom">
       <p class="mb-0">&copy; <span id="year"><?= date('Y') ?></span> CJ Travels. All rights reserved.</p>
       <div class="footer-legal">
-        <a href="<?= route('about') ?>">Privacy Policy</a>
-        <a href="<?= route('about') ?>">Terms of Service</a>
+        <a href="<?= route('privacy') ?>">Privacy Policy</a>
+        <a href="<?= route('terms') ?>">Terms of Service</a>
+        <a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a>
         <a href="<?= route('contact') ?>">Support</a>
       </div>
     </div>

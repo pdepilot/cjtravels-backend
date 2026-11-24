@@ -2,6 +2,13 @@
     RewriteEngine On
     RewriteBase /TravelBooking/
 
+    # Keep the address bar free of .php. The front controller stays internal.
+    RewriteCond %{THE_REQUEST} \s/TravelBooking/index\.php[\s?] [NC]
+    RewriteRule ^ /TravelBooking/ [R=302,L]
+
+    RewriteCond %{THE_REQUEST} \s/TravelBooking/(.+?)\.php[\s?] [NC]
+    RewriteRule ^ /TravelBooking/%1 [R=302,L,NE,QSA]
+
     RewriteCond %{REQUEST_URI} !^/TravelBooking/public/ [NC]
     RewriteRule ^(.*)$ public/$1 [L]
 </IfModule>

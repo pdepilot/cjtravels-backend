@@ -43,6 +43,16 @@
   <a class="float-btn <?= routeIs('admin.api') ? 'active' : '' ?>" href="<?= route('admin.api') ?>" <?= routeIs('admin.api') ? 'aria-current="page"' : '' ?> aria-label="API integrations">
     <i class="bi bi-cpu-fill"></i>
     <span class="float-btn-label">API Integrations</span>
+    <span class="float-badge" id="badgeApi"><?= (int)($liveCounts['api'] ?? 0) ?></span>
+  </a>
+  <a class="float-btn <?= routeIs('admin.emails') ? 'active' : '' ?>" href="<?= route('admin.emails') ?>" <?= routeIs('admin.emails') ? 'aria-current="page"' : '' ?> aria-label="Email">
+    <i class="bi bi-envelope-paper-fill"></i>
+    <span class="float-btn-label">Email</span>
+  </a>
+  <a class="float-btn <?= routeIs('admin.messages') ? 'active' : '' ?>" href="<?= route('admin.messages') ?>" <?= routeIs('admin.messages') ? 'aria-current="page"' : '' ?> aria-label="Messages">
+    <i class="bi bi-envelope-fill"></i>
+    <span class="float-btn-label">Messages</span>
+    <span class="float-badge" id="badgeMessages"><?= (int)($liveCounts['messages'] ?? 0) ?></span>
   </a>
   <a class="float-btn <?= routeIs('admin.reports') ? 'active' : '' ?>" href="<?= route('admin.reports') ?>" <?= routeIs('admin.reports') ? 'aria-current="page"' : '' ?> aria-label="Reports">
     <i class="bi bi-bar-chart-fill"></i>

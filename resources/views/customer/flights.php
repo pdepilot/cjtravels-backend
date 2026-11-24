@@ -9,7 +9,7 @@
               <p>Manage and review your confirmed, pending and completed flight bookings.</p>
             </div>
             <div class="page-head-actions">
-              <a href="../flights.php" class="btn btn-primary">
+              <a href="<?= route('flights') ?>" class="btn btn-primary">
                 <i class="bi bi-search"></i> Book a new flight
               </a>
             </div>

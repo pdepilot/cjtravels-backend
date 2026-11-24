@@ -1,7 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign in — CJ Travels</title>
@@ -11,6 +26,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -746,8 +762,8 @@
          BRAND AREA
          ========================================================= -->
     <header class="brand-area">
-      <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
     </header>
 
@@ -792,7 +808,7 @@
               <input type="checkbox" id="rememberMe" name="remember" />
               <span>Remember me</span>
             </label>
-            <a href="forgot-password.php" class="link-muted">Forgot password?</a>
+            <a href="forgot-password" class="link-muted">Forgot password?</a>
           </div>
 
           <button type="submit" class="btn-submit" id="loginBtn">
@@ -819,7 +835,7 @@
           </div>
 
           <p class="prompt">
-            No account yet? <a href="/register">Create one</a>
+            No account yet? <a href="<?= route('register') ?>">Create one</a>
           </p>
 
         </form>
@@ -870,15 +886,22 @@
          FOOTER AREA
          ========================================================= -->
     <footer class="foot">
-      <span>&copy; <span data-year>2025</span> CJ Travels</span>
+      <span>&copy; <span data-year>2026</span> CJ Travels</span>
       <ul class="foot-links">
-        <li><a href="privacy.php">Privacy</a></li>
-        <li><a href="terms.php">Terms</a></li>
-        <li><a href="/contact">Support</a></li>
+        <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+        <li><a href="<?= route('terms') ?>">Terms</a></li>
+        <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+        <li><a href="<?= route('contact') ?>">Support</a></li>
       </ul>
     </footer>
 
   </div>
+
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
 
   <script>
     (function () {
@@ -979,7 +1002,7 @@
             '<strong>Demonstration only — you are not signed in.</strong>' +
             'Your details passed validation, but no account was checked and no session was created. ' +
             'CJ Travels has not stored your password or sent your credentials anywhere. ' +
-            '<a href="/">Continue browsing</a> or <a href="/register">create an account</a>.');
+            '<a href="<?= route('home') ?>">Continue browsing</a> or <a href="<?= route('register') ?>">create an account</a>.');
         }, 550);
       });
 

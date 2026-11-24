@@ -3,8 +3,8 @@
 <section class="view active" id="view-api" data-view="api">
           <div class="page-head">
             <div>
-              <h1>API Integrations <span class="demo-pill"><i class="bi bi-info-circle"></i> Demo data</span></h1>
-              <p>Manage flight and hotel API provider connections.</p>
+              <h1>API Integrations</h1>
+              <p>Saved flight and hotel providers refresh with the rest of the console. Test connection checks the provider address from the server.</p>
             </div>
             <div class="page-head-actions">
               <button type="button" class="btn btn-ghost" id="apiRefreshBtn">
@@ -16,21 +16,8 @@
           <div class="info-note">
             <i class="bi bi-shield-lock"></i>
             <div>
-              <strong>Frontend demonstration only.</strong> No real API connections are made from this page.
-              Credential fields below use masked placeholders and are never stored in JavaScript, localStorage
-              or logs. When the PHP/MySQL backend is connected, credentials will be encrypted server-side and
-              only accessible to authorized administrators.
-            </div>
-          </div>
-
-          <div class="api-security-note">
-            <i class="bi bi-exclamation-triangle"></i>
-            <div>
-              <strong>Security requirements.</strong> API keys and secrets must never be exposed to the
-              browser in production. They will live encrypted on the server and be used only by server-side
-              code. This page will communicate with a PHP endpoint that returns masked credential metadata
-              only. Never log credentials, never store them in localStorage, and never display full secrets
-              after saving.
+              <strong>Keys stay on the server.</strong> After a provider is saved, this page shows only the
+              last four characters. Connection tests check whether the address responds and do not send the key or secret.
             </div>
           </div>
 

@@ -4,7 +4,12 @@
           <div class="page-head">
             <div>
               <h1>Flight Bookings</h1>
-              <p>Active flight bookings, passenger itineraries and tickets synced with MySQL.</p>
+              <p>Inventory and bookings. Selections made on the public flight search appear here automatically.</p>
+            </div>
+            <div class="page-head-actions">
+              <button type="button" class="btn btn-gold" id="addFlightBtn">
+                <i class="bi bi-plus-lg"></i> Add flight
+              </button>
             </div>
           </div>
           <div class="card-box">

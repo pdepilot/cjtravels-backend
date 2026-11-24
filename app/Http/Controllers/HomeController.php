@@ -40,5 +40,19 @@ class HomeController extends Controller
             'title' => 'Travel Financing — Travelbookings',
         ]);
     }
+
+    public function terms(): Response
+    {
+        return $this->view('pages/terms', [
+            'title' => 'Terms of Use — CJ Travels',
+        ]);
+    }
+
+    public function privacy(): Response
+    {
+        return $this->view('pages/privacy', [
+            'title' => 'Privacy Policy & Cookies — CJ Travels',
+        ]);
+    }
 }
 

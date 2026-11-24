@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Core\Database;
 use App\Core\Response;
+use App\Services\RealtimeDataService;
 
 class DashboardController extends AdminController
 {
@@ -30,11 +31,12 @@ class DashboardController extends AdminController
 
     protected function buildDashboardData(): array
     {
+        RealtimeDataService::ensureUserSchema();
         $db = Database::getInstance();
 
         // 1. KPI Counts
         $totalCustomers = (int)($db->selectOne("SELECT COUNT(*) as c FROM users")['c'] ?? 0);
-        $activeCustomers = (int)($db->selectOne("SELECT COUNT(*) as c FROM users WHERE role = 'customer'")['c'] ?? 0);
+        $activeCustomers = (int)($db->selectOne("SELECT COUNT(*) as c FROM users WHERE status = 'Active' OR status IS NULL OR status = ''")['c'] ?? 0);
         $totalFlights = (int)($db->selectOne("SELECT COUNT(*) as c FROM flights")['c'] ?? 0);
         $pendingFlights = (int)($db->selectOne("SELECT COUNT(*) as c FROM flights WHERE status = 'Pending'")['c'] ?? 0);
         $totalHotels = (int)($db->selectOne("SELECT COUNT(*) as c FROM hotels")['c'] ?? 0);
@@ -95,34 +97,31 @@ class DashboardController extends AdminController
             }
         }
 
-        // 6-month recent window
-        $chartMonths = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
         $bookingChart = [];
-        foreach ($chartMonths as $m) {
+        $cursor = new \DateTimeImmutable('first day of this month');
+        $cursor = $cursor->modify('-5 months');
+        for ($i = 0; $i < 6; $i++) {
+            $label = $cursor->format('M');
             $bookingChart[] = [
-                'month' => $m,
-                'flights' => $monthlyFlights[$m] ?? 0,
-                'hotels' => $monthlyHotels[$m] ?? 0,
+                'month' => $label,
+                'flights' => $monthlyFlights[$label] ?? 0,
+                'hotels' => $monthlyHotels[$label] ?? 0,
             ];
+            $cursor = $cursor->modify('+1 month');
         }
 
         // 4. Recent Bookings (Combined Latest Flights & Hotels)
-        $latestFlights = $db->select("SELECT id, ref, airline, flight_no, origin, destination, departure_date, price, status, 'flight' as type, created_at FROM flights ORDER BY id DESC LIMIT 5");
-        $latestHotels = $db->select("SELECT id, ref, property, location, checkin as departure_date, price, status, 'hotel' as type, created_at FROM hotels ORDER BY id DESC LIMIT 5");
+        $latestFlights = $db->select("SELECT f.id, f.ref, f.airline, f.flight_no, f.origin, f.destination, f.departure_date, f.price, f.status, 'flight' as type, f.created_at, u.name as customer_name FROM flights f LEFT JOIN users u ON f.user_id = u.id ORDER BY f.id DESC LIMIT 5");
+        $latestHotels = $db->select("SELECT h.id, h.ref, h.property, h.location, h.checkin as departure_date, h.price, h.status, 'hotel' as type, h.created_at, u.name as customer_name FROM hotels h LEFT JOIN users u ON h.user_id = u.id ORDER BY h.id DESC LIMIT 5");
 
         $combined = array_merge($latestFlights, $latestHotels);
         usort($combined, fn($a, $b) => strcmp($b['created_at'] ?? '', $a['created_at'] ?? ''));
         $recentBookings = array_slice($combined, 0, 6);
 
-        // Format recent bookings for presentation
         $formattedBookings = [];
-        $customersList = $db->select("SELECT id, name FROM users ORDER BY id ASC");
-        $customerNames = array_column($customersList, 'name');
-        $custIndex = 0;
 
         foreach ($recentBookings as $b) {
-            $custName = $customerNames[$custIndex % max(1, count($customerNames))] ?? 'Valued Customer';
-            $custIndex++;
+            $custName = trim((string)($b['customer_name'] ?? '')) ?: 'Unassigned';
 
             $isFlight = ($b['type'] ?? '') === 'flight';
             $title = $isFlight
@@ -166,6 +165,17 @@ class DashboardController extends AdminController
                 'title' => 'Financing enquiry submitted',
                 'meta' => $l['ref'] . ' · ₦' . number_format((float)$l['amount']) . ' (' . ($l['customer_name'] ?? 'Applicant') . ')',
                 'time' => date('M j', strtotime($l['submitted'] ?? 'now')),
+            ];
+        }
+        RealtimeDataService::ensureContactSchema();
+        $recentMessages = $db->select('SELECT ref, name, department, created_at FROM contact_messages ORDER BY id DESC LIMIT 3');
+        foreach ($recentMessages as $message) {
+            $activity[] = [
+                'icon' => 'bi-envelope-fill',
+                'iconClass' => 'navy',
+                'title' => 'Contact message received',
+                'meta' => $message['ref'] . ' · ' . $message['name'] . ' (' . $message['department'] . ')',
+                'time' => date('M j', strtotime($message['created_at'] ?? 'now')),
             ];
         }
 

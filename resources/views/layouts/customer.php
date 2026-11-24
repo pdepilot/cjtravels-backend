@@ -15,6 +15,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
   <link href="<?= asset('css/customer.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
 
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -31,16 +32,19 @@
       <?php $this->include('partials/topbar', ['isAdmin' => false, 'title' => $title ?? 'Overview']); ?>
 
       <div class="dash-content">
+        <?php if (!isset($content)) { $content = ''; } ?>
         <?= $content ?>
       </div>
 
       <footer class="dash-footer">
         <p class="mb-0">
-          &copy; <span id="year"><?= date('Y') ?></span> CJ Travels. Demonstration dashboard — sample data only.
+          &copy; <span id="year"><?= date('Y') ?></span> CJ Travels.
         </p>
         <ul>
           <li><a href="<?= route('home') ?>">Home</a></li>
-          <li><a href="<?= route('about') ?>">About</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
           <li><a href="<?= route('contact') ?>">Support</a></li>
         </ul>
       </footer>
@@ -86,9 +90,15 @@
 
   <script>
     window.CJ_CUSTOMER_DATA = <?= json_encode($customerData ?? null, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    window.CJ_CSRF_TOKEN = "<?= csrf_token() ?>";
+    window.CJ_API_URLS = {
+      updateProfile: "<?= route('customer.profile.update') ?>",
+      applyLoan: "<?= route('api.loans.apply') ?>"
+    };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?= asset('js/customer.js') ?>"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
 </body>
 </html>
 

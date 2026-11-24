@@ -1,8 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="images/logo-mark.png" />
-
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hotels — CJ Travels</title>
@@ -13,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -1220,12 +1236,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="contact.php">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -1238,23 +1254,20 @@
     <div class="container">
       <div class="nav-inner">
 
-        <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.php">Home</a>
-          <a href="flights.php">Flights</a>
-          <a href="hotels.php" class="active">Hotels</a>
-          <a href="destinations.php">Destinations</a>
-          <a href="financing.php">Financing</a>
-          <a href="about.php">About</a>
-        
+          <a href="<?= route('flights') ?>">Flights</a>
+          <a href="<?= route('hotels') ?>" class="active">Hotels</a>
+          <a href="<?= route('destinations') ?>">Destinations</a>
+          <a href="<?= route('financing') ?>">Financing</a>
+          <a href="<?= route('about') ?>">About</a>
         </nav>
 
         <div class="nav-actions">
-          <a href="login.php" class="text-link">Sign in</a>
-          <a href="register.php" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -1273,8 +1286,8 @@
 
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -1283,24 +1296,23 @@
 
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="index.php">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="flights.php">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="hotels.php">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="destinations.php">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="financing.php">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="about.php">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="contact.php">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('financing') ?>">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
 
     <div class="mobile-nav-cta">
-      <a href="login.php" class="btn btn-ghost">Sign in</a>
-      <a href="register.php" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="mobile-nav-footer">
       <p>Reach the concierge</p>
-      <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -1399,12 +1411,12 @@
                     <i class="bi bi-arrow-counterclockwise"></i> Reset
                   </button>
                   <button type="submit" class="btn btn-navy flex-grow-1">
-                    <i class="bi bi-search"></i> Search hotels
+                    <i class="bi bi-whatsapp"></i> Reserve on WhatsApp
                   </button>
                 </div>
               </div>
               <p class="search-note info mb-0">
-                <i class="bi bi-info-circle"></i> Sample results shown — hotels, ratings and prices are demonstration data and cannot be booked.
+                <i class="bi bi-whatsapp"></i> Reserve on WhatsApp sends this stay request to CJ Travels on <?= e(cj_phone_display()) ?>.
               </p>
             </div>
 
@@ -1437,8 +1449,8 @@
         <div class="demo-banner">
           <i class="bi bi-info-circle"></i>
           <div>
-            <strong>Sample hotel data.</strong> These properties, guest ratings, descriptions and
-            prices are illustrative demonstration data. They are not live availability and cannot be booked.
+            <strong>Live hotel inventory.</strong> Confirmed stays are loaded from CJ Travels.
+            Choosing a room and continuing saves a pending reservation in the admin hotel list.
           </div>
         </div>
 
@@ -1543,8 +1555,8 @@
       <div class="footer-grid">
 
         <div>
-          <a class="footer-brand" href="index.php" aria-label="CJ Travels home">
-            <img src="images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -1561,27 +1573,27 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="flights.php">Flights</a></li>
-            <li><a href="hotels.php">Hotels</a></li>
-            <li><a href="destinations.php">Destinations</a></li>
-            <li><a href="financing.php">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="<?= route('financing') ?>">Travel financing</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
 
@@ -1601,17 +1613,28 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <?php if (file_exists(__DIR__ . '/../partials/promo-modal.php')): ?>
+    <?php include __DIR__ . '/../partials/promo-modal.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
 
   <script>
     (function () {
@@ -1752,20 +1775,7 @@
         'Room service': 'bi-bell-fill'
       };
 
-      var SAMPLE_HOTELS = [
-        { id: 'h1', name: 'The Wheatbaker', city: 'Lagos', location: 'Ikoyi, Lagos, Nigeria', stars: 5, rating: 4.7, reviews: 284, type: 'Boutique hotel', description: 'An elegant boutique hotel tucked away in Ikoyi with curated art, an award-winning restaurant and a tranquil spa.', pricePerNight: 185000, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Spa', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Room service'], rooms: buildRooms(185000, ['deluxe', 'executive', 'presidential']), policies: basePolicies(['No smoking in rooms; designated outdoor areas available']) },
-        { id: 'h2', name: 'Eko Hotel & Suites', city: 'Lagos', location: 'Victoria Island, Lagos, Nigeria', stars: 5, rating: 4.5, reviews: 612, type: 'Hotel', description: 'A landmark waterfront hotel with multiple restaurants, a large pool deck and direct access to the Eko Atlantic beach.', pricePerNight: 165000, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Spa', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Business centre'], rooms: buildRooms(165000, ['standard', 'deluxe', 'executive']), policies: basePolicies() },
-        { id: 'h3', name: 'Radisson Blu Anchorage', city: 'Lagos', location: 'Victoria Island, Lagos, Nigeria', stars: 5, rating: 4.4, reviews: 498, type: 'Hotel', description: 'A contemporary hotel on the Lagos waterfront, popular with business travellers for its meeting facilities and rooftop views.', pricePerNight: 145000, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Spa', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Airport shuttle'], rooms: buildRooms(145000, ['standard', 'deluxe', 'executive']), policies: basePolicies() },
-        { id: 'h4', name: 'The George', city: 'Lagos', location: 'Ikoyi, Lagos, Nigeria', stars: 4, rating: 4.3, reviews: 341, type: 'Hotel', description: 'A refined boutique-style hotel with a leafy courtyard, an intimate restaurant and easy access to Ikoyi business district.', pricePerNight: 120000, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Business centre'], rooms: buildRooms(120000, ['standard', 'deluxe', 'executive']), policies: basePolicies() },
-        { id: 'h5', name: 'Southern Sun Ikoyi', city: 'Lagos', location: 'Ikoyi, Lagos, Nigeria', stars: 4, rating: 4.2, reviews: 276, type: 'Hotel', description: 'A dependable international business hotel with a leafy outdoor pool, well-equipped gym and friendly service.', pricePerNight: 110000, image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Fitness centre', 'Restaurant', 'Bar', 'Parking'], rooms: buildRooms(110000, ['standard', 'deluxe']), policies: basePolicies() },
-        { id: 'h6', name: 'Maison Fahrenheit', city: 'Lagos', location: 'Victoria Island, Lagos, Nigeria', stars: 4, rating: 4.3, reviews: 198, type: 'Boutique hotel', description: 'A design-led boutique hotel with bold interiors, a rooftop lounge and a much-loved brunch restaurant.', pricePerNight: 95000, image: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Restaurant', 'Bar', 'Parking', 'Room service'], rooms: buildRooms(95000, ['standard', 'deluxe']), policies: basePolicies() },
-        { id: 'h7', name: 'BON Hotels Ikeja', city: 'Lagos', location: 'Ikeja GRA, Lagos, Nigeria', stars: 3, rating: 3.9, reviews: 152, type: 'Hotel', description: 'A practical, well-priced hotel close to Murtala Muhammed Airport, popular for short stopovers and business trips.', pricePerNight: 55000, image: 'https://images.unsplash.com/photo-1587985064135-0366536eab42?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1587985064135-0366536eab42?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Restaurant', 'Bar', 'Parking'], rooms: buildRooms(55000, ['standard', 'deluxe']), policies: basePolicies() },
-        { id: 'h8', name: 'Amber Residence', city: 'Lagos', location: 'Ikeja GRA, Lagos, Nigeria', stars: 4, rating: 4.1, reviews: 89, type: 'Serviced apartment', description: 'Fully serviced one- and two-bedroom apartments with kitchenettes — ideal for longer stays and families.', pricePerNight: 75000, image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Fitness centre', 'Parking', 'Room service'], rooms: buildRooms(75000, ['standard', 'deluxe']), policies: basePolicies() },
-        { id: 'h9', name: 'The Berkeley', city: 'London', location: 'Knightsbridge, London, United Kingdom', stars: 5, rating: 4.8, reviews: 1204, type: 'Hotel', description: 'A legendary Knightsbridge hotel with a rooftop pool, an acclaimed spa and Michelin-starred dining.', pricePerNight: 380000, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Spa', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Room service'], rooms: buildRooms(380000, ['deluxe', 'executive', 'presidential']), policies: basePolicies() },
-        { id: 'h10', name: 'The Hoxton Shoreditch', city: 'London', location: 'Shoreditch, London, United Kingdom', stars: 4, rating: 4.5, reviews: 856, type: 'Boutique hotel', description: 'A lively East London boutique hotel with a buzzy lobby bar, rooftop restaurant and stylish, compact rooms.', pricePerNight: 175000, image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Restaurant', 'Bar', 'Room service'], rooms: buildRooms(175000, ['standard', 'deluxe', 'executive']), policies: basePolicies() },
-        { id: 'h11', name: 'Atlantis The Palm', city: 'Dubai', location: 'Palm Jumeirah, Dubai, United Arab Emirates', stars: 5, rating: 4.6, reviews: 2140, type: 'Resort', description: 'An iconic Palm Jumeirah resort with a private beach, an enormous waterpark and more than twenty restaurants.', pricePerNight: 290000, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Spa', 'Fitness centre', 'Restaurant', 'Bar', 'Parking', 'Airport shuttle', 'Beach access', 'Business centre', 'Room service'], rooms: buildRooms(290000, ['deluxe', 'executive', 'presidential']), policies: basePolicies() },
-        { id: 'h12', name: 'Rove Downtown', city: 'Dubai', location: 'Downtown Dubai, United Arab Emirates', stars: 3, rating: 4.3, reviews: 934, type: 'Hotel', description: 'A modern, well-priced hotel within walking distance of Dubai Mall and Burj Khalifa, with a rooftop pool.', pricePerNight: 95000, image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=900&q=80', images: ['https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?auto=format&fit=crop&w=1200&q=80', 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'], amenities: ['Free WiFi', 'Swimming pool', 'Fitness centre', 'Restaurant', 'Parking'], rooms: buildRooms(95000, ['standard', 'deluxe']), policies: basePolicies() }
-      ];
+      var SAMPLE_HOTELS = [];
 
       // Expose the same dataset for any external scripts or console inspection.
       window.HOTEL_DATA = SAMPLE_HOTELS;
@@ -1773,8 +1783,15 @@
       /* =====================================================
          3. STATE
          ===================================================== */
+      var stayQuery = new URLSearchParams(window.location.search);
       var state = {
-        search: { destination: 'Lagos, Nigeria', checkin: daysFromNow(14), checkout: daysFromNow(17), guests: 2, rooms: 1 },
+        search: {
+          destination: stayQuery.get('destination') || 'Lagos, Nigeria',
+          checkin: stayQuery.get('checkin') || daysFromNow(14),
+          checkout: stayQuery.get('checkout') || daysFromNow(17),
+          guests: Number(stayQuery.get('guests') || 2) || 2,
+          rooms: Number(stayQuery.get('rooms') || 1) || 1
+        },
         filters: { maxPrice: 400000, stars: new Set([3, 4, 5]), types: new Set(), amenities: new Set() },
         sort: 'recommended'
       };
@@ -1955,8 +1972,11 @@
          ===================================================== */
       els.checkin.min = todayISO();
       els.checkout.min = todayISO();
-      els.checkin.value = daysFromNow(14);
-      els.checkout.value = daysFromNow(17);
+      els.checkin.value = state.search.checkin || daysFromNow(14);
+      els.checkout.value = state.search.checkout || daysFromNow(17);
+      if (els.destination && stayQuery.get('destination')) els.destination.value = state.search.destination;
+      if (els.guests && stayQuery.get('guests')) els.guests.value = String(state.search.guests);
+      if (els.rooms && stayQuery.get('rooms')) els.rooms.value = String(state.search.rooms);
 
       els.checkin.addEventListener('change', function () {
         if (!els.checkin.value) return;
@@ -2005,18 +2025,17 @@
         }
 
         clearFormStatus();
-
-        state.search = {
-          destination: destination,
-          checkin: checkin,
-          checkout: checkout,
-          guests: Number(els.guests.value),
-          rooms: Number(els.rooms.value)
-        };
-
-        updateResultsHeading();
-        renderResults();
-        els.resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var guests = Number(els.guests.value);
+        var rooms = Number(els.rooms.value);
+        window.location.href = 'https://wa.me/<?= e(cj_whatsapp_number()) ?>?text=' + encodeURIComponent([
+          'Hello CJ Travels, I would like to reserve a hotel.',
+          '',
+          'Destination: ' + destination,
+          'Check-in: ' + checkin,
+          'Check-out: ' + checkout,
+          'Guests: ' + guests,
+          'Rooms: ' + rooms
+        ].join('\n'));
       });
 
       els.resetSearchBtn.addEventListener('click', function () {
@@ -2042,21 +2061,16 @@
       /* =====================================================
          14. HEADING
          ===================================================== */
-      function matchCity(destination) {
-        var lower = destination.toLowerCase();
-        var cities = ['lagos', 'london', 'dubai'];
-        for (var i = 0; i < cities.length; i++) {
-          if (lower.indexOf(cities[i]) !== -1) return cities[i];
-        }
-        return null;
+      function destinationMatches(hotel, destination) {
+        var needle = String(destination || '').split(',')[0].trim().toLowerCase();
+        if (!needle) return true;
+        var hay = ((hotel.city || '') + ' ' + (hotel.location || '') + ' ' + (hotel.name || '')).toLowerCase();
+        return hay.indexOf(needle) !== -1;
       }
 
       function updateResultsHeading() {
         var s = state.search;
-        var title = 'Hotels in ' + s.destination;
-        var matchedCity = matchCity(s.destination);
-        if (!matchedCity) title = 'Sample stays — ' + s.destination;
-        els.resultsTitle.textContent = title;
+        els.resultsTitle.textContent = 'Hotels in ' + s.destination;
 
         var nights = nightsBetween(s.checkin, s.checkout);
         var guestLabel = s.guests + (s.guests === 1 ? ' guest' : ' guests');
@@ -2074,12 +2088,11 @@
       function getVisibleHotels() {
         var search = state.search;
         var filters = state.filters;
-        var matchedCity = matchCity(search.destination);
 
         var filtered = SAMPLE_HOTELS.filter(function (hotel) {
-          if (matchedCity && hotel.city.toLowerCase() !== matchedCity) return false;
+          if (!destinationMatches(hotel, search.destination)) return false;
           if (hotel.pricePerNight > filters.maxPrice) return false;
-          if (!filters.stars.has(hotel.stars)) return false;
+          if (hotel.stars && !filters.stars.has(hotel.stars)) return false;
           if (!filters.types.has(hotel.type)) return false;
 
           var amenitiesOk = true;
@@ -2121,7 +2134,7 @@
           amenitiesHTML += '<span class="amenity-pill amenity-more">+' + extras + ' more</span>';
         }
 
-        var detailsHref = 'hotel-details.php?id=' + encodeURIComponent(hotel.id) +
+        var detailsHref = 'hotel-details?id=' + encodeURIComponent(hotel.id) +
           '&checkin=' + encodeURIComponent(state.search.checkin) +
           '&checkout=' + encodeURIComponent(state.search.checkout) +
           '&guests=' + state.search.guests +
@@ -2130,19 +2143,18 @@
         return (
           '<article class="hotel-card" data-hotel-id="' + hotel.id + '">' +
             '<div class="hotel-photo">' +
-              '<img src="' + hotel.image + '" alt="' + escapeHTML(hotel.name) + ' in ' + escapeHTML(hotel.location) + '" loading="lazy" decoding="async" />' +
+              (hotel.image ? '<img src="' + hotel.image + '" alt="' + escapeHTML(hotel.name) + ' in ' + escapeHTML(hotel.location) + '" loading="lazy" decoding="async" />' : '') +
               '<span class="hotel-type-badge">' + escapeHTML(hotel.type) + '</span>' +
             '</div>' +
             '<div class="hotel-info">' +
-              '<div class="hotel-stars">' + starsHTML(hotel.stars) + '</div>' +
+              (hotel.stars ? '<div class="hotel-stars">' + starsHTML(hotel.stars) + '</div>' : '') +
               '<h3>' + escapeHTML(hotel.name) + '</h3>' +
               '<p class="hotel-location"><i class="bi bi-geo-alt-fill"></i>' + escapeHTML(hotel.location) + '</p>' +
-              '<div class="hotel-rating-row">' +
-                '<span class="rating-badge"><i class="bi bi-star-fill"></i>' + hotel.rating.toFixed(1) + '</span>' +
+              (hotel.rating == null ? '' : '<div class="hotel-rating-row">' +
+                '<span class="rating-badge"><i class="bi bi-star-fill"></i>' + Number(hotel.rating).toFixed(1) + '</span>' +
                 '<span class="rating-label">' + ratingLabel(hotel.rating) + '</span>' +
-                '<span class="rating-demo-pill">Demo rating</span>' +
-                '<span class="rating-count">(' + hotel.reviews + ' sample reviews)</span>' +
-              '</div>' +
+                (hotel.reviews ? '<span class="rating-count">(' + hotel.reviews + ' reviews)</span>' : '') +
+              '</div>') +
               '<p class="hotel-desc">' + escapeHTML(hotel.description) + '</p>' +
               '<div class="hotel-amenities">' + amenitiesHTML + '</div>' +
             '</div>' +
@@ -2150,7 +2162,7 @@
               '<span class="price-from">From</span>' +
               '<span class="price-amount">' + formatMoney(hotel.pricePerNight) + '</span>' +
               '<span class="price-per">per night</span>' +
-              '<span class="price-demo">Sample price</span>' +
+              
               '<a href="' + detailsHref + '" class="btn btn-navy btn-sm">View details</a>' +
             '</div>' +
           '</article>'
@@ -2200,8 +2212,94 @@
       }
 
       /* =====================================================
-         18. INITIAL RENDER
+         18. LIVE INVENTORY + INITIAL RENDER
          ===================================================== */
+      function catalogBase() {
+        var path = window.location.pathname.replace(/\/+$/, '');
+        var cut = path.search(/\/(hotels|hotel-details)(\.php)?(\/|$)/i);
+        if (cut !== -1) return path.slice(0, cut);
+        return path.replace(/\/[^\/]*$/, '');
+      }
+
+      function rebuildStayFilters() {
+        TYPES = [];
+        SAMPLE_HOTELS.forEach(function (h) {
+          if (TYPES.indexOf(h.type) === -1) TYPES.push(h.type);
+        });
+        TYPES.sort();
+        state.filters.types = new Set(TYPES);
+        els.typeFilters.innerHTML = TYPES.map(function (type, index) {
+          var id = 'type-' + index;
+          return (
+            '<div class="form-check">' +
+              '<input class="form-check-input type-check" type="checkbox" id="' + id + '" value="' + escapeHTML(type) + '" checked />' +
+              '<label class="form-check-label" for="' + id + '">' + escapeHTML(type) + '</label>' +
+            '</div>'
+          );
+        }).join('');
+        typeChecks = Array.prototype.slice.call(document.querySelectorAll('.type-check'));
+        typeChecks.forEach(function (cb) {
+          cb.addEventListener('change', function () {
+            if (cb.checked) state.filters.types.add(cb.value);
+            else state.filters.types.delete(cb.value);
+            renderResults();
+          });
+        });
+
+        AMENITIES = [];
+        SAMPLE_HOTELS.forEach(function (h) {
+          (h.amenities || []).forEach(function (a) {
+            if (AMENITIES.indexOf(a) === -1) AMENITIES.push(a);
+          });
+        });
+        AMENITIES.sort();
+        state.filters.amenities = new Set();
+        els.amenityFilters.innerHTML = AMENITIES.map(function (amenity, index) {
+          var id = 'amenity-' + index;
+          return (
+            '<div class="form-check">' +
+              '<input class="form-check-input amenity-check" type="checkbox" id="' + id + '" value="' + escapeHTML(amenity) + '" />' +
+              '<label class="form-check-label" for="' + id + '">' + escapeHTML(amenity) + '</label>' +
+            '</div>'
+          );
+        }).join('');
+        amenityChecks = Array.prototype.slice.call(document.querySelectorAll('.amenity-check'));
+        amenityChecks.forEach(function (cb) {
+          cb.addEventListener('change', function () {
+            if (cb.checked) state.filters.amenities.add(cb.value);
+            else state.filters.amenities.delete(cb.value);
+            renderResults();
+          });
+        });
+      }
+
+      function applyLiveHotels(list) {
+        if (!list || !list.length) return;
+        SAMPLE_HOTELS = list;
+        window.HOTEL_DATA = SAMPLE_HOTELS;
+        var prices = SAMPLE_HOTELS.map(function (hotel) { return hotel.pricePerNight; });
+        PRICE_MIN = Math.max(5000, Math.floor(Math.min.apply(null, prices) / 5000) * 5000);
+        PRICE_MAX = Math.max(PRICE_MIN + 5000, Math.ceil(Math.max.apply(null, prices) / 5000) * 5000);
+        els.priceRange.min = String(PRICE_MIN);
+        els.priceRange.max = String(PRICE_MAX);
+        els.priceRange.step = '5000';
+        els.priceRange.value = String(PRICE_MAX);
+        els.priceMinHint.textContent = formatMoney(PRICE_MIN);
+        els.priceMaxHint.textContent = formatMoney(PRICE_MAX);
+        state.filters.maxPrice = PRICE_MAX;
+        state.filters.stars = new Set([3, 4, 5]);
+        updatePriceLabel();
+        rebuildStayFilters();
+        renderResults();
+      }
+
+      fetch(catalogBase() + '/api/hotels', { headers: { 'Accept': 'application/json' } })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          if (res && res.success && res.data) applyLiveHotels(res.data);
+        })
+        .catch(function () {});
+
       updateResultsHeading();
       renderResults();
 

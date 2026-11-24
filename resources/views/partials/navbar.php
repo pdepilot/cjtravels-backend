@@ -14,8 +14,7 @@
     </nav>
 
     <div class="nav-actions">
-      <a href="<?= route('login') ?>" class="text-link">Sign in</a>
-      <a href="<?= route('register') ?>" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -47,8 +46,7 @@
     <a href="<?= route('contact') ?>"><i class="bi bi-envelope"></i> Contact</a>
   </div>
   <div class="mobile-nav-foot">
-    <a href="<?= route('login') ?>" class="btn-lux btn-lux-ghost w-100 mb-2">Sign in</a>
-    <a href="<?= route('register') ?>" class="btn-lux btn-lux-primary w-100">Create account</a>
+    <a href="<?= route('contact') ?>#send-message" class="btn-lux btn-lux-primary w-100">Book now</a>
   </div>
 </aside>
 

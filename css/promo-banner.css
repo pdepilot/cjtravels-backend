@@ -1,0 +1,847 @@
+/**
+ * CJ Travels — World-Class Luxury Promo Banner & Registration Modal Styles
+ */
+
+:root {
+  --cj-promo-navy-deep: #050E1C;
+  --cj-promo-navy: #0B1E3D;
+  --cj-promo-navy-card: #0E2448;
+  --cj-promo-gold: #C9A55B;
+  --cj-promo-gold-light: #E0C58A;
+  --cj-promo-gold-dark: #9E7D3B;
+  --cj-promo-gold-glow: rgba(201, 165, 91, 0.25);
+  --cj-promo-cream: #FAF6ED;
+  --cj-promo-white: #FFFFFF;
+  --cj-promo-text-sub: rgba(250, 246, 237, 0.82);
+  --cj-promo-border: rgba(201, 165, 91, 0.35);
+  --cj-promo-radius: 24px;
+}
+
+/* =========================================================
+   BACKDROP & MODAL OVERLAY
+   ========================================================= */
+.cj-promo-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(5, 14, 28, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 99995;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s ease;
+}
+
+.cj-promo-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* =========================================================
+   MODAL CARD
+   ========================================================= */
+.cj-promo-card {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  background: radial-gradient(circle at 85% 15%, #16325c 0%, var(--cj-promo-navy) 55%, var(--cj-promo-navy-deep) 100%);
+  color: var(--cj-promo-cream);
+  border: 1px solid var(--cj-promo-border);
+  border-radius: var(--cj-promo-radius);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.7), 0 0 50px var(--cj-promo-gold-glow);
+  padding: clamp(24px, 4.5vw, 42px);
+  margin: auto;
+  max-height: calc(100dvh - 32px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 165, 91, 0.75) transparent;
+  transform: translateY(35px) scale(0.94);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+}
+
+.cj-promo-card.has-flier {
+  max-width: 690px;
+}
+
+/* =========================================================
+   PROMOTIONAL FLIER DISPLAY
+   ========================================================= */
+.cj-promo-flier-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 22px;
+  border: 1px solid rgba(201, 165, 91, 0.45);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.55), 0 0 25px rgba(201, 165, 91, 0.15);
+  background: #050E1C;
+  display: block;
+}
+
+.cj-promo-flier-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  text-decoration: none;
+}
+
+.cj-promo-flier-img {
+  width: 100%;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+}
+
+.cj-promo-flier-wrap:hover .cj-promo-flier-img {
+  transform: scale(1.03);
+  filter: brightness(1.05);
+}
+
+.cj-promo-flier-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 14, 28, 0.45) 0%, transparent 40%, rgba(5, 14, 28, 0.65) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 14px;
+}
+
+.cj-promo-flier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(11, 30, 61, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(201, 165, 91, 0.6);
+  border-radius: 100px;
+  color: #E0C58A;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.cj-promo-flier-zoom {
+  align-self: flex-end;
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(5, 14, 28, 0.82);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 100px;
+  color: #FAF6ED;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+
+.cj-promo-flier-wrap:hover .cj-promo-flier-zoom {
+  background: #C9A55B;
+  color: #050E1C;
+  border-color: #C9A55B;
+}
+
+@media (max-width: 576px) {
+  .cj-promo-flier-wrap {
+    margin-bottom: 16px;
+  }
+}
+
+.cj-promo-backdrop.active .cj-promo-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* AMBIENT GLOW EFFECTS */
+.cj-promo-glow-top {
+  position: absolute;
+  top: -120px;
+  right: -100px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(201, 165, 91, 0.22), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.cj-promo-glow-bottom {
+  position: absolute;
+  bottom: -100px;
+  left: -80px;
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(30, 80, 155, 0.3), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* CLOSE BUTTON */
+.cj-promo-close {
+  position: sticky;
+  top: 0;
+  float: right;
+  margin: 0 0 -38px 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--cj-promo-cream);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 10;
+}
+
+.cj-promo-close:hover {
+  background: rgba(201, 165, 91, 0.25);
+  border-color: var(--cj-promo-gold);
+  color: var(--cj-promo-gold-light);
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* =========================================================
+   CARD HEADER: PILL & COUNTDOWN
+   ========================================================= */
+.cj-promo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-right: 52px;
+}
+
+.cj-promo-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 13px;
+  background: rgba(201, 165, 91, 0.16);
+  border: 1px solid rgba(201, 165, 91, 0.4);
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--cj-promo-gold-light);
+  text-transform: uppercase;
+}
+
+.cj-promo-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 100px;
+  font-size: 11px;
+  color: var(--cj-promo-cream);
+}
+
+.cj-countdown-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  opacity: 0.75;
+}
+
+.cj-countdown-digits strong {
+  color: var(--cj-promo-gold);
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+/* =========================================================
+   HEADINGS & TYPOGRAPHY
+   ========================================================= */
+.cj-promo-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(26px, 4.2vw, 36px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--cj-promo-cream);
+  margin-bottom: 12px;
+}
+
+.cj-promo-title em {
+  font-style: italic;
+  color: var(--cj-promo-gold);
+}
+
+.cj-promo-sub {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--cj-promo-text-sub);
+  margin-bottom: 22px;
+}
+
+/* =========================================================
+   VALUE HIGHLIGHTS
+   ========================================================= */
+.cj-promo-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.cj-promo-feat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.cj-promo-feat:hover {
+  transform: translateY(-2px);
+  border-color: rgba(201, 165, 91, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cj-feat-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(201, 165, 91, 0.18);
+  color: var(--cj-promo-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+
+.cj-feat-text strong {
+  display: block;
+  font-size: 13px;
+  color: var(--cj-promo-cream);
+  line-height: 1.25;
+  margin-bottom: 2px;
+}
+
+.cj-feat-text small {
+  display: block;
+  font-size: 11px;
+  color: rgba(250, 246, 237, 0.65);
+  line-height: 1.3;
+}
+
+/* =========================================================
+   VOUCHER COUPON BOX
+   ========================================================= */
+.cj-promo-voucher-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(8, 22, 45, 0.85);
+  border: 1px dashed var(--cj-promo-gold);
+  border-radius: 14px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.cj-voucher-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.cj-voucher-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--cj-promo-gold);
+}
+
+.cj-voucher-code {
+  font-family: 'DM Sans', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #FFFFFF;
+}
+
+.cj-voucher-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(201, 165, 91, 0.15);
+  border: 1px solid rgba(201, 165, 91, 0.4);
+  border-radius: 8px;
+  color: var(--cj-promo-gold-light);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cj-voucher-copy:hover {
+  background: var(--cj-promo-gold);
+  color: var(--cj-promo-navy-deep);
+}
+
+/* =========================================================
+   BUTTONS & ACTIONS
+   ========================================================= */
+.cj-promo-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cj-promo-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  text-align: center;
+  border: none;
+}
+
+.cj-promo-btn-primary {
+  background: linear-gradient(135deg, var(--cj-promo-gold-light) 0%, var(--cj-promo-gold) 50%, var(--cj-promo-gold-dark) 100%);
+  color: var(--cj-promo-navy-deep) !important;
+  box-shadow: 0 8px 24px rgba(201, 165, 91, 0.35);
+}
+
+.cj-promo-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(201, 165, 91, 0.5);
+  color: var(--cj-promo-navy-deep) !important;
+}
+
+.cj-promo-btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--cj-promo-cream) !important;
+}
+
+.cj-promo-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: var(--cj-promo-gold);
+  color: #FFFFFF !important;
+}
+
+.cj-promo-btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(250, 246, 237, 0.8) !important;
+}
+
+.cj-promo-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #FFFFFF !important;
+}
+
+.cj-promo-foot {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.cj-promo-dismiss-link {
+  background: none;
+  border: none;
+  color: rgba(250, 246, 237, 0.6);
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+.cj-promo-dismiss-link:hover {
+  color: var(--cj-promo-gold);
+}
+
+.cj-promo-terms-note {
+  display: block;
+  font-size: 11px;
+  color: rgba(250, 246, 237, 0.45);
+  line-height: 1.4;
+}
+
+/* =========================================================
+   FORM VIEW
+   ========================================================= */
+.cj-form-header {
+  margin-bottom: 20px;
+}
+
+.cj-form-step {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--cj-promo-gold);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.cj-form-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(24px, 3.8vw, 30px);
+  color: var(--cj-promo-cream);
+  margin-bottom: 6px;
+}
+
+.cj-form-sub {
+  font-size: 13px;
+  color: var(--cj-promo-text-sub);
+}
+
+.cj-form-group {
+  margin-bottom: 14px;
+}
+
+.cj-form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.cj-col-half {
+  flex: 1;
+}
+
+.cj-promo-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cj-promo-cream);
+  margin-bottom: 6px;
+}
+
+.cj-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cj-input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 15px;
+  color: var(--cj-promo-gold);
+  pointer-events: none;
+}
+
+.cj-promo-input,
+.cj-promo-select {
+  width: 100%;
+  padding: 11px 14px 11px 40px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.cj-promo-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23C9A55B' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: calc(100% - 14px) center;
+}
+
+.cj-promo-select option {
+  background: var(--cj-promo-navy-deep);
+  color: #FFFFFF;
+}
+
+.cj-promo-input:focus,
+.cj-promo-select:focus {
+  border-color: var(--cj-promo-gold);
+  box-shadow: 0 0 0 3px rgba(201, 165, 91, 0.25);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cj-promo-input.is-invalid {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+
+.cj-promo-error {
+  display: none;
+  color: #ff8e8e;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.cj-promo-error.show {
+  display: block;
+}
+
+.cj-promo-status {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 14px;
+}
+
+.cj-promo-status.success {
+  background: rgba(46, 213, 115, 0.15);
+  border: 1px solid rgba(46, 213, 115, 0.4);
+  color: #7bed9f;
+}
+
+.cj-promo-status.error {
+  background: rgba(255, 71, 87, 0.15);
+  border: 1px solid rgba(255, 71, 87, 0.4);
+  color: #ff6b81;
+}
+
+.cj-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+/* =========================================================
+   SUCCESS / CERTIFICATE VIEW
+   ========================================================= */
+.cj-success-badge-wrap {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: rgba(201, 165, 91, 0.16);
+  border: 2px solid var(--cj-promo-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px rgba(201, 165, 91, 0.3);
+}
+
+.cj-success-badge-icon {
+  font-size: 36px;
+  color: var(--cj-promo-gold);
+}
+
+.cj-success-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(26px, 4vw, 32px);
+  color: var(--cj-promo-cream);
+  margin-bottom: 8px;
+}
+
+.cj-success-sub {
+  font-size: 13px;
+  color: var(--cj-promo-text-sub);
+  max-width: 460px;
+  margin: 0 auto 20px;
+}
+
+.cj-voucher-certificate {
+  background: linear-gradient(135deg, rgba(20, 45, 85, 0.9) 0%, rgba(8, 20, 42, 0.95) 100%);
+  border: 1px solid var(--cj-promo-gold);
+  border-radius: 16px;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.cj-cert-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(201, 165, 91, 0.25);
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--cj-promo-gold-light);
+}
+
+.cj-cert-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cj-cert-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 0.05em;
+}
+
+.cj-cert-code {
+  font-size: 13px;
+  color: var(--cj-promo-cream);
+}
+
+.cj-cert-code strong {
+  font-family: 'DM Sans', monospace;
+  font-size: 18px;
+  color: var(--cj-promo-gold);
+  letter-spacing: 0.1em;
+  margin-left: 4px;
+}
+
+.cj-cert-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: rgba(250, 246, 237, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+/* =========================================================
+   FLOATING TRIGGER BUTTON (RE-OPEN AT ANY TIME)
+   ========================================================= */
+.cj-promo-trigger {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 99980;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background: linear-gradient(135deg, rgba(14, 36, 72, 0.95), rgba(7, 19, 38, 0.98));
+  border: 1px solid var(--cj-promo-gold);
+  border-radius: 100px;
+  padding: 10px 18px 10px 14px;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 12px 35px rgba(5, 14, 28, 0.5), 0 0 20px rgba(201, 165, 91, 0.25);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: visible;
+}
+
+.cj-promo-trigger:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 16px 40px rgba(5, 14, 28, 0.7), 0 0 30px rgba(201, 165, 91, 0.45);
+  border-color: var(--cj-promo-gold-light);
+  color: var(--cj-promo-gold-light);
+}
+
+.cj-promo-trigger i {
+  color: var(--cj-promo-gold);
+  font-size: 16px;
+  animation: cjGiftShake 3s ease infinite;
+}
+
+.cj-promo-trigger-pulse {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  background: var(--cj-promo-gold);
+  border-radius: 50%;
+  animation: cjPulseGlow 2s infinite;
+}
+
+@keyframes cjPulseGlow {
+  0% { box-shadow: 0 0 0 0 rgba(201, 165, 91, 0.7); }
+  70% { box-shadow: 0 0 0 12px rgba(201, 165, 91, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(201, 165, 91, 0); }
+}
+
+@keyframes cjGiftShake {
+  0%, 80%, 100% { transform: rotate(0); }
+  85% { transform: rotate(-15deg); }
+  90% { transform: rotate(15deg); }
+  95% { transform: rotate(-10deg); }
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================================= */
+@media (max-width: 640px) {
+  .cj-promo-backdrop {
+    padding: 10px;
+  }
+
+  .cj-promo-card {
+    padding: 22px 18px 24px;
+    max-height: calc(100dvh - 20px);
+  }
+
+  .cj-promo-features {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .cj-promo-feat {
+    padding: 9px 12px;
+  }
+
+  .cj-promo-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cj-form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .cj-promo-trigger {
+    bottom: 16px;
+    right: 16px;
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .cj-promo-voucher-box {
+    padding: 10px 14px;
+  }
+
+  .cj-voucher-code {
+    font-size: 17px;
+  }
+}
+

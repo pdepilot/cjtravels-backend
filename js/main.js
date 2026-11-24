@@ -39,21 +39,16 @@ bookingTabs.forEach(function(tab) {
 });
 
 
-// FLIGHT SEARCH DEMONSTRATION
-flightForm.addEventListener("submit", function(event) {
+if (flightForm) {
+    flightForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        window.location.href = "flights";
+    });
+}
 
-    event.preventDefault();
-
-    alert("Flight search demonstration! Live flight search will be connected later.");
-
-});
-
-
-// HOTEL SEARCH DEMONSTRATION
-hotelForm.addEventListener("submit", function(event) {
-
-    event.preventDefault();
-
-    alert("Hotel search demonstration! Live hotel search will be connected later.");
-
-});
+if (hotelForm) {
+    hotelForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        window.location.href = "hotels";
+    });
+}

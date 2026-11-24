@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Core\Auth;
+use App\Core\Database;
 use App\Core\Request;
 use App\Core\Response;
 use App\Core\Session;
@@ -13,6 +14,14 @@ class SettingController extends AdminController
     public function index(): Response
     {
         $admin = Auth::admin();
+        $mysql = config('database.connections.mysql', []);
+        $version = '';
+        try {
+            $row = Database::getInstance()->selectOne('SELECT VERSION() AS version');
+            $version = (string)($row['version'] ?? '');
+        } catch (\Throwable $e) {
+            $version = '';
+        }
 
         return $this->adminView('settings', [
             'title' => 'Console Settings — CJ Travels Admin',
@@ -20,6 +29,14 @@ class SettingController extends AdminController
             'admin' => $admin,
             'success' => Session::getFlash('success'),
             'error' => Session::getFlash('error'),
+            'promoCampaign' => \App\Services\RealtimeDataService::getActivePromoCampaign(),
+            'contactPhone' => \App\Services\RealtimeDataService::contactPhone(),
+            'environment' => [
+                'engine' => $version !== '' ? $version : 'MySQL',
+                'name' => (string)($mysql['database'] ?? ''),
+                'host' => trim((string)($mysql['host'] ?? '') . ':' . (string)($mysql['port'] ?? ''), ':'),
+                'server' => (string)($_SERVER['SERVER_SOFTWARE'] ?? 'PHP'),
+            ],
         ]);
     }
 
@@ -141,5 +158,41 @@ class SettingController extends AdminController
 
         Session::flash('success', 'Administrator password updated successfully!');
         return $this->redirect('/admin/settings');
+    }
+
+    public function updatePromoCampaign(Request $request): Response
+    {
+        $admin = Auth::admin();
+        if (!$admin) {
+            return $this->redirect('/admin/login');
+        }
+
+        $file = $_FILES['flier_image'] ?? null;
+        $result = \App\Services\RealtimeDataService::updatePromoCampaign($request->all(), $file);
+
+        if (!empty($result['success'])) {
+            Session::flash('success', $result['message'] ?? 'Promotional flier and campaign settings saved successfully!');
+        } else {
+            Session::flash('error', $result['error'] ?? 'Failed to update promotional campaign.');
+        }
+
+        return $this->redirect('/admin/settings#promo-settings');
+    }
+
+    public function updateContactPhone(Request $request): Response
+    {
+        $admin = Auth::admin();
+        if (!$admin) {
+            return $this->redirect('/admin/login');
+        }
+
+        $result = \App\Services\RealtimeDataService::updateContactPhone((string)$request->input('contact_phone', ''));
+        if (!empty($result['success'])) {
+            Session::flash('success', $result['message'] ?? 'The public phone and WhatsApp number have been updated.');
+        } else {
+            Session::flash('error', $result['error'] ?? 'Could not update the public phone number.');
+        }
+
+        return $this->redirect('/admin/settings#public-phone');
     }
 }

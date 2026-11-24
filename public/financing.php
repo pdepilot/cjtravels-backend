@@ -1,8 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="images/logo-mark.png" />
-
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Travel Financing — CJ Travels</title>
@@ -13,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -1761,12 +1777,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="contact.php">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -1779,23 +1795,20 @@
     <div class="container">
       <div class="nav-inner">
 
-        <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="index.php">Home</a>
-          <a href="flights.php">Flights</a>
-          <a href="hotels.php">Hotels</a>
-          <a href="destinations.php">Destinations</a>
-          <a href="financing.php" class="active" aria-current="page">Financing</a>
-          <a href="about.php">About</a>
-        
+          <a href="<?= route('flights') ?>">Flights</a>
+          <a href="<?= route('hotels') ?>">Hotels</a>
+          <a href="<?= route('destinations') ?>">Destinations</a>
+          <a href="<?= route('financing') ?>" class="active" aria-current="page">Financing</a>
+          <a href="<?= route('about') ?>">About</a>
         </nav>
 
         <div class="nav-actions">
-          <a href="login.php" class="text-link">Sign in</a>
-          <a href="register.php" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -1814,8 +1827,8 @@
 
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="index.php" aria-label="CJ Travels home">
-          <img src="images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -1824,24 +1837,23 @@
 
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="index.php">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="flights.php">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="hotels.php">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="destinations.php">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="financing.php">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="about.php">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="contact.php">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('financing') ?>">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
 
     <div class="mobile-nav-cta">
-      <a href="login.php" class="btn-lux btn-lux-ghost">Sign in</a>
-      <a href="register.php" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn-lux btn-lux-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="mobile-nav-footer">
       <p>Reach the concierge</p>
-      <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -2045,6 +2057,13 @@
             <div class="result-row">
               <span>Illustrative cost of credit</span>
               <strong id="resultCost">₦0</strong>
+            </div>
+
+            <div class="my-3">
+              <button type="button" id="applyWithPlanBtn" class="btn-lux btn-lux-gold w-100 text-center d-flex align-items-center justify-content-center gap-2">
+                <span>Apply with this Plan</span>
+                <i class="bi bi-arrow-down-circle"></i>
+              </button>
             </div>
 
             <p class="result-note">
@@ -2277,12 +2296,12 @@
           <div class="col-lg-9">
             <div class="review-card">
               <span class="review-tag">
-                <i class="bi bi-eye"></i> Frontend preview — not submitted
+                <i class="bi bi-eye"></i> Review before sending
               </span>
               <h2>Review your financing enquiry</h2>
               <p>
-                Please check the details below. This is a preview of what would be sent — no enquiry
-                has been submitted and no lending partner has been contacted.
+                Please check the details below. Submitting saves the enquiry for the CJ Travels team.
+                No lending partner is contacted from this page, and nothing here is an approval.
               </p>
 
               <div class="review-grid" id="reviewGrid"></div>
@@ -2290,9 +2309,9 @@
               <div class="demo-banner">
                 <i class="bi bi-info-circle"></i>
                 <div>
-                  <strong>Demonstration only.</strong> CJ Travels is not a lender. This enquiry
-                  has not been sent anywhere, and no financing has been arranged or approved. Any
-                  future application would be assessed by an independent licensed lending partner.
+                  <strong>Enquiry only.</strong> CJ Travels is not a lender. Submitting saves this
+                  enquiry in the admin loan list. Any financing decision belongs to an independent
+                  licensed lending partner.
                 </div>
               </div>
 
@@ -2302,13 +2321,61 @@
                   <li>A consultant would review your enquiry and contact you if anything needs clarifying.</li>
                   <li>With your consent, your enquiry would be shared with an independent licensed lending partner.</li>
                   <li>The partner would assess your eligibility and affordability using its own criteria.</li>
-                  <li>If approved, the partner would issue the loan terms to you directly — CJ Travels does not approve or decline applications.</li>
+                  <li>CJ Travels customer care reviews the enquiry and emails you when the flight loan is approved.</li>
                 </ol>
               </div>
 
-              <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn-lux btn-lux-navy" id="editBtn">
-                  Edit details <i class="bi bi-arrow-right arrow"></i>
+              <div id="enquirySuccessCard" class="enquiry-success-box text-center p-4 p-md-5 my-4 rounded-3 border" style="display:none; background: #faf6ed; border-color: #c9a55b !important;">
+                <div class="success-icon mb-3">
+                  <span class="d-inline-flex align-items-center justify-content-center rounded-circle" style="width: 72px; height: 72px; background: rgba(201,165,91,0.18); color: #0b1e3d; font-size: 32px;">
+                    <i class="bi bi-shield-check text-warning"></i>
+                  </span>
+                </div>
+                <span class="badge px-3 py-2 text-uppercase mb-2" style="background:#0b1e3d; color:#c9a55b; letter-spacing:0.1em; font-size: 11px;">
+                  Enquiry Confirmed · Partner Workflow
+                </span>
+                <h2 class="h3 fw-bold mb-2" style="color:#0b1e3d;">Your Travel Financing Enquiry Is Registered!</h2>
+                <p class="text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
+                  Your enquiry has been securely saved in the system under reference <strong id="successRefCode" class="text-dark font-monospace"></strong>. It stays pending until CJ Travels customer care approves it.
+                </p>
+                <p id="successEmailNote" class="mb-4" style="max-width:600px;margin:0 auto;color:#0b1e3d;"></p>
+                <div class="row g-3 justify-content-center mb-4">
+                  <div class="col-sm-4">
+                    <div class="p-3 bg-white rounded shadow-sm border text-start">
+                      <span class="text-muted d-block small">Amount Requested</span>
+                      <strong id="successAmount" class="fs-5" style="color:#0b1e3d;"></strong>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="p-3 bg-white rounded shadow-sm border text-start">
+                      <span class="text-muted d-block small">Repayment Period</span>
+                      <strong id="successPeriod" class="fs-5" style="color:#0b1e3d;"></strong>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="p-3 bg-white rounded shadow-sm border text-start">
+                      <span class="text-muted d-block small">Estimated Monthly</span>
+                      <strong id="successMonthly" class="fs-5 text-warning"></strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 justify-content-center">
+                  <a href="<?= route('customer.financing') ?>" class="btn-lux btn-lux-navy">
+                    <i class="bi bi-person-check me-1"></i> View in Customer Dashboard
+                  </a>
+                  <a href="#calculator" class="btn-lux btn-lux-ghost" id="successNewCalcBtn">
+                    <i class="bi bi-arrow-repeat me-1"></i> Calculate Another Plan
+                  </a>
+                </div>
+              </div>
+
+              <div class="form-status" id="reviewStatus" role="status" aria-live="polite"></div>
+              <div class="d-flex flex-wrap gap-2" id="reviewActionsRow">
+                <button type="button" class="btn-lux btn-lux-navy" id="submitEnquiryBtn">
+                  Submit enquiry <i class="bi bi-arrow-right arrow"></i>
+                </button>
+                <button type="button" class="btn-lux btn-lux-ghost" id="editBtn">
+                  Edit details
                 </button>
                 <a href="#calculator" class="btn-lux btn-lux-ghost" id="doneBtn">
                   Back to calculator
@@ -2601,8 +2668,8 @@
       <div class="footer-grid">
 
         <div>
-          <a class="footer-brand" href="index.php" aria-label="CJ Travels home">
-            <img src="images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -2619,27 +2686,27 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="flights.php">Flights</a></li>
-            <li><a href="hotels.php">Hotels</a></li>
-            <li><a href="destinations.php">Destinations</a></li>
-            <li><a href="financing.php">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="<?= route('financing') ?>">Travel financing</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="about.php">About us</a></li>
-            <li><a href="contact.php">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
 
@@ -2659,17 +2726,33 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <?php if (file_exists(__DIR__ . '/../partials/promo-modal.php')): ?>
+    <?php include __DIR__ . '/../partials/promo-modal.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
+
+  <script>
+    window.CJ_FINANCING_API = "<?= function_exists('route') ? route('api.loans.apply') : '/api/loans/apply' ?>";
+    window.CJ_CUSTOMER_FINANCING_URL = "<?= function_exists('route') ? route('customer.financing') : '/customer/financing' ?>";
+  </script>
 
   <script>
     (function () {
@@ -2869,6 +2952,30 @@
 
       renderCalculator();
 
+      var applyWithPlanBtn = document.getElementById('applyWithPlanBtn');
+      if (applyWithPlanBtn) {
+        applyWithPlanBtn.addEventListener('click', function () {
+          var costInput = document.getElementById('travelCostInput');
+          var periodInput = document.getElementById('periodInput');
+          if (costInput) {
+            costInput.value = calcState.budget;
+            costInput.classList.remove('is-invalid');
+          }
+          if (periodInput) {
+            periodInput.value = calcState.months + ' months';
+            periodInput.classList.remove('is-invalid');
+          }
+          var target = document.getElementById('apply');
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            var nameInput = document.getElementById('fullName');
+            if (nameInput) {
+              setTimeout(function () { nameInput.focus(); }, 400);
+            }
+          }
+        });
+      }
+
       /* =====================================================
          7. FORM VALIDATION
          ===================================================== */
@@ -2999,8 +3106,22 @@
       var reviewSection = document.getElementById('reviewSection');
       var reviewGrid    = document.getElementById('reviewGrid');
       var editBtn       = document.getElementById('editBtn');
+      var submitEnquiryBtn = document.getElementById('submitEnquiryBtn');
+      var reviewStatus = document.getElementById('reviewStatus');
+      var pendingEnquiry = null;
+
+      function catalogBase() {
+        if (window.CJ_FINANCING_API) {
+          return window.CJ_FINANCING_API.replace(/\/api\/loans\/apply\/?$/, '');
+        }
+        var path = window.location.pathname.replace(/\/+$/, '');
+        var cut = path.search(/\/financing(\.php)?$/i);
+        if (cut !== -1) return path.slice(0, cut);
+        return path.replace(/\/[^\/]*$/, '');
+      }
 
       function buildReview(data) {
+        pendingEnquiry = data;
         var summary = [
           { label: 'Full name',  value: data.fullName },
           { label: 'Email address', value: data.email },
@@ -3030,6 +3151,89 @@
         applySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
       editBtn.addEventListener('click', returnToForm);
+
+      if (submitEnquiryBtn) {
+        submitEnquiryBtn.addEventListener('click', function () {
+          if (!pendingEnquiry) return;
+          submitEnquiryBtn.disabled = true;
+          if (reviewStatus) {
+            reviewStatus.textContent = 'Saving this enquiry…';
+            reviewStatus.className = 'form-status show';
+          }
+          var apiUrl = window.CJ_FINANCING_API ? window.CJ_FINANCING_API : (catalogBase() + '/api/loans/apply');
+          fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              fullName: pendingEnquiry.fullName,
+              email: pendingEnquiry.email,
+              phone: pendingEnquiry.phone,
+              country: pendingEnquiry.country,
+              amount: pendingEnquiry.travelCost,
+              purpose: pendingEnquiry.purpose,
+              period: pendingEnquiry.period
+            })
+          })
+            .then(function (res) { return res.json(); })
+            .then(function (res) {
+              submitEnquiryBtn.disabled = false;
+              if (res && res.success && res.loan) {
+                if (reviewStatus) reviewStatus.style.display = 'none';
+                var successCard = document.getElementById('enquirySuccessCard');
+                var actionsRow = document.getElementById('reviewActionsRow');
+                var refCodeEl = document.getElementById('successRefCode');
+                var amountEl = document.getElementById('successAmount');
+                var periodEl = document.getElementById('successPeriod');
+                var monthlyEl = document.getElementById('successMonthly');
+                if (refCodeEl) refCodeEl.textContent = res.loan.ref;
+                var emailNote = document.getElementById('successEmailNote');
+                if (emailNote) {
+                  emailNote.textContent = res.emailSent
+                    ? 'A confirmation email has been sent. Your enquiry is pending approval by CJ Travels customer care.'
+                    : 'Your enquiry is pending approval. The confirmation email could not be sent yet.';
+                }
+                if (amountEl) amountEl.textContent = formatMoney(res.loan.amount || pendingEnquiry.travelCost);
+                if (periodEl) periodEl.textContent = res.loan.period || pendingEnquiry.period;
+                if (monthlyEl) {
+                  var mInst = res.loan.monthly_installment || monthlyInstalment(pendingEnquiry.travelCost, 15, parseInt(pendingEnquiry.period, 10) || 6);
+                  monthlyEl.textContent = formatMoney(mInst) + ' / mo';
+                }
+                if (actionsRow) actionsRow.style.display = 'none';
+                if (successCard) {
+                  successCard.style.display = 'block';
+                  successCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+              }
+              if (reviewStatus) {
+                reviewStatus.className = 'form-status show';
+                reviewStatus.textContent = (res && (res.error || res.message)) || 'Could not save this enquiry.';
+              }
+            })
+            .catch(function () {
+              submitEnquiryBtn.disabled = false;
+              if (reviewStatus) {
+                reviewStatus.className = 'form-status show';
+                reviewStatus.textContent = 'Could not reach the server.';
+              }
+            });
+        });
+      }
+
+      var successNewCalcBtn = document.getElementById('successNewCalcBtn');
+      if (successNewCalcBtn) {
+        successNewCalcBtn.addEventListener('click', function (e) {
+          e.preventDefault();
+          var successCard = document.getElementById('enquirySuccessCard');
+          var actionsRow = document.getElementById('reviewActionsRow');
+          if (successCard) successCard.style.display = 'none';
+          if (actionsRow) actionsRow.style.display = 'flex';
+          reviewSection.classList.add('d-none');
+          applySection.classList.remove('d-none');
+          var calc = document.getElementById('calculator');
+          if (calc) calc.scrollIntoView({ behavior: 'smooth' });
+        });
+      }
 
       /* =====================================================
          9. NEWSLETTER

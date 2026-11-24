@@ -73,7 +73,7 @@ if (!function_exists('redirect')) {
     {
         $base = base_subfolder();
         if ($base !== '' && str_starts_with($url, '/') && !str_starts_with($url, $base)) {
-            $url = $base . '/' . ltrim($url, '/');
+            $url = $url === '/' ? $base : ($base . '/' . ltrim($url, '/'));
         }
         return Response::redirect($url, $status);
     }
@@ -85,7 +85,7 @@ if (!function_exists('route')) {
         $path = Router::route($name, $params);
         $base = base_subfolder();
         if ($base !== '' && !str_starts_with($path, $base)) {
-            $path = $base . '/' . ltrim($path, '/');
+            $path = $path === '/' ? $base : ($base . '/' . ltrim($path, '/'));
         }
         return $path;
     }
@@ -185,6 +185,49 @@ if (!function_exists('e')) {
     function e(mixed $value): string
     {
         return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+    }
+}
+
+if (!function_exists('cj_contact')) {
+    function cj_contact(): array
+    {
+        static $contact = null;
+        if ($contact !== null) {
+            return $contact;
+        }
+
+        try {
+            $contact = \App\Services\RealtimeDataService::contactPhone();
+        } catch (\Throwable $e) {
+            $contact = [
+                'display' => '08135196772',
+                'tel' => '+2348135196772',
+                'whatsapp' => '2348135196772',
+            ];
+        }
+
+        return $contact;
+    }
+}
+
+if (!function_exists('cj_phone_display')) {
+    function cj_phone_display(): string
+    {
+        return (string)(cj_contact()['display'] ?? '08135196772');
+    }
+}
+
+if (!function_exists('cj_phone_tel')) {
+    function cj_phone_tel(): string
+    {
+        return (string)(cj_contact()['tel'] ?? '+2348135196772');
+    }
+}
+
+if (!function_exists('cj_whatsapp_number')) {
+    function cj_whatsapp_number(): string
+    {
+        return (string)(cj_contact()['whatsapp'] ?? '2348135196772');
     }
 }
 

@@ -1,7 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>404 Not Found — CJ Travels</title>
@@ -66,7 +81,7 @@
     <h1>404</h1>
     <h2>Destination Not Found</h2>
     <p>The page or itinerary you are looking for does not exist or has been moved.</p>
-    <a href="/" class="btn-home">Return to Home</a>
+    <a href="<?= e(route('home')) ?>" class="btn-home">Return to Home</a>
   </div>
 </body>
 </html>

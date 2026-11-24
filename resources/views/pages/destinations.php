@@ -1,7 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Destinations — CJ Travels</title>
@@ -12,6 +27,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
+  <link href="<?= asset('css/promo-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -1465,12 +1482,12 @@
     <div class="container">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+          <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
           <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
         </div>
         <div class="topbar-right">
           <span class="topbar-badge">Concierge · Available 24/7</span>
-          <a href="/contact">Contact</a>
+          <a href="<?= route('contact') ?>">Contact</a>
         </div>
       </div>
     </div>
@@ -1483,21 +1500,20 @@
     <div class="container">
       <div class="nav-inner">
 
-        <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+        <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
 
         <nav class="nav-center" aria-label="Main navigation">
-          <a href="/flights">Flights</a>
-          <a href="/hotels">Hotels</a>
-          <a href="/destinations" class="active" aria-current="page">Destinations</a>
-          <a href="/financing">Financing</a>
-          <a href="/about">About</a>
+          <a href="<?= route('flights') ?>">Flights</a>
+          <a href="<?= route('hotels') ?>">Hotels</a>
+          <a href="<?= route('destinations') ?>" class="active" aria-current="page">Destinations</a>
+          <a href="<?= route('financing') ?>">Financing</a>
+          <a href="<?= route('about') ?>">About</a>
         </nav>
 
         <div class="nav-actions">
-          <a href="/login" class="text-link">Sign in</a>
-          <a href="/register" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
+          <a href="<?= route('contact') ?>#send-message" class="btn-nav-cta">Book now <i class="bi bi-arrow-right"></i></a>
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
@@ -1516,8 +1532,8 @@
 
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
-      <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
@@ -1526,24 +1542,23 @@
 
     <div class="mobile-nav-body">
       <ul class="nav-list">
-        <li><a class="nav-link" href="/">Home <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/flights">Flights <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/hotels">Hotels <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link active" href="/destinations">Destinations <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/financing">Financing <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/about">About <i class="bi bi-arrow-right"></i></a></li>
-        <li><a class="nav-link" href="/contact">Contact <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('home') ?>">Home <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('flights') ?>">Flights <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('hotels') ?>">Hotels <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link active" href="<?= route('destinations') ?>">Destinations <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('financing') ?>">Financing <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('about') ?>">About <i class="bi bi-arrow-right"></i></a></li>
+        <li><a class="nav-link" href="<?= route('contact') ?>">Contact <i class="bi bi-arrow-right"></i></a></li>
       </ul>
     </div>
 
     <div class="mobile-nav-cta">
-      <a href="/login" class="btn btn-ghost">Sign in</a>
-      <a href="/register" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
+      <a href="<?= route('contact') ?>#send-message" class="btn btn-navy">Book now <i class="bi bi-arrow-right"></i></a>
     </div>
 
     <div class="mobile-nav-footer">
       <p>Reach the concierge</p>
-      <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+      <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
       <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
     </div>
   </aside>
@@ -1647,60 +1662,6 @@
     </section>
 
     <!-- =========================================================
-         TRAVEL INSPIRATION
-         ========================================================= -->
-    <section class="section bg-cream">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="eyebrow">Travel inspiration</span>
-          <h2>Ideas for your <em>next trip</em>.</h2>
-          <p>Practical guides and seasonal ideas from our travel consultants.</p>
-        </div>
-
-        <div class="inspo-grid">
-          <article class="inspo-card reveal">
-            <img src="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=900&q=80"
-                 alt="Istanbul skyline at dusk" loading="lazy" decoding="async" />
-            <div class="inspo-content">
-              <span class="inspo-kicker">City guide</span>
-              <h3>48 hours in Istanbul: where two continents meet</h3>
-              <p>Bosphorus ferries, hidden courtyards and the best time to visit Hagia Sophia without the crowds.</p>
-              <a class="inspo-link" href="destinations.php#explore" data-inspire="Istanbul">
-                Explore Istanbul <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
-          </article>
-
-          <article class="inspo-card reveal">
-            <img src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=900&q=80"
-                 alt="Table Mountain and the Cape Town coastline" loading="lazy" decoding="async" />
-            <div class="inspo-content">
-              <span class="inspo-kicker">First-timer's guide</span>
-              <h3>Cape Town in a week: coast, wine and Table Mountain</h3>
-              <p>How to plan the perfect first visit — including when to hike and which wine route to choose.</p>
-              <a class="inspo-link" href="destinations.php#explore" data-inspire="Cape Town">
-                Explore Cape Town <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
-          </article>
-
-          <article class="inspo-card reveal">
-            <img src="https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=80"
-                 alt="Overwater villas in the Maldives" loading="lazy" decoding="async" />
-            <div class="inspo-content">
-              <span class="inspo-kicker">Seasonal picks</span>
-              <h3>Where to go when: the best months to travel</h3>
-              <p>From dry-season safaris to shoulder-season city breaks, timing makes all the difference.</p>
-              <a class="inspo-link" href="destinations.php#explore" data-inspire="Maldives">
-                Explore the Maldives <i class="bi bi-arrow-right"></i>
-              </a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
          CTA
          ========================================================= -->
     <section class="cta">
@@ -1712,10 +1673,10 @@
           straight into our flight and hotel search tools.
         </p>
         <div class="cta-actions">
-          <a href="/flights" class="btn btn-gold btn-lg">
+          <a href="<?= route('flights') ?>" class="btn btn-gold btn-lg">
             <i class="bi bi-airplane"></i> Search flights
           </a>
-          <a href="/hotels" class="btn btn-outline-light btn-lg">
+          <a href="<?= route('hotels') ?>" class="btn btn-outline-light btn-lg">
             <i class="bi bi-building"></i> Search hotels
           </a>
         </div>
@@ -1751,8 +1712,8 @@
       <div class="footer-grid">
 
         <div>
-          <a class="footer-brand" href="/" aria-label="CJ Travels home">
-            <img src="/images/logo-white.png" alt="CJ Travels" class="brand-logo footer-logo" />
+          <a class="footer-brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+            <img src="<?= asset('images/logo-white.png') ?>" alt="CJ Travels" class="brand-logo footer-logo" />
           </a>
           <p class="footer-about">
             An online travel agency serving customers in Nigeria and internationally.
@@ -1769,27 +1730,27 @@
         <div>
           <h4 class="footer-heading">Travel</h4>
           <ul class="footer-links">
-            <li><a href="/flights">Flights</a></li>
-            <li><a href="/hotels">Hotels</a></li>
-            <li><a href="/destinations">Destinations</a></li>
-            <li><a href="/financing">Travel financing</a></li>
+            <li><a href="<?= route('flights') ?>">Flights</a></li>
+            <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+            <li><a href="<?= route('destinations') ?>">Destinations</a></li>
+            <li><a href="<?= route('financing') ?>">Travel financing</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Company</h4>
           <ul class="footer-links">
-            <li><a href="/about">About us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="faq.php">FAQ</a></li>
-            <li><a href="manage-booking.php">Manage booking</a></li>
+            <li><a href="<?= route('about') ?>">About us</a></li>
+            <li><a href="<?= route('contact') ?>">Contact</a></li>
+            <li><a href="<?= route('about') ?>#faq">FAQ</a></li>
+            <li><a href="<?= route('contact') ?>#send-message">Contact us</a></li>
           </ul>
         </div>
 
         <div>
           <h4 class="footer-heading">Get in touch</h4>
           <div class="footer-contact">
-            <a href="tel:+2348080452890"><i class="bi bi-telephone"></i> 0808 045 2890</a>
+            <a href="tel:<?= e(cj_phone_tel()) ?>"><i class="bi bi-telephone"></i> <?= e(cj_phone_display()) ?></a>
             <a href="mailto:info@cjtravelsowerri.com"><i class="bi bi-envelope"></i> info@cjtravelsowerri.com</a>
           </div>
 
@@ -1809,17 +1770,28 @@
       </div>
 
       <div class="footer-bottom">
-        <p>&copy; <span data-year>2025</span> CJ Travels. All rights reserved.</p>
+        <p>&copy; <span data-year>2026</span> CJ Travels. All rights reserved.</p>
         <ul class="footer-legal">
-          <li><a href="privacy.php">Privacy</a></li>
-          <li><a href="terms.php">Terms</a></li>
-          <li><a href="faq.php">Help</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+          <li><a href="<?= route('contact') ?>">Help</a></li>
         </ul>
       </div>
     </div>
   </footer>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
+  <?php if (file_exists(__DIR__ . '/../partials/promo-modal.php')): ?>
+    <?php include __DIR__ . '/../partials/promo-modal.php'; ?>
+  <?php endif; ?>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
+  <script src="<?= asset('js/promo-banner.js') ?>"></script>
 
   <script>
     (function () {
@@ -1828,435 +1800,7 @@
       /* =====================================================
          1. DESTINATION DATA
          ===================================================== */
-      var DESTINATIONS = [
-        /* -------------------- AFRICA -------------------- */
-        {
-          id: 'cape-town', city: 'Cape Town', country: 'South Africa', continent: 'Africa',
-          categories: ['Adventure', 'Beaches', 'City Breaks'], popular: true,
-          image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Where Table Mountain meets the Atlantic.',
-          description: 'Cape Town wraps mountains, beaches and vineyards into one compact, walkable city. Mornings can begin with a hike up Lion\'s Head and end with a sunset drive along Chapman\'s Peak, with the Winelands only an hour inland.',
-          highlights: [
-            'Table Mountain cableway and sunrise hikes',
-            'V&A Waterfront restaurants and markets',
-            'Cape Peninsula and Boulders Beach penguins',
-            'Stellenbosch and Franschhoek wine routes'
-          ],
-          bestTime: 'November – March',
-          idealLength: '6 – 8 days',
-          flightCode: 'Cape Town (CPT)'
-        },
-        {
-          id: 'marrakech', city: 'Marrakech', country: 'Morocco', continent: 'Africa',
-          categories: ['Culture', 'City Breaks'], popular: false,
-          image: 'https://images.unsplash.com/photo-1489749798305-4fea3ae63d43?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Souks, riads and the Atlas Mountains.',
-          description: 'Marrakech is a city of contrasts — the clamour of Jemaa el-Fnaa square, the quiet of a tiled riad courtyard, and the snow-capped Atlas Mountains just a day trip away. Come for the craft, the food and the light.',
-          highlights: [
-            'Jemaa el-Fnaa square at dusk',
-            'Bahia Palace and the Saadian Tombs',
-            'Souk shopping for leather and lanterns',
-            'Day trip to the Atlas Mountains'
-          ],
-          bestTime: 'March – May, September – November',
-          idealLength: '3 – 5 days',
-          flightCode: 'Marrakech (RAK)'
-        },
-        {
-          id: 'zanzibar', city: 'Zanzibar', country: 'Tanzania', continent: 'Africa',
-          categories: ['Beaches', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Spice island beaches and Stone Town.',
-          description: 'An archipelago off the Tanzanian coast where turquoise water meets white sand and a UNESCO-listed old town. Pair lazy beach days in Nungwi with a spice tour and a wander through Stone Town\'s alleyways.',
-          highlights: [
-            'Nungwi and Kendwa beaches',
-            'Stone Town UNESCO walking tour',
-            'Spice farm visits',
-            'Snorkelling at Mnemba Atoll'
-          ],
-          bestTime: 'June – October',
-          idealLength: '4 – 7 days',
-          flightCode: 'Zanzibar (ZNZ)'
-        },
-        {
-          id: 'cairo', city: 'Cairo', country: 'Egypt', continent: 'Africa',
-          categories: ['Culture', 'City Breaks'], popular: false,
-          image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Pyramids, museums and the Nile.',
-          description: 'Cairo is one of the world\'s great historic cities, home to the Giza pyramids, the Grand Egyptian Museum and a thousand years of Islamic architecture. The Nile runs through it all, best seen from a felucca at sunset.',
-          highlights: [
-            'Giza pyramids and the Sphinx',
-            'Grand Egyptian Museum',
-            'Khan el-Khalili bazaar',
-            'Felucca ride on the Nile'
-          ],
-          bestTime: 'October – April',
-          idealLength: '4 – 6 days',
-          flightCode: 'Cairo (CAI)'
-        },
-        {
-          id: 'nairobi', city: 'Nairobi', country: 'Kenya', continent: 'Africa',
-          categories: ['Adventure', 'City Breaks'], popular: false,
-          image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=900&q=80',
-          blurb: 'A capital with a national park on its doorstep.',
-          description: 'Nairobi is the only capital city with a national park inside its boundaries. Use it as a base for a safari in the Maasai Mara, then return for coffee culture, craft markets and a thriving restaurant scene.',
-          highlights: [
-            'Nairobi National Park game drives',
-            'Giraffe Centre and Elephant Orphanage',
-            'Karura Forest walks',
-            'Day trips to the Great Rift Valley'
-          ],
-          bestTime: 'June – October, January – February',
-          idealLength: '3 – 5 days',
-          flightCode: 'Nairobi (NBO)'
-        },
-        {
-          id: 'accra', city: 'Accra', country: 'Ghana', continent: 'Africa',
-          categories: ['Culture', 'City Breaks'], popular: false,
-          image: 'https://images.unsplash.com/photo-1580741203987-9c9b6f0e2c2b?auto=format&fit=crop&w=900&q=80',
-          blurb: 'West African art, music and coastline.',
-          description: 'Ghana\'s capital blends Atlantic beaches with a serious contemporary art scene and some of the most welcoming nightlife in West Africa. History sits close to the surface at Cape Coast and Elmina castles.',
-          highlights: [
-            'Independence Arch and Jamestown',
-            'Artist studios in Osu and Accra',
-            'Labadi and Kokrobite beaches',
-            'Day trip to Cape Coast Castle'
-          ],
-          bestTime: 'November – March',
-          idealLength: '4 – 6 days',
-          flightCode: 'Accra (ACC)'
-        },
-
-        /* -------------------- EUROPE -------------------- */
-        {
-          id: 'paris', city: 'Paris', country: 'France', continent: 'Europe',
-          categories: ['Culture', 'City Breaks', 'Luxury'], popular: true,
-          image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80',
-          blurb: 'The classic city break, endlessly reimagined.',
-          description: 'Paris rewards both first-timers and repeat visitors. Tick off the Eiffel Tower and the Louvre, then slow down in the Marais, eat your way through a market street, and watch the Seine turn gold at dusk.',
-          highlights: [
-            'Eiffel Tower and Trocadéro views',
-            'Louvre and Musée d\'Orsay',
-            'Montmartre and the Marais',
-            'Seine river cruise at sunset'
-          ],
-          bestTime: 'April – June, September – October',
-          idealLength: '3 – 5 days',
-          flightCode: 'Paris (CDG)'
-        },
-        {
-          id: 'london', city: 'London', country: 'United Kingdom', continent: 'Europe',
-          categories: ['City Breaks', 'Culture'], popular: true,
-          image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Markets, museums and a thousand neighbourhoods.',
-          description: 'London is a city of villages, each with its own rhythm — Shoreditch\'s street art, Borough Market\'s food stalls, the museums of South Kensington. The theatre, the parks and the skyline are simply the backdrop.',
-          highlights: [
-            'British Museum and Tate Modern',
-            'Borough Market and Brick Lane',
-            'West End theatre',
-            'Greenwich and the South Bank'
-          ],
-          bestTime: 'May – September',
-          idealLength: '4 – 6 days',
-          flightCode: 'London (LHR)'
-        },
-        {
-          id: 'santorini', city: 'Santorini', country: 'Greece', continent: 'Europe',
-          categories: ['Beaches', 'Luxury', 'Culture'], popular: true,
-          image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Whitewashed cliffs above a volcanic caldera.',
-          description: 'Santorini is the postcard Cycladic island — blue domes, cave suites and sunsets that draw a crowd to Oia every evening. Beyond the view, there are black-sand beaches, vineyards and ancient Akrotiri to explore.',
-          highlights: [
-            'Oia and Fira sunset viewpoints',
-            'Caldera sailing and hot springs',
-            'Red and Black sand beaches',
-            'Ancient Akrotiri excavations'
-          ],
-          bestTime: 'May – June, September – October',
-          idealLength: '4 – 6 days',
-          flightCode: 'Santorini (JTR)'
-        },
-        {
-          id: 'rome', city: 'Rome', country: 'Italy', continent: 'Europe',
-          categories: ['Culture', 'City Breaks'], popular: false,
-          image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=900&q=80',
-          blurb: 'An open-air museum with excellent pasta.',
-          description: 'Rome layers three thousand years of history into a walkable centre. The Colosseum, the Pantheon and the Vatican are the obvious stops, but the real pleasure is wandering Trastevere at night with a gelato.',
-          highlights: [
-            'Colosseum and Roman Forum',
-            'Vatican Museums and St Peter\'s',
-            'Pantheon and Piazza Navona',
-            'Trastevere food walks'
-          ],
-          bestTime: 'April – May, September – October',
-          idealLength: '3 – 5 days',
-          flightCode: 'Rome (FCO)'
-        },
-        {
-          id: 'amsterdam', city: 'Amsterdam', country: 'Netherlands', continent: 'Europe',
-          categories: ['City Breaks', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Canals, cycling and world-class museums.',
-          description: 'Amsterdam is compact enough to see by bike and rich enough to keep you busy for a week. The Rijksmuseum and Van Gogh Museum anchor the museum quarter, while the Jordaan and De Pijp supply the cafés and markets.',
-          highlights: [
-            'Rijksmuseum and Van Gogh Museum',
-            'Canal cruise at golden hour',
-            'Jordaan neighbourhood walks',
-            'Day trip to Zaanse Schans windmills'
-          ],
-          bestTime: 'April – May, September',
-          idealLength: '2 – 4 days',
-          flightCode: 'Amsterdam (AMS)'
-        },
-        {
-          id: 'interlaken', city: 'Interlaken', country: 'Switzerland', continent: 'Europe',
-          categories: ['Adventure', 'Luxury'], popular: false,
-          image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Alpine lakes between two mountain ranges.',
-          description: 'Interlaken sits between Lake Thun and Lake Brienz, with the Jungfrau region rising behind it. It is the base for paragliding, cogwheel trains to Jungfraujoch, and some of the most scenic rail journeys in Europe.',
-          highlights: [
-            'Jungfraujoch – Top of Europe',
-            'Paragliding over Interlaken',
-            'Lake Brienz and Giessbach Falls',
-            'Lauterbrunnen valley waterfalls'
-          ],
-          bestTime: 'June – September, December – March',
-          idealLength: '3 – 5 days',
-          flightCode: 'Zurich (ZRH)'
-        },
-
-        /* -------------------- ASIA -------------------- */
-        {
-          id: 'bali', city: 'Bali', country: 'Indonesia', continent: 'Asia',
-          categories: ['Beaches', 'Adventure', 'Culture'], popular: true,
-          image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Rice terraces, surf breaks and temple mornings.',
-          description: 'Bali is far more than a beach destination. Ubud\'s rice terraces and temples sit an hour from the surf beaches of Canggu and Uluwatu, with volcanoes, waterfalls and dive sites filling the space in between.',
-          highlights: [
-            'Tegallalang rice terraces',
-            'Uluwatu Temple and cliff sunsets',
-            'Canggu and Seminyak beaches',
-            'Mount Batur sunrise trek'
-          ],
-          bestTime: 'April – October',
-          idealLength: '7 – 10 days',
-          flightCode: 'Denpasar (DPS)'
-        },
-        {
-          id: 'tokyo', city: 'Tokyo', country: 'Japan', continent: 'Asia',
-          categories: ['City Breaks', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Neon, precision and quiet temple gardens.',
-          description: 'Tokyo runs from the crossing at Shibuya to the stillness of Meiji Shrine in a few metro stops. Food, design and neighbourhood character are the real draw — each district feels like a small city of its own.',
-          highlights: [
-            'Shibuya Crossing and Shinjuku',
-            'Senso-ji Temple in Asakusa',
-            'Tsukiji and Toyosu food markets',
-            'Day trip to Mount Fuji and Hakone'
-          ],
-          bestTime: 'March – May, October – November',
-          idealLength: '5 – 7 days',
-          flightCode: 'Tokyo (HND)'
-        },
-        {
-          id: 'maldives', city: 'Maldives', country: 'Maldives', continent: 'Asia',
-          categories: ['Beaches', 'Luxury'], popular: true,
-          image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Overwater villas and impossibly clear lagoons.',
-          description: 'The Maldives is 26 atolls of white sand, coral reefs and turquoise water. Resorts range from barefoot-luxury hideaways to family-friendly islands, and the snorkelling is as good from the beach as it is from a boat.',
-          highlights: [
-            'Overwater villa stays',
-            'Snorkelling and diving the reefs',
-            'Sandbank picnics',
-            'Sunset dolphin cruises'
-          ],
-          bestTime: 'November – April',
-          idealLength: '5 – 8 days',
-          flightCode: 'Malé (MLE)'
-        },
-        {
-          id: 'bangkok', city: 'Bangkok', country: 'Thailand', continent: 'Asia',
-          categories: ['City Breaks', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1508009603885-50cf7c579365?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Street food, temples and rooftop bars.',
-          description: 'Bangkok is a city that rewards curiosity — the Grand Palace and Wat Pho sit beside river ferries and night markets, and the food alone justifies the trip. Use it as a gateway to Thailand\'s islands and northern cities.',
-          highlights: [
-            'Grand Palace and Wat Pho',
-            'Chao Phraya river ferries',
-            'Chatuchak weekend market',
-            'Street food in Chinatown'
-          ],
-          bestTime: 'November – February',
-          idealLength: '3 – 5 days',
-          flightCode: 'Bangkok (BKK)'
-        },
-
-        /* -------------------- MIDDLE EAST -------------------- */
-        {
-          id: 'dubai', city: 'Dubai', country: 'United Arab Emirates', continent: 'Middle East',
-          categories: ['Luxury', 'City Breaks'], popular: true,
-          image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Skyline ambition and desert calm.',
-          description: 'Dubai does scale — the world\'s tallest building, enormous malls and man-made islands — but the city is at its best when you step away from it: a desert dune drive, an abra ride across the creek, or dinner in old Deira.',
-          highlights: [
-            'Burj Khalifa observation decks',
-            'Desert safari and dune bashing',
-            'Dubai Mall and Fountain show',
-            'Old Dubai souks and abra ride'
-          ],
-          bestTime: 'November – March',
-          idealLength: '3 – 5 days',
-          flightCode: 'Dubai (DXB)'
-        },
-        {
-          id: 'istanbul', city: 'Istanbul', country: 'Türkiye', continent: 'Middle East',
-          categories: ['Culture', 'City Breaks'], popular: true,
-          image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Two continents, one skyline.',
-          description: 'Istanbul straddles Europe and Asia across the Bosphorus, and the layers show: Byzantine churches, Ottoman palaces, and a food culture that runs from street simit to fine dining. Ferries are the best way to see it.',
-          highlights: [
-            'Hagia Sophia and Blue Mosque',
-            'Topkapi Palace',
-            'Grand Bazaar and Spice Bazaar',
-            'Bosphorus ferry at sunset'
-          ],
-          bestTime: 'April – May, September – October',
-          idealLength: '4 – 6 days',
-          flightCode: 'Istanbul (IST)'
-        },
-        {
-          id: 'doha', city: 'Doha', country: 'Qatar', continent: 'Middle East',
-          categories: ['City Breaks', 'Luxury'], popular: false,
-          image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=900&q=80',
-          blurb: 'A modern skyline beside traditional souqs.',
-          description: 'Doha pairs a striking modern waterfront with the traditional Souq Waqif and the Museum of Islamic Art. It is compact, easy to navigate and works well as a stopover or a short city break.',
-          highlights: [
-            'Museum of Islamic Art',
-            'Souq Waqif and its restaurants',
-            'Dhow cruise on Doha Bay',
-            'Katara cultural village'
-          ],
-          bestTime: 'November – March',
-          idealLength: '2 – 3 days',
-          flightCode: 'Doha (DOH)'
-        },
-        {
-          id: 'petra', city: 'Petra', country: 'Jordan', continent: 'Middle East',
-          categories: ['Adventure', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1548786811-dd62f6e1a3e5?auto=format&fit=crop&w=900&q=80',
-          blurb: 'A rose-red city carved into the cliffs.',
-          description: 'Petra is reached through a narrow gorge that opens onto the Treasury, and the site keeps unfolding from there — tombs, a Roman theatre and a monastery high above the valley. Go early or stay for Petra by Night.',
-          highlights: [
-            'The Siq and the Treasury',
-            'Monastery hike',
-            'Petra by Night',
-            'Wadi Rum desert extension'
-          ],
-          bestTime: 'March – May, September – November',
-          idealLength: '2 – 3 days',
-          flightCode: 'Amman (AMM)'
-        },
-
-        /* -------------------- AMERICAS -------------------- */
-        {
-          id: 'new-york', city: 'New York', country: 'United States', continent: 'Americas',
-          categories: ['City Breaks', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Five boroughs, endless energy.',
-          description: 'New York is best approached neighbourhood by neighbourhood — the galleries of Chelsea, the food of Queens, the parks of Brooklyn. The skyline is the backdrop, but the walking and the eating are the point.',
-          highlights: [
-            'Central Park and the High Line',
-            'Metropolitan Museum of Art',
-            'Brooklyn Bridge walk',
-            'Broadway theatre'
-          ],
-          bestTime: 'April – June, September – November',
-          idealLength: '4 – 6 days',
-          flightCode: 'New York (JFK)'
-        },
-        {
-          id: 'rio', city: 'Rio de Janeiro', country: 'Brazil', continent: 'Americas',
-          categories: ['Beaches', 'Adventure', 'Culture'], popular: false,
-          image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Mountains, beaches and carnival rhythm.',
-          description: 'Rio packs granite peaks, city beaches and rainforest into one dramatic setting. Christ the Redeemer and Sugarloaf Mountain are the icons, but the neighbourhoods — Santa Teresa, Botafogo, Ipanema — are what you remember.',
-          highlights: [
-            'Christ the Redeemer',
-            'Sugarloaf Mountain cable car',
-            'Copacabana and Ipanema beaches',
-            'Santa Teresa and Lapa nights'
-          ],
-          bestTime: 'December – March',
-          idealLength: '4 – 6 days',
-          flightCode: 'Rio de Janeiro (GIG)'
-        },
-        {
-          id: 'cancun', city: 'Cancún', country: 'Mexico', continent: 'Americas',
-          categories: ['Beaches', 'Luxury'], popular: false,
-          image: 'https://images.unsplash.com/photo-1510097467424-192d713fd8b2?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Caribbean water and Maya ruins nearby.',
-          description: 'Cancún is the gateway to the Riviera Maya — white sand and calm water on one side, cenotes, jungle and Maya ruins on the other. It works equally well for a resort holiday or a base for exploring the Yucatán.',
-          highlights: [
-            'Playa Delfines and the hotel zone',
-            'Chichén Itzá day trip',
-            'Cenote swimming',
-            'Isla Mujeres ferry'
-          ],
-          bestTime: 'December – April',
-          idealLength: '4 – 6 days',
-          flightCode: 'Cancún (CUN)'
-        },
-        {
-          id: 'banff', city: 'Banff', country: 'Canada', continent: 'Americas',
-          categories: ['Adventure'], popular: false,
-          image: 'https://images.unsplash.com/photo-1503614472-8c93d56e92ce?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Turquoise lakes beneath the Rockies.',
-          description: 'Banff National Park is Canada at its most cinematic — glacier-fed lakes, hiking trails and wildlife around every bend. Summer brings hiking and canoeing; winter brings skiing and frozen canyon walks.',
-          highlights: [
-            'Lake Louise and Moraine Lake',
-            'Icefields Parkway drive',
-            'Johnston Canyon ice walk',
-            'Banff Gondola and Sulphur Mountain'
-          ],
-          bestTime: 'June – September, December – March',
-          idealLength: '4 – 6 days',
-          flightCode: 'Calgary (YYC)'
-        },
-
-        /* -------------------- OCEANIA -------------------- */
-        {
-          id: 'sydney', city: 'Sydney', country: 'Australia', continent: 'Oceania',
-          categories: ['City Breaks', 'Beaches'], popular: false,
-          image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=900&q=80',
-          blurb: 'Harbour views and coastal walks.',
-          description: 'Sydney is a city built around water. The Opera House and Harbour Bridge frame the centre, while the Bondi to Coogee coastal walk and the ferries to Manly show off the beaches that make it liveable.',
-          highlights: [
-            'Sydney Opera House and Harbour Bridge',
-            'Bondi to Coogee coastal walk',
-            'Manly ferry and beaches',
-            'Blue Mountains day trip'
-          ],
-          bestTime: 'September – November, March – May',
-          idealLength: '4 – 6 days',
-          flightCode: 'Sydney (SYD)'
-        },
-        {
-          id: 'queenstown', city: 'Queenstown', country: 'New Zealand', continent: 'Oceania',
-          categories: ['Adventure'], popular: false,
-          image: 'https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=900&q=80',
-          blurb: 'The adventure capital of the southern hemisphere.',
-          description: 'Queenstown sits on Lake Wakatipu with the Remarkables behind it. Bungee, jet boating and skiing are the headline activities, but the quieter draw is the wineries, the hiking and the drive to Milford Sound.',
-          highlights: [
-            'Milford Sound day trip',
-            'Bungee and jet boating',
-            'Lake Wakatipu and the Remarkables',
-            'Central Otago wineries'
-          ],
-          bestTime: 'December – February, June – August',
-          idealLength: '4 – 6 days',
-          flightCode: 'Queenstown (ZQN)'
-        }
-      ];
+      var DESTINATIONS = [];
 
       /* =====================================================
          2. CONSTANTS + STATE
@@ -2316,12 +1860,12 @@
       }
 
       function flightLink(dest) {
-        return 'flights.php?to=' + encodeURIComponent(dest.flightCode || dest.city) +
+        return 'flights?to=' + encodeURIComponent(dest.flightCode || dest.city) +
                '&city=' + encodeURIComponent(dest.city);
       }
 
       function hotelLink(dest) {
-        return 'hotels.php?destination=' +
+        return 'hotels?destination=' +
                encodeURIComponent(dest.city + ', ' + dest.country);
       }
 
@@ -2658,8 +2202,7 @@
 
             '<p class="modal-note">' +
               '<i class="bi bi-info-circle"></i> ' +
-              'Destination guides and travel notes are for inspiration only. Flight and hotel ' +
-              'search pages show demonstration data and do not represent live availability.' +
+              'Destination guides are for inspiration. Finding flights or hotels opens the live CJ Travels search.' +
             '</p>' +
           '</div>';
 
@@ -2694,8 +2237,37 @@
       }
 
       /* =====================================================
-         16. INITIAL RENDER
+         16. LIVE CATALOGUE + INITIAL RENDER
          ===================================================== */
+      function catalogBase() {
+        var path = window.location.pathname.replace(/\/+$/, '');
+        var cut = path.search(/\/destinations(\.php)?$/i);
+        if (cut !== -1) return path.slice(0, cut);
+        return path.replace(/\/[^\/]*$/, '');
+      }
+
+      function applyLiveDestinations(list) {
+        if (!list || !list.length) return;
+        DESTINATIONS = list.map(function (dest) {
+          dest.categories = dest.categories && dest.categories.length ? dest.categories : ['City Breaks'];
+          dest.highlights = dest.highlights && dest.highlights.length ? dest.highlights : dest.categories;
+          dest.description = dest.description || dest.blurb || (dest.city + ', ' + dest.country);
+          dest.bestTime = dest.bestTime || 'Year round';
+          dest.idealLength = dest.idealLength || '4 – 7 days';
+          dest.flightCode = dest.flightCode || dest.city;
+          return dest;
+        });
+        renderPopular();
+        renderDestinations();
+      }
+
+      fetch(catalogBase() + '/api/destinations', { headers: { 'Accept': 'application/json' } })
+        .then(function (res) { return res.json(); })
+        .then(function (res) {
+          if (res && res.success && res.data) applyLiveDestinations(res.data);
+        })
+        .catch(function () {});
+
       renderPopular();
       renderDestinations();
 

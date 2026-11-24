@@ -4,15 +4,18 @@
           <div class="page-head">
             <div>
               <h1 id="overviewTitle" class="h2 mb-1">
-                Welcome back, Adaeze <span class="demo-pill"><i class="bi bi-stars"></i> Customer Portal</span>
+                Welcome back, <?= e($user->firstName ?? 'there') ?> <span class="demo-pill"><i class="bi bi-stars"></i> Customer Portal</span>
               </h1>
               <p>Review your travel itinerary, active bookings, financing status, and upcoming luxury escapes.</p>
+              <?php if (($user->status ?? 'Active') === 'Inactive'): ?>
+                <p class="mt-2" style="color:#a3452e;">This account is marked inactive in the admin customer directory.</p>
+              <?php endif; ?>
             </div>
             <div class="page-head-actions">
-              <a href="/customer/profile" class="btn btn-ghost btn-sm">
+              <a href="<?= route('customer.profile') ?>" class="btn btn-ghost btn-sm">
                 <i class="bi bi-person-fill"></i> View profile
               </a>
-              <a href="/customer/settings" class="btn btn-ghost btn-sm">
+              <a href="<?= route('customer.settings') ?>" class="btn btn-ghost btn-sm">
                 <i class="bi bi-gear-fill"></i> Settings
               </a>
             </div>
@@ -34,7 +37,7 @@
           <div class="profile-card">
             <span class="avatar-lg"><?= e($user->initials ?? 'AO') ?></span>
             <div class="profile-meta">
-              <h2><?= e($user->name ?? 'Adaeze Okonkwo') ?></h2>
+              <h2><?= e($user->name ?? '') ?></h2>
               <span class="email"><?= e($user->email ?? 'adaeze.okonkwo@example.com') ?></span>
               <div class="profile-tags">
                 <span class="profile-tag gold"><i class="bi bi-award-fill"></i> <?= e($user->tier ?? 'Gold Member') ?></span>
@@ -43,7 +46,7 @@
               </div>
             </div>
             <div class="profile-actions">
-              <a href="/customer/profile" class="btn btn-ghost btn-sm">Edit profile</a>
+              <a href="<?= route('customer.profile') ?>" class="btn btn-ghost btn-sm">Edit profile</a>
             </div>
           </div>
 
@@ -100,7 +103,7 @@
 
           <!-- QUICK ACTIONS -->
           <div class="quick-grid">
-            <a href="../flights.php" class="quick-card">
+            <a href="<?= route('flights') ?>" class="quick-card">
               <span class="q-icon"><i class="bi bi-airplane-engines"></i></span>
               <span class="q-text">
                 <strong>Book a flight</strong>
@@ -109,7 +112,7 @@
               <i class="bi bi-chevron-right"></i>
             </a>
 
-            <a href="../hotels.php" class="quick-card">
+            <a href="<?= route('hotels') ?>" class="quick-card">
               <span class="q-icon"><i class="bi bi-building-check"></i></span>
               <span class="q-text">
                 <strong>Reserve luxury hotel</strong>
@@ -118,7 +121,7 @@
               <i class="bi bi-chevron-right"></i>
             </a>
 
-            <a href="/customer/financing" class="quick-card">
+            <a href="<?= route('customer.financing') ?>" class="quick-card">
               <span class="q-icon"><i class="bi bi-cash-stack"></i></span>
               <span class="q-text">
                 <strong>Apply for financing</strong>
@@ -135,7 +138,7 @@
               <div class="card-box mb-4">
                 <div class="card-box-head">
                   <h2><i class="bi bi-calendar2-range"></i> Upcoming trips</h2>
-                  <a href="/customer/flights" class="btn-link-soft">
+                  <a href="<?= route('customer.flights') ?>" class="btn-link-soft">
                     View all <i class="bi bi-arrow-right"></i>
                   </a>
                 </div>
@@ -148,7 +151,7 @@
               <div class="card-box">
                 <div class="card-box-head">
                   <h2><i class="bi bi-clock-history"></i> Recent bookings</h2>
-                  <a href="/customer/flights" class="btn-link-soft">
+                  <a href="<?= route('customer.flights') ?>" class="btn-link-soft">
                     All bookings <i class="bi bi-arrow-right"></i>
                   </a>
                 </div>
@@ -188,7 +191,7 @@
                 <i class="bi bi-shield-check"></i>
                 <div>
                   <strong>24/7 Dedicated Concierge Support</strong><br />
-                  Need assistance with seat selection, VIP airport lounge access, or special dietary requirements? Reach our travel concierge anytime via <a href="../contact.php" style="color:var(--navy);font-weight:600;">Support</a>.
+                  Need assistance with seat selection, VIP airport lounge access, or special dietary requirements? Reach our travel concierge anytime via <a href="<?= route('contact') ?>" style="color:var(--navy);font-weight:600;">Support</a>.
                 </div>
               </div>
             </div>

@@ -4,7 +4,12 @@
           <div class="page-head">
             <div>
               <h1>Transactions &amp; Payments</h1>
-              <p>Real-time payment logs, gateway records and client settlements synced with MySQL.</p>
+              <p>Add, edit, or delete a payment. Saved records also appear on that customer’s Payments page. Five records are shown per page.</p>
+            </div>
+            <div class="page-head-actions">
+              <button type="button" class="btn btn-gold" id="addTransactionBtn">
+                <i class="bi bi-plus-lg"></i> Add transaction
+              </button>
             </div>
           </div>
           <div class="card-box">
@@ -41,5 +46,6 @@
                 <tbody id="transactionsBody"></tbody>
               </table>
             </div>
+            <nav class="table-pager" id="txnPager" aria-label="Transaction pages" hidden></nav>
           </div>
         </section>

@@ -1,7 +1,22 @@
+<?php
+if (!function_exists('route')) {
+    $bootstrap = __DIR__ . '/bootstrap/app.php';
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../bootstrap/app.php';
+    }
+    if (!file_exists($bootstrap)) {
+        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+    }
+    if (file_exists($bootstrap)) {
+        require_once $bootstrap;
+    }
+}
+$base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" href="/images/logo-mark.png" />
+  <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create account — CJ Travels</title>
@@ -15,6 +30,7 @@
   <!-- Bootstrap (for grid/flex only) + Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="<?= asset('css/cookie-banner.css') ?>" rel="stylesheet" />
 
   <style>
     /* =======================================================
@@ -993,8 +1009,8 @@
          BRAND AREA
          ========================================================= -->
     <header class="brand-area">
-      <a class="brand" href="/" aria-label="CJ Travels home">
-          <img src="/images/logo-transparent.png" alt="CJ Travels" class="brand-logo" />
+      <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
+          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
         </a>
     </header>
 
@@ -1012,6 +1028,17 @@
           <p class="subtitle">
             Save searches, manage bookings in one place and continue travel financing enquiries without starting over.
           </p>
+
+          <?php $promoCode = !empty($_GET['promo']) ? htmlspecialchars(trim((string)$_GET['promo'])) : ''; ?>
+          <?php if ($promoCode): ?>
+            <div class="alert alert-warning border-0 d-flex align-items-center gap-3 p-3 mb-4 rounded-3" style="background: rgba(201, 165, 91, 0.15); border-left: 4px solid #c9a55b !important;">
+              <i class="bi bi-gift-fill fs-4 text-warning"></i>
+              <div>
+                <strong class="d-block text-dark">Promo Code Active: <?= $promoCode ?></strong>
+                <small class="text-muted">Register your account below to have your ₦50,000 travel credit loaded automatically.</small>
+              </div>
+            </div>
+          <?php endif; ?>
 
           <form id="registerForm" novalidate autocomplete="on">
             <div class="row g-3">
@@ -1182,7 +1209,7 @@
                 <input class="form-check-input" type="checkbox" id="acceptTerms"
                        aria-describedby="termsError" />
                 <label class="form-check-label" for="acceptTerms">
-                  I agree to the <a href="terms.php" target="_blank" rel="noopener">Terms of Service</a> and <a href="privacy.php" target="_blank" rel="noopener">Privacy Policy</a>, and I understand this is a demonstration site where no real account is created.
+                  I agree to the <a href="<?= route('terms') ?>" target="_blank" rel="noopener">Terms of Service</a> and <a href="<?= route('privacy') ?>" target="_blank" rel="noopener">Privacy Policy</a>, and I accept the terms of reservation.
                 </label>
               </div>
               <div class="field-error" id="termsError">Please accept the terms to continue.</div>
@@ -1197,7 +1224,7 @@
 
             <div class="divider">Or</div>
             <p class="login-prompt">
-              Already have a CJ Travels account? <a href="/login">Sign in instead</a>
+              Already have a CJ Travels account? <a href="<?= route('login') ?>">Sign in instead</a>
             </p>
           </form>
 
@@ -1224,7 +1251,7 @@
             <button type="button" class="btn-submit" id="backToForm" style="width: auto; padding-left: 32px; padding-right: 32px;">
               Back to form
             </button>
-            <a href="/login" class="btn-ghost">
+            <a href="<?= route('login') ?>" class="btn-ghost">
               Go to sign in
             </a>
           </div>
@@ -1273,18 +1300,24 @@
          FOOTER AREA
          ========================================================= -->
     <footer class="foot">
-      <span>&copy; <span data-year>2025</span> CJ Travels</span>
+      <span>&copy; <span data-year>2026</span> CJ Travels</span>
       <ul class="foot-links">
-        <li><a href="privacy.php">Privacy</a></li>
-        <li><a href="terms.php">Terms</a></li>
-        <li><a href="/contact">Support</a></li>
+        <li><a href="<?= route('privacy') ?>">Privacy</a></li>
+        <li><a href="<?= route('terms') ?>">Terms</a></li>
+        <li><a href="javascript:void(0)" class="cj-open-cookie-settings" data-open-cookie-settings>Cookie Settings</a></li>
+        <li><a href="<?= route('contact') ?>">Support</a></li>
       </ul>
     </footer>
 
   </div>
 
+  <?php if (file_exists(__DIR__ . '/../partials/cookie-banner.php')): ?>
+    <?php include __DIR__ . '/../partials/cookie-banner.php'; ?>
+  <?php endif; ?>
+
   <!-- Bootstrap JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="<?= asset('js/cookie-banner.js') ?>"></script>
 
   <!-- =========================================================
        REGISTRATION PAGE SCRIPT

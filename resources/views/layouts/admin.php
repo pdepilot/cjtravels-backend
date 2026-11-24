@@ -36,12 +36,13 @@
 
       <footer class="admin-footer">
         <p class="mb-0">
-          &copy; <span id="year"><?= date('Y') ?></span> CJ Travels admin console — demonstration only.
+          &copy; <span id="year"><?= date('Y') ?></span> CJ Travels admin console.
         </p>
         <ul>
           <li><a href="<?= route('home') ?>">Public site</a></li>
+          <li><a href="<?= route('terms') ?>">Terms</a></li>
+          <li><a href="<?= route('privacy') ?>">Privacy</a></li>
           <li><a href="<?= route('contact') ?>">Support</a></li>
-          <li><a href="<?= route('about') ?>">About</a></li>
         </ul>
       </footer>
 
@@ -105,7 +106,7 @@
         </div>
         <div class="modal-body">
           <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;">
-            Are you sure you want to delete <strong id="deleteRecordLabel">this record</strong>?
+            Delete <strong id="deleteRecordLabel">this record</strong>, or cancel to leave it unchanged.
           </p>
           <p class="modal-note mb-0" style="color:var(--error);">
             <i class="bi bi-exclamation-triangle"></i>
@@ -197,6 +198,378 @@
     </div>
   </div>
 
+  <div class="modal fade" id="flightModal" tabindex="-1" aria-labelledby="flightModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="flightModalTitle">
+            <i class="bi bi-airplane-fill"></i> Add flight
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>Confirmed flights are offered on the public flight search. Pending flights stay in this admin list.</div>
+          </div>
+          <form id="flightForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="flightCustomer">Customer</label>
+                <select class="form-select" id="flightCustomer"></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightAirline">Airline</label>
+                <input type="text" class="form-control" id="flightAirline" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightNumber">Flight number</label>
+                <input type="text" class="form-control" id="flightNumber" placeholder="BA 074" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightCabin">Cabin</label>
+                <select class="form-select" id="flightCabin">
+                  <option>Economy</option>
+                  <option>Premium Economy</option>
+                  <option>Business</option>
+                  <option>First Class</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightFrom">From</label>
+                <input type="text" class="form-control" id="flightFrom" placeholder="Lagos (LOS)" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightTo">To</label>
+                <input type="text" class="form-control" id="flightTo" placeholder="London (LHR)" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightDate">Departure date</label>
+                <input type="date" class="form-control" id="flightDate" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightTime">Departure time</label>
+                <input type="time" class="form-control" id="flightTime" value="09:00" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightArrival">Arrival time</label>
+                <input type="time" class="form-control" id="flightArrival" value="16:00" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightDuration">Duration</label>
+                <input type="text" class="form-control" id="flightDuration" value="7h 00m" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightStops">Stops</label>
+                <select class="form-select" id="flightStops">
+                  <option>Direct</option>
+                  <option>1 stop</option>
+                  <option>2 stops</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="flightAmount">Amount (₦)</label>
+                <input type="number" class="form-control" id="flightAmount" min="1" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="flightStatus">Status</label>
+                <select class="form-select" id="flightStatus">
+                  <option value="Confirmed" selected>Confirmed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="flightToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveFlightBtn">
+            <i class="bi bi-plus-lg"></i> Add flight
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="hotelModal" tabindex="-1" aria-labelledby="hotelModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="hotelModalTitle">
+            <i class="bi bi-building-fill"></i> Add hotel
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>Confirmed hotels are offered on the public hotel search. Pending stays stay in this admin list.</div>
+          </div>
+          <form id="hotelForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="hotelCustomer">Customer</label>
+                <select class="form-select" id="hotelCustomer"></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="hotelProperty">Property</label>
+                <input type="text" class="form-control" id="hotelProperty" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="hotelLocation">Location</label>
+                <input type="text" class="form-control" id="hotelLocation" placeholder="Ikoyi, Lagos" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="hotelRoomType">Room type</label>
+                <input type="text" class="form-control" id="hotelRoomType" value="Deluxe Room" />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="hotelCheckIn">Check-in</label>
+                <input type="date" class="form-control" id="hotelCheckIn" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="hotelCheckOut">Check-out</label>
+                <input type="date" class="form-control" id="hotelCheckOut" required />
+              </div>
+              <div class="col-md-4">
+                <label class="form-label" for="hotelGuests">Guests</label>
+                <select class="form-select" id="hotelGuests">
+                  <option value="1">1 guest</option>
+                  <option value="2" selected>2 guests</option>
+                  <option value="3">3 guests</option>
+                  <option value="4">4 guests</option>
+                  <option value="6">6 guests</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="hotelAmount">Total amount (₦)</label>
+                <input type="number" class="form-control" id="hotelAmount" min="1" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="hotelStatus">Status</label>
+                <select class="form-select" id="hotelStatus">
+                  <option value="Confirmed" selected>Confirmed</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Completed">Completed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="hotelToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveHotelBtn">
+            <i class="bi bi-plus-lg"></i> Add hotel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="loanModal" tabindex="-1" aria-labelledby="loanModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="loanModalTitle">
+            <i class="bi bi-cash-coin"></i> Add financing enquiry
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>This records an enquiry only. CJ Travels does not approve or decline financing.</div>
+          </div>
+          <form id="loanForm" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="loanCustomer">Customer</label>
+                <select class="form-select" id="loanCustomer"></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="loanAmount">Amount (₦)</label>
+                <input type="number" class="form-control" id="loanAmount" min="1" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="loanPeriod">Repayment period</label>
+                <select class="form-select" id="loanPeriod">
+                  <option>3 months</option>
+                  <option selected>6 months</option>
+                  <option>9 months</option>
+                  <option>12 months</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="loanPurpose">Purpose of travel</label>
+                <input type="text" class="form-control" id="loanPurpose" required />
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="loanNote">Note</label>
+                <input type="text" class="form-control" id="loanNote" />
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="loanStatus">Status</label>
+                <select class="form-select" id="loanStatus">
+                  <option value="In review" selected>In review</option>
+                  <option value="Awaiting documents">Awaiting documents</option>
+                  <option value="Referred to partner">Referred to partner</option>
+                  <option value="Draft">Draft</option>
+                  <option value="Approved">Approved</option>
+                </select>
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="loanToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveLoanBtn">
+            <i class="bi bi-plus-lg"></i> Add enquiry
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="transactionModal" tabindex="-1" aria-labelledby="transactionModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="transactionModalTitle">
+            <i class="bi bi-credit-card-2-front-fill"></i> Add transaction
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>The payment is saved to MySQL and shows on the selected customer’s Payments page.</div>
+          </div>
+          <form id="transactionForm" novalidate>
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label" for="txnCustomer">Customer</label>
+                <select class="form-select" id="txnCustomer" required></select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="txnAmount">Amount (₦)</label>
+                <input type="number" class="form-control" id="txnAmount" min="1" step="0.01" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="txnMethod">Payment method</label>
+                <select class="form-select" id="txnMethod">
+                  <option value="Card" selected>Card</option>
+                  <option value="Paystack / Card">Paystack / Card</option>
+                  <option value="Bank Transfer">Bank Transfer</option>
+                  <option value="Cash">Cash</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="txnDate">Date</label>
+                <input type="date" class="form-control" id="txnDate" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="txnStatus">Status</label>
+                <select class="form-select" id="txnStatus">
+                  <option value="Paid" selected>Paid</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Refunded">Refunded</option>
+                  <option value="Failed">Failed</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="txnRelated">Related booking reference</label>
+                <input type="text" class="form-control" id="txnRelated" placeholder="Optional, for example TBF-2201" />
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="txnToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveTransactionBtn">
+            <i class="bi bi-plus-lg"></i> Add transaction
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="customerModalTitle">
+            <i class="bi bi-person-plus-fill"></i> Add customer
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="info-note" style="margin-bottom:1rem;background:#e8f3ed;border:1px solid #2e7d5b;color:#184a34;">
+            <i class="bi bi-shield-check" style="color:#2e7d5b;"></i>
+            <div>The new customer is saved to MySQL and becomes available to the customer portal.</div>
+          </div>
+          <form id="customerForm" novalidate>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="custFirst">First name</label>
+                <input type="text" class="form-control" id="custFirst" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custLast">Last name</label>
+                <input type="text" class="form-control" id="custLast" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custEmail">Email</label>
+                <input type="email" class="form-control" id="custEmail" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custPhone">Phone</label>
+                <input type="text" class="form-control" id="custPhone" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custCountry">Country</label>
+                <input type="text" class="form-control" id="custCountry" value="Nigeria" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custCity">City</label>
+                <input type="text" class="form-control" id="custCity" value="Lagos" />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custTier">Membership</label>
+                <select class="form-select" id="custTier">
+                  <option value="Standard member">Standard member</option>
+                  <option value="Silver member">Silver member</option>
+                  <option value="Gold member" selected>Gold member</option>
+                  <option value="Platinum member">Platinum member</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="custStatus">Status</label>
+                <select class="form-select" id="custStatus">
+                  <option value="Active" selected>Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            <div class="toast-inline mt-3" id="customerToast"></div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost btn-sm" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-gold btn-sm" id="saveCustomerBtn">
+            <i class="bi bi-plus-lg"></i> Add customer
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal fade" id="apiProviderModal" tabindex="-1" aria-labelledby="apiProviderModalTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
@@ -210,9 +583,8 @@
           <div class="api-security-note" style="margin-bottom:16px;">
             <i class="bi bi-shield-lock"></i>
             <div>
-              <strong>Credentials are never stored in this browser.</strong> In this demonstration,
-              keys and secrets are masked immediately after saving. The PHP backend will encrypt
-              them server-side and return only masked metadata to the admin UI.
+              <strong>Keys stay on the server.</strong> After you save, this page shows only the last
+              four characters. Leave a field blank while editing to keep the current key or secret.
             </div>
           </div>
           <form id="apiProviderForm" novalidate>
@@ -268,6 +640,7 @@
                 </div>
               </div>
             </div>
+            <div class="toast-inline mt-3" id="apiToast"></div>
           </form>
         </div>
         <div class="modal-footer">
@@ -291,12 +664,11 @@
         </div>
         <div class="modal-body">
           <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;line-height:1.7;">
-            Remove <strong id="apiDeleteName">this provider</strong> from the demonstration list?
+            Remove <strong id="apiDeleteName">this provider</strong>, or cancel to keep it.
           </p>
-          <p class="modal-note mb-0">
-            <i class="bi bi-info-circle"></i>
-            This removes the sample provider from this page only. No server-side configuration is
-            changed because no backend is connected.
+          <p class="modal-note mb-0" style="color:var(--error);">
+            <i class="bi bi-exclamation-triangle"></i>
+            This deletes the provider and its saved key from the database.
           </p>
         </div>
         <div class="modal-footer">
@@ -339,7 +711,16 @@
       liveData: "<?= route('admin.api.live-data') ?>",
       updateRecord: "<?= route('admin.api.records.update') ?>",
       deleteRecord: "<?= route('admin.api.records.delete') ?>",
-      createDestination: "<?= route('admin.api.destinations.create') ?>"
+      createDestination: "<?= route('admin.api.destinations.create') ?>",
+      createCustomer: "<?= route('admin.api.customers.create') ?>",
+      createFlight: "<?= route('admin.api.flights.create') ?>",
+      createHotel: "<?= route('admin.api.hotels.create') ?>",
+      createLoan: "<?= route('admin.api.loans.create') ?>",
+      createTransaction: "<?= route('admin.api.transactions.create') ?>",
+      saveProvider: "<?= route('admin.api.providers.save') ?>",
+      deleteProvider: "<?= route('admin.api.providers.delete') ?>",
+      testProvider: "<?= route('admin.api.providers.test') ?>",
+      exportReport: "<?= route('admin.reports.export') ?>"
     };
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

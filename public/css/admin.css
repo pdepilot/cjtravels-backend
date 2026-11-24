@@ -823,6 +823,41 @@
     }
     .toolbar-count strong { color: var(--navy); }
 
+    .table-pager {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 14px 18px;
+      border-top: 1px solid var(--hairline, #e6e1d8);
+    }
+    .pager-meta {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .pager-controls { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pager-btn {
+      min-width: 36px;
+      height: 34px;
+      padding: 0 10px;
+      border: 1px solid var(--hairline, #e6e1d8);
+      background: #fff;
+      border-radius: 8px;
+      color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .pager-btn.active,
+    .pager-btn[aria-current="page"] {
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #fff;
+    }
+    .pager-btn:disabled { opacity: .45; cursor: default; }
+
     /* =======================================================
        TABLES
        ======================================================= */
@@ -1594,23 +1629,49 @@
        ======================================================= */
     @media (max-width: 767.98px) {
       :root {
-        --rail-w: 64px;
+        --rail-w: 220px;
         --rail-btn: 36px;
         --rail-left: 8px;
       }
 
       .float-nav {
-        gap: 3px;
-        padding: 6px 5px;
+        width: calc(var(--rail-w) - 16px);
+        align-items: stretch;
+        gap: 4px;
+        padding: 8px;
         max-height: calc(100dvh - 24px);
       }
-      .float-btn { font-size: 13px; }
-      .float-brand { font-size: 13px; }
-      .float-nav-divider { width: 22px; margin: 3px 0; }
-      .float-btn-label { display: none; }
+      .float-btn {
+        font-size: 13px;
+        height: 36px;
+        justify-content: flex-start;
+        padding: 0 8px;
+        gap: 8px;
+        border-radius: 2px;
+      }
+      .float-brand {
+        width: 100%;
+        height: 36px;
+        font-size: 13px;
+        border-radius: 2px;
+        justify-content: flex-start;
+        padding: 0 8px;
+        gap: 8px;
+      }
+      .float-nav-divider { width: calc(100% - 12px); margin: 4px auto; }
+      .float-btn-label,
+      .float-brand .float-btn-label {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+        max-width: none;
+        font-size: 9.5px;
+        letter-spacing: .06em;
+        pointer-events: auto;
+      }
       .float-badge {
-        top: -3px;
-        right: -3px;
+        position: static;
+        margin-left: auto;
         min-width: 15px;
         height: 15px;
         font-size: 8px;
@@ -1849,14 +1910,15 @@
        ======================================================= */
     @media (max-width: 399.98px) {
       :root {
-        --rail-w: 56px;
+        --rail-w: 188px;
         --rail-btn: 32px;
         --rail-left: 6px;
       }
-      .float-nav { gap: 2px; padding: 5px 4px; }
-      .float-btn { font-size: 12px; }
-      .float-brand { font-size: 12px; }
-      .float-nav-divider { width: 18px; margin: 2px 0; }
+      .float-nav { gap: 3px; padding: 6px; width: calc(var(--rail-w) - 12px); }
+      .float-btn { font-size: 12px; height: 32px; }
+      .float-brand { font-size: 12px; height: 32px; }
+      .float-btn-label,
+      .float-brand .float-btn-label { font-size: 8.5px; letter-spacing: .04em; }
       .float-badge { min-width: 14px; height: 14px; font-size: 7.5px; padding: 0 4px; }
 
       .admin-content { padding: 12px 10px; }
@@ -1893,12 +1955,11 @@
     @media (max-height: 500px) and (orientation: landscape) {
       .float-nav {
         gap: 2px;
-        padding: 5px 4px;
+        padding: 6px;
         max-height: calc(100dvh - 12px);
       }
-      .float-brand,
-      .float-nav-divider { display: none; }
-      .float-btn { width: 34px; height: 34px; font-size: 12px; }
+      .float-btn { height: 30px; font-size: 12px; }
+      .float-brand { height: 30px; }
       .float-badge { min-width: 13px; height: 13px; font-size: 7px; padding: 0 3px; }
 
       .dash-topbar { padding: 10px 14px; }

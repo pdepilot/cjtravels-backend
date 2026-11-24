@@ -11,7 +11,7 @@
     </div>
   </div>
   <div class="topbar-right">
-    <button type="button" class="icon-btn" id="notificationsBtn" aria-label="Notifications (demo)">
+    <button type="button" class="icon-btn" id="notificationsBtn" aria-label="Notifications">
       <i class="bi bi-bell-fill"></i>
       <span class="dot" aria-hidden="true"></span>
     </button>
@@ -19,8 +19,8 @@
       <i class="bi bi-question-lg"></i>
     </button>
     <div class="topbar-user">
-      <span class="avatar"><?= isset($isAdmin) && $isAdmin ? e($adminInitials ?? 'AD') : 'AO' ?></span>
-      <span><?= isset($isAdmin) && $isAdmin ? e($adminUser ?? 'Admin') : 'Adaeze' ?></span>
+      <span class="avatar"><?= isset($isAdmin) && $isAdmin ? e($adminInitials ?? 'AD') : e($user->initials ?? 'CU') ?></span>
+      <span><?= isset($isAdmin) && $isAdmin ? e($adminUser ?? 'Admin') : e($user->firstName ?? 'Customer') ?></span>
     </div>
   </div>
 </header>

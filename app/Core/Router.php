@@ -170,7 +170,17 @@ class Router
 
     public static function route(string $name, array $params = []): string
     {
+        if (empty(self::$namedRoutes)) {
+            $routesFile = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'routes' . DIRECTORY_SEPARATOR . 'web.php';
+            if (file_exists($routesFile)) {
+                require_once $routesFile;
+            }
+        }
+
         if (!isset(self::$namedRoutes[$name])) {
+            if ($name === 'home') {
+                return '/';
+            }
             return '/' . trim($name, '/');
         }
 

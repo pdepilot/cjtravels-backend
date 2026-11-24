@@ -4,7 +4,7 @@
           <div class="page-head">
             <div>
               <h1>Destinations</h1>
-              <p>Manage the destinations displayed on the public website.</p>
+              <p>Active destinations appear on the public destinations page. Inactive ones stay in this list.</p>
             </div>
             <div class="page-head-actions">
               <button type="button" class="btn btn-gold" id="addDestinationBtn">

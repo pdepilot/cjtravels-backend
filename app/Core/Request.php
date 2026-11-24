@@ -17,6 +17,17 @@ class Request
         $this->query = $_GET;
         $this->post = $_POST;
 
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? '';
+        if (stripos($contentType, 'application/json') !== false) {
+            $raw = file_get_contents('php://input');
+            if (is_string($raw) && $raw !== '') {
+                $decoded = json_decode($raw, true);
+                if (is_array($decoded)) {
+                    $this->post = array_merge($this->post, $decoded);
+                }
+            }
+        }
+
         $rawUri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = parse_url($rawUri, PHP_URL_PATH) ?: '/';
 
