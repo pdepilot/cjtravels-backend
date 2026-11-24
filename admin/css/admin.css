@@ -2440,3 +2440,27 @@
       margin-top: 6px;
     }
     .cred-hint i { color: var(--gold); margin-top: 1px; flex: 0 0 auto; font-size: 11px; }
+
+    /* Final mobile rule: the admin menu stays off-screen until the hamburger opens it. */
+    @media (max-width: 991.98px) {
+      .admin-nav-toggle { display: inline-flex !important; }
+      .admin-main { padding-left: 0 !important; }
+      .float-nav {
+        position: fixed !important;
+        top: 69px !important;
+        left: 0 !important;
+        right: auto !important;
+        width: min(300px, 88vw) !important;
+        height: calc(100dvh - 69px) !important;
+        max-height: calc(100dvh - 69px) !important;
+        transform: translateX(-120%) !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        z-index: 1050 !important;
+      }
+      body.admin-nav-open .float-nav {
+        transform: translateX(0) !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+    }

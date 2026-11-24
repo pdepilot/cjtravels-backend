@@ -14,7 +14,7 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
-  <link href="css/admin.css" rel="stylesheet" />
+  <link href="css/admin.css?v=nav3" rel="stylesheet" />
 
   <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -24,6 +24,7 @@
 
   <div class="dash-shell">
 
+    <button type="button" class="admin-nav-backdrop" id="adminNavBackdrop" aria-label="Close navigation" tabindex="-1"></button>
     <!-- FLOATING SIDE NAV -->
     <nav class="float-nav" id="floatNav" aria-label="Admin navigation">
       <a class="float-brand" href="../index.php" aria-label="CJ Travels home">
@@ -95,6 +96,9 @@
 
       <header class="dash-topbar">
         <div class="topbar-left">
+          <button type="button" class="admin-nav-toggle" id="adminNavToggle" aria-controls="floatNav" aria-expanded="false" aria-label="Open navigation menu">
+            <i class="bi bi-list" aria-hidden="true"></i>
+          </button>
           <div class="topbar-crumb">
             <i class="bi bi-shield-lock-fill"></i>
             <a href="dashboard.php" style="color:var(--muted);text-decoration:none;">Admin</a>
@@ -479,5 +483,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/admin-nav.js?v=nav3"></script>
 </body>
 </html>
