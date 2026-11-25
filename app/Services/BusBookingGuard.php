@@ -12,6 +12,10 @@ class BusBookingGuard
 
     protected static bool $failNextInsert = false;
 
+    protected static ?string $schemaDriverOverride = null;
+
+    protected static ?string $markerPathOverride = null;
+
     public static function setReferenceFactory(?callable $factory): void
     {
         self::$referenceFactory = $factory ? \Closure::fromCallable($factory) : null;
@@ -20,6 +24,16 @@ class BusBookingGuard
     public static function failNextInsert(bool $fail = true): void
     {
         self::$failNextInsert = $fail;
+    }
+
+    public static function useSchemaDriver(?string $driver): void
+    {
+        self::$schemaDriverOverride = $driver;
+    }
+
+    public static function useMarkerPath(?string $path): void
+    {
+        self::$markerPathOverride = $path;
     }
 
     public static function ensureSchema(): void
@@ -34,11 +48,12 @@ class BusBookingGuard
 
     public static function installSchema(): void
     {
-        $db = Database::getInstance();
-        if ($db->getDriver() !== 'mysql') {
-            return;
+        $driver = self::$schemaDriverOverride ?? Database::getInstance()->getDriver();
+        if ($driver !== 'mysql') {
+            throw new \RuntimeException('Bus bookings require a MySQL database.');
         }
 
+        $db = Database::getInstance();
         $path = self::schemaFile();
         $sql = is_file($path) ? file_get_contents($path) : false;
         if (!is_string($sql) || trim($sql) === '') {
@@ -608,6 +623,10 @@ class BusBookingGuard
 
     protected static function markerPath(): string
     {
+        if (self::$markerPathOverride !== null) {
+            return self::$markerPathOverride;
+        }
+
         return dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'bus_bookings.schema';
     }
 
@@ -616,16 +635,27 @@ class BusBookingGuard
         $marker = self::markerPath();
         $dir = dirname($marker);
         if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
+            @mkdir($dir, 0755, true);
+            if (!is_dir($dir)) {
+                throw new \RuntimeException('The bus booking schema marker directory could not be created.');
+            }
         }
-        file_put_contents($marker, date('c'));
+
+        $written = @file_put_contents($marker, date('c'));
+        if ($written === false) {
+            throw new \RuntimeException('The bus booking schema marker could not be written.');
+        }
     }
 
     protected static function clearMarker(): void
     {
         $marker = self::markerPath();
-        if (is_file($marker)) {
-            unlink($marker);
+        if (!is_file($marker)) {
+            return;
+        }
+
+        if (!@unlink($marker) || is_file($marker)) {
+            throw new \RuntimeException('The bus booking schema marker could not be removed.');
         }
     }
 

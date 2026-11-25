@@ -131,6 +131,12 @@ Router::get('/api/promo/active', function (\App\Core\Request $request) {
 
 Router::post('/api/bus/enquire', function (\App\Core\Request $request) {
     $limit = \App\Services\BusBookingRateLimiter::attempt($request->ip());
+    if (($limit['outcome'] ?? '') === 'storage') {
+        return \App\Core\Response::json([
+            'success' => false,
+            'error' => 'Bus enquiries are temporarily unavailable. Please try again in a moment.',
+        ], 503);
+    }
     if (!$limit['allowed']) {
         return \App\Core\Response::json([
             'success' => false,

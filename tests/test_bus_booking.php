@@ -13,6 +13,7 @@ use App\Core\Router;
 use App\Core\Session;
 use App\Core\View;
 use App\Models\Admin;
+use App\Services\BusBookingGuard;
 use App\Services\BusBookingRateLimiter;
 use App\Services\RealtimeDataService;
 
@@ -183,6 +184,101 @@ try {
     $afterSchema = (int)($db->selectOne('SELECT COUNT(*) AS c FROM bus_bookings WHERE id = :id', [':id' => $savedId1])['c'] ?? 0);
     assertTest("Installing the schema again keeps the existing booking", $beforeSchema === 1 && $afterSchema === 1);
 
+    $markerBackup = $marker . '.bak-test';
+    if (is_file($markerBackup)) {
+        unlink($markerBackup);
+    }
+    if (is_file($marker)) {
+        rename($marker, $markerBackup);
+    }
+    try {
+        BusBookingGuard::useSchemaDriver('sqlite');
+        $driverFailed = false;
+        $driverMessage = '';
+        try {
+            BusBookingGuard::ensureSchema();
+        } catch (\RuntimeException $driverError) {
+            $driverFailed = true;
+            $driverMessage = $driverError->getMessage();
+        }
+        assertTest("An unsupported database driver is rejected", $driverFailed && $driverMessage === 'Bus bookings require a MySQL database.');
+        assertTest("A failed schema installation does not leave a marker", !is_file($marker));
+
+        BusBookingGuard::useSchemaDriver(null);
+        BusBookingGuard::ensureSchema();
+        $stillSaved = $db->selectOne('SELECT id FROM bus_bookings WHERE id = :id', [':id' => $savedId1]);
+        assertTest("MySQL schema installation writes the marker only after success", is_file($marker));
+        assertTest("An existing MySQL bus booking stays usable after installation", (int)($stillSaved['id'] ?? 0) === $savedId1);
+    } finally {
+        BusBookingGuard::useSchemaDriver(null);
+        if (!is_file($marker) && is_file($markerBackup)) {
+            rename($markerBackup, $marker);
+        } elseif (is_file($markerBackup)) {
+            unlink($markerBackup);
+        }
+    }
+
+    $directoryBlocker = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cjbus-marker-block-' . getmypid();
+    $writeDirectory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'cjbus-marker-dir-' . getmypid();
+    $blockedMarker = $directoryBlocker . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'bus_bookings.schema';
+    try {
+        if (is_file($directoryBlocker)) {
+            unlink($directoryBlocker);
+        }
+        file_put_contents($directoryBlocker, 'x');
+        BusBookingGuard::useMarkerPath($blockedMarker);
+        $directoryFailed = false;
+        $directoryMessage = '';
+        try {
+            BusBookingGuard::ensureSchema();
+        } catch (\RuntimeException $markerError) {
+            $directoryFailed = true;
+            $directoryMessage = $markerError->getMessage();
+        }
+        assertTest(
+            "Schema marker directory creation failure is reported",
+            $directoryFailed && $directoryMessage === 'The bus booking schema marker directory could not be created.'
+        );
+        assertTest("A failed marker directory does not leave a marker file", !is_file($blockedMarker) && is_file($marker));
+
+        if (!is_dir($writeDirectory)) {
+            mkdir($writeDirectory);
+        }
+        BusBookingGuard::useMarkerPath($writeDirectory);
+        $writeFailed = false;
+        $writeMessage = '';
+        try {
+            BusBookingGuard::ensureSchema();
+        } catch (\RuntimeException $markerError) {
+            $writeFailed = true;
+            $writeMessage = $markerError->getMessage();
+        }
+        $markerPhone = '08039990091';
+        $beforeMarkerWrite = (int)($db->selectOne('SELECT COUNT(*) AS c FROM bus_bookings WHERE customer_phone = :phone', [':phone' => $markerPhone])['c'] ?? 0);
+        $markerSave = RealtimeDataService::createBusBooking(busPayload([
+            'customer_name' => 'BusTest Marker',
+            'customer_phone' => $markerPhone,
+            'destination_city' => 'Ibadan (Iwo Road / Challenge)',
+        ]));
+        $afterMarkerWrite = (int)($db->selectOne('SELECT COUNT(*) AS c FROM bus_bookings WHERE customer_phone = :phone', [':phone' => $markerPhone])['c'] ?? 0);
+        assertTest(
+            "Schema marker writing failure is reported",
+            $writeFailed && $writeMessage === 'The bus booking schema marker could not be written.'
+        );
+        assertTest(
+            "A booking is not saved when the schema marker cannot be written",
+            empty($markerSave['success']) && $beforeMarkerWrite === $afterMarkerWrite && is_file($marker)
+        );
+    } finally {
+        BusBookingGuard::useMarkerPath(null);
+        if (is_file($directoryBlocker)) {
+            unlink($directoryBlocker);
+        }
+        if (is_dir($writeDirectory)) {
+            rmdir($writeDirectory);
+        }
+    }
+
     RealtimeDataService::setBusReferenceFactory(static fn (): string => (string)$oneway['booking']['ref']);
     $collision = RealtimeDataService::createBusBooking(busPayload([
         'customer_name' => 'BusTest Collision',
@@ -293,6 +389,28 @@ try {
     $httpBody = json_decode($httpSaved->getContent(), true);
     assertTest("A valid CSRF token allows the booking endpoint", $httpSaved->getStatusCode() === 200 && !empty($httpBody['success']) && str_contains((string)($httpBody['whatsappUrl'] ?? ''), 'https://wa.me/'));
 
+    BusBookingRateLimiter::reset('203.0.113.70');
+    BusBookingRateLimiter::usePolicy(2, 600);
+    $within = [
+        BusBookingRateLimiter::attempt('203.0.113.70'),
+        BusBookingRateLimiter::attempt('203.0.113.70'),
+    ];
+    $beyond = BusBookingRateLimiter::attempt('203.0.113.70');
+    assertTest("Requests inside the configured limit are allowed", ($within[0]['outcome'] ?? '') === 'ok' && ($within[1]['outcome'] ?? '') === 'ok' && !empty($within[0]['allowed']) && !empty($within[1]['allowed']));
+    assertTest("Requests past the configured limit are denied without a storage error", empty($beyond['allowed']) && ($beyond['outcome'] ?? '') === 'limited');
+
+    $storageDenied = true;
+    foreach (['directory', 'open', 'lock', 'read', 'write', 'truncate', 'flush'] as $operation) {
+        BusBookingRateLimiter::forceStorageFailure($operation);
+        $failedLimit = BusBookingRateLimiter::attempt('203.0.113.80');
+        if (!empty($failedLimit['allowed']) || ($failedLimit['outcome'] ?? '') !== 'storage') {
+            $storageDenied = false;
+        }
+    }
+    $afterFailure = BusBookingRateLimiter::attempt('203.0.113.81');
+    assertTest("Directory, file, lock, and write failures are not treated as allowed", $storageDenied);
+    assertTest("A simulated storage failure does not stick to the next address", !empty($afterFailure['allowed']) && ($afterFailure['outcome'] ?? '') === 'ok');
+
     BusBookingRateLimiter::reset('203.0.113.50');
     BusBookingRateLimiter::usePolicy(3, 600);
     $limitedStatuses = [];
@@ -324,9 +442,32 @@ try {
         'REMOTE_ADDR' => '203.0.113.51',
         'HTTP_ACCEPT' => 'application/json',
     ]);
+    $limitedBody = json_decode($spoofed->getContent(), true);
     assertTest("Booking attempts are rate limited by network address", $limitedStatuses === [422, 422, 422, 429]);
-    assertTest("Ordinary request fields cannot move a client into a new rate-limit bucket", $spoofed->getStatusCode() === 429);
+    assertTest("Ordinary request fields cannot move a client into a new rate-limit bucket", $spoofed->getStatusCode() === 429 && str_contains((string)($limitedBody['error'] ?? ''), 'Too many'));
     assertTest("A different network address keeps its own booking allowance", $otherNetwork->getStatusCode() === 422);
+
+    $storagePhone = '08039990090';
+    $beforeStorage = (int)($db->selectOne('SELECT COUNT(*) AS c FROM bus_bookings WHERE customer_phone = :phone', [':phone' => $storagePhone])['c'] ?? 0);
+    BusBookingRateLimiter::forceStorageFailure('open');
+    $storageResponse = dispatchBus('/api/bus/enquire', 'POST', busPayload([
+        'customer_name' => 'BusTest Storage',
+        'customer_phone' => $storagePhone,
+        '_token' => $token,
+    ]), [
+        'REMOTE_ADDR' => '203.0.113.90',
+        'HTTP_ACCEPT' => 'application/json',
+        'HTTP_X_FORWARDED_FOR' => '198.51.100.90',
+    ]);
+    $storageBody = json_decode($storageResponse->getContent(), true);
+    $afterStorage = (int)($db->selectOne('SELECT COUNT(*) AS c FROM bus_bookings WHERE customer_phone = :phone', [':phone' => $storagePhone])['c'] ?? 0);
+    $storageError = (string)($storageBody['error'] ?? '');
+    assertTest("Limiter storage failure returns HTTP 503 and does not create a booking", $storageResponse->getStatusCode() === 503 && empty($storageBody['success']) && $beforeStorage === $afterStorage);
+    assertTest("The storage failure message stays generic", $storageError === 'Bus enquiries are temporarily unavailable. Please try again in a moment.' && !str_contains($storageError, 'storage') && !str_contains($storageError, 'fopen'));
+
+    BusBookingRateLimiter::resetPolicy();
+    $restoredPolicy = BusBookingRateLimiter::policy();
+    assertTest("The production rate-limit policy is 60 attempts per 600 seconds", ($restoredPolicy['maxAttempts'] ?? 0) === 60 && ($restoredPolicy['windowSeconds'] ?? 0) === 600);
 
     $adminRow = $db->selectOne("SELECT id FROM administrators WHERE status = 'active' ORDER BY id ASC LIMIT 1");
     $adminId = (int)($adminRow['id'] ?? 0);
@@ -395,6 +536,9 @@ try {
     }
     BusBookingRateLimiter::reset();
     BusBookingRateLimiter::resetPolicy();
+    BusBookingRateLimiter::forceStorageFailure(null);
+    BusBookingGuard::useSchemaDriver(null);
+    BusBookingGuard::useMarkerPath(null);
     RealtimeDataService::setBusReferenceFactory(null);
     RealtimeDataService::failNextBusInsert(false);
     Session::remove('_admin_id');

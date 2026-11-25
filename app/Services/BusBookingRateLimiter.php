@@ -8,6 +8,8 @@ class BusBookingRateLimiter
 
     protected static int $windowSeconds = 600;
 
+    protected static ?string $forcedFailure = null;
+
     public static function usePolicy(int $maxAttempts, int $windowSeconds): void
     {
         self::$maxAttempts = max(1, $maxAttempts);
@@ -20,52 +22,79 @@ class BusBookingRateLimiter
         self::$windowSeconds = 600;
     }
 
+    public static function policy(): array
+    {
+        return [
+            'maxAttempts' => self::$maxAttempts,
+            'windowSeconds' => self::$windowSeconds,
+        ];
+    }
+
+    public static function forceStorageFailure(?string $operation): void
+    {
+        self::$forcedFailure = $operation;
+    }
+
     public static function attempt(string $ip): array
     {
         $ip = self::clientIp($ip);
         $now = time();
+        $directory = self::directory();
         $path = self::pathFor($ip);
-        $directory = dirname($path);
-        if (!is_dir($directory)) {
-            mkdir($directory, 0755, true);
+
+        if (self::consumeFailure('directory') || !self::prepareDirectory($directory)) {
+            return self::storageFailure();
         }
 
-        $handle = fopen($path, 'c+');
+        $handle = self::openBucket($path);
         if ($handle === false) {
-            return ['allowed' => true, 'remaining' => self::$maxAttempts];
+            return self::storageFailure();
         }
 
+        $locked = false;
         try {
-            flock($handle, LOCK_EX);
-            $raw = stream_get_contents($handle);
-            $hits = json_decode($raw ?: '[]', true);
-            if (!is_array($hits)) {
-                $hits = [];
+            if (self::consumeFailure('lock') || !@flock($handle, LOCK_EX)) {
+                return self::storageFailure();
+            }
+            $locked = true;
+
+            if (self::consumeFailure('read')) {
+                return self::storageFailure();
             }
 
-            $cutoff = $now - self::$windowSeconds;
-            $hits = array_values(array_filter(
-                $hits,
-                static fn($hit): bool => is_int($hit) && $hit > $cutoff
-            ));
+            $raw = @stream_get_contents($handle);
+            if ($raw === false) {
+                return self::storageFailure();
+            }
+
+            $hits = self::activeHits($raw, $now);
+            if ($hits === null) {
+                return self::storageFailure();
+            }
 
             if (count($hits) >= self::$maxAttempts) {
-                return ['allowed' => false, 'remaining' => 0];
+                return [
+                    'allowed' => false,
+                    'remaining' => 0,
+                    'outcome' => 'limited',
+                ];
             }
 
             $hits[] = $now;
-            rewind($handle);
-            ftruncate($handle, 0);
-            fwrite($handle, json_encode($hits));
-            fflush($handle);
+            if (!self::persistHits($handle, $hits)) {
+                return self::storageFailure();
+            }
 
             return [
                 'allowed' => true,
                 'remaining' => max(0, self::$maxAttempts - count($hits)),
+                'outcome' => 'ok',
             ];
         } finally {
-            flock($handle, LOCK_UN);
-            fclose($handle);
+            if ($locked) {
+                @flock($handle, LOCK_UN);
+            }
+            @fclose($handle);
         }
     }
 
@@ -84,8 +113,99 @@ class BusBookingRateLimiter
 
         $path = self::pathFor(self::clientIp($ip));
         if (is_file($path)) {
-            unlink($path);
+            @unlink($path);
         }
+    }
+
+    protected static function storageFailure(): array
+    {
+        return [
+            'allowed' => false,
+            'remaining' => 0,
+            'outcome' => 'storage',
+        ];
+    }
+
+    protected static function prepareDirectory(string $directory): bool
+    {
+        if (is_dir($directory)) {
+            return true;
+        }
+
+        if (!@mkdir($directory, 0755, true) && !is_dir($directory)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected static function openBucket(string $path)
+    {
+        if (self::consumeFailure('open')) {
+            return false;
+        }
+
+        $handle = @fopen($path, 'c+');
+        return $handle === false ? false : $handle;
+    }
+
+    protected static function activeHits(string $raw, int $now): ?array
+    {
+        if (trim($raw) === '') {
+            return [];
+        }
+
+        $decoded = json_decode($raw, true);
+        if (!is_array($decoded)) {
+            return null;
+        }
+
+        $cutoff = $now - self::$windowSeconds;
+        $hits = [];
+        foreach ($decoded as $hit) {
+            if (is_int($hit) && $hit > $cutoff) {
+                $hits[] = $hit;
+            }
+        }
+
+        return $hits;
+    }
+
+    protected static function persistHits($handle, array $hits): bool
+    {
+        if (self::consumeFailure('write') || self::consumeFailure('truncate') || self::consumeFailure('flush')) {
+            return false;
+        }
+
+        $payload = json_encode(array_values($hits));
+        if (!is_string($payload)) {
+            return false;
+        }
+
+        if (@rewind($handle) !== true) {
+            return false;
+        }
+
+        $written = @fwrite($handle, $payload);
+        if ($written !== strlen($payload)) {
+            return false;
+        }
+
+        if (@ftruncate($handle, strlen($payload)) !== true) {
+            return false;
+        }
+
+        return @fflush($handle) === true;
+    }
+
+    protected static function consumeFailure(string $operation): bool
+    {
+        if (self::$forcedFailure !== $operation) {
+            return false;
+        }
+
+        self::$forcedFailure = null;
+        return true;
     }
 
     protected static function clientIp(string $ip): string
@@ -94,6 +214,7 @@ class BusBookingRateLimiter
         if (filter_var($ip, FILTER_VALIDATE_IP)) {
             return $ip;
         }
+
         return '0.0.0.0';
     }
 
