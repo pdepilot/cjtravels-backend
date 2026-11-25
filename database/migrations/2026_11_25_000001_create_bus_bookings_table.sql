@@ -1,0 +1,26 @@
+-- Idempotent bus enquiry table. Safe to run more than once. Does not drop or rewrite existing rows.
+CREATE TABLE IF NOT EXISTS bus_bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ref VARCHAR(32) NOT NULL UNIQUE,
+    customer_name VARCHAR(150) NOT NULL,
+    customer_phone VARCHAR(50) NOT NULL,
+    customer_email VARCHAR(150) NULL,
+    trip_type VARCHAR(20) NOT NULL DEFAULT 'one-way',
+    departure_city VARCHAR(100) NOT NULL,
+    destination_city VARCHAR(100) NOT NULL,
+    departure_date DATE NOT NULL,
+    return_date DATE NULL,
+    departure_time VARCHAR(60) NULL DEFAULT 'Morning (06:30 - 08:00 AM)',
+    passengers INT NOT NULL DEFAULT 1,
+    coach_class VARCHAR(80) NOT NULL DEFAULT 'Executive Luxury AC Coach',
+    preferred_operator VARCHAR(100) NULL DEFAULT 'Any Verified Luxury Partner',
+    estimated_fare DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+    notes TEXT NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'Pending',
+    whatsapp_status VARCHAR(30) NOT NULL DEFAULT 'Initiated',
+    created_at DATETIME NOT NULL,
+    updated_at DATETIME NOT NULL,
+    INDEX idx_bus_ref (ref),
+    INDEX idx_bus_status (status),
+    INDEX idx_bus_depart_date (departure_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

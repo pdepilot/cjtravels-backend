@@ -220,10 +220,15 @@
 
     // 1. Status Update via AJAX
     document.querySelectorAll('.status-select').forEach(function (select) {
+      select.addEventListener('focus', function () {
+        this.setAttribute('data-previous', this.value);
+      });
       select.addEventListener('change', function () {
         var id = this.getAttribute('data-id');
         var newStatus = this.value;
+        var previous = this.getAttribute('data-previous') || newStatus;
         var originalColor = this.style.borderColor;
+        var selectEl = this;
 
         fetch('<?= route('admin.api.bus.status') ?>', {
           method: 'POST',
@@ -236,13 +241,16 @@
         .then(function (res) { return res.json(); })
         .then(function (data) {
           if (data.success) {
-            select.style.borderColor = '#2e7d5b';
-            setTimeout(function () { select.style.borderColor = originalColor; }, 1200);
+            selectEl.setAttribute('data-previous', newStatus);
+            selectEl.style.borderColor = '#2e7d5b';
+            setTimeout(function () { selectEl.style.borderColor = originalColor; }, 1200);
           } else {
+            selectEl.value = previous;
             alert(data.error || 'Failed to update status.');
           }
         })
         .catch(function () {
+          selectEl.value = previous;
           alert('Network error while updating status.');
         });
       });
@@ -254,9 +262,13 @@
         var id = this.getAttribute('data-id');
         var ref = this.getAttribute('data-ref');
 
+        if (btn.disabled) {
+          return;
+        }
         if (!confirm('Are you sure you want to delete bus booking enquiry ' + ref + '?')) {
           return;
         }
+        btn.disabled = true;
 
         fetch('<?= route('admin.api.bus.delete') ?>', {
           method: 'POST',
@@ -276,10 +288,12 @@
               setTimeout(function () { row.remove(); }, 300);
             }
           } else {
-            alert(data.error || 'Failed to delete booking.');
+            btn.disabled = false;
+            alert(data.error || 'That booking could not be removed.');
           }
         })
         .catch(function () {
+          btn.disabled = false;
           alert('Network error while deleting.');
         });
       });

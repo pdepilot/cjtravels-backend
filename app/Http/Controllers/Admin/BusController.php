@@ -36,31 +36,37 @@ class BusController extends AdminController
 
     public function updateStatus(Request $request): Response
     {
-        $id = (int)$request->input('id');
+        $id = self::bookingId($request->input('id'));
         $status = trim((string)$request->input('status'));
-
-        if ($id <= 0 || !in_array($status, ['Pending', 'Confirmed', 'Processing', 'Cancelled'], true)) {
-            return Response::json(['success' => false, 'error' => 'Invalid booking ID or status.'], 422);
+        if ($id === null) {
+            return Response::json(['success' => false, 'error' => 'Choose a valid booking.'], 422);
         }
 
-        $updated = RealtimeDataService::updateRecord('bus', $id, ['status' => $status]);
-        return Response::json([
-            'success' => $updated,
-            'message' => $updated ? "Booking #{$id} status updated to {$status}." : 'Failed to update booking status.',
-        ]);
+        $result = RealtimeDataService::updateBusBooking($id, ['status' => $status]);
+        $code = !empty($result['success']) ? 200 : (($result['code'] ?? '') === 'not_found' ? 404 : 422);
+        return Response::json($result, $code);
     }
 
     public function destroy(Request $request): Response
     {
-        $id = (int)$request->input('id');
-        if ($id <= 0) {
-            return Response::json(['success' => false, 'error' => 'Invalid booking ID.'], 422);
+        $id = self::bookingId($request->input('id'));
+        if ($id === null) {
+            return Response::json(['success' => false, 'error' => 'Choose a valid booking.'], 422);
         }
 
-        $deleted = RealtimeDataService::deleteRecord('bus', $id);
-        return Response::json([
-            'success' => $deleted,
-            'message' => $deleted ? 'Booking enquiry removed successfully.' : 'Failed to delete booking enquiry.',
-        ]);
+        $result = RealtimeDataService::deleteBusBooking($id);
+        $code = !empty($result['success']) ? 200 : (($result['code'] ?? '') === 'not_found' ? 404 : 422);
+        return Response::json($result, $code);
+    }
+
+    protected static function bookingId(mixed $raw): ?int
+    {
+        if (is_int($raw) && $raw > 0) {
+            return $raw;
+        }
+        if (is_string($raw) && preg_match('/^[1-9]\d*$/', $raw)) {
+            return (int)$raw;
+        }
+        return null;
     }
 }

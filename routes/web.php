@@ -130,10 +130,18 @@ Router::get('/api/promo/active', function (\App\Core\Request $request) {
 })->name('api.promo.active');
 
 Router::post('/api/bus/enquire', function (\App\Core\Request $request) {
+    $limit = \App\Services\BusBookingRateLimiter::attempt($request->ip());
+    if (!$limit['allowed']) {
+        return \App\Core\Response::json([
+            'success' => false,
+            'error' => 'Too many booking attempts from this network. Please wait a few minutes and try again.',
+        ], 429);
+    }
+
     $created = \App\Services\RealtimeDataService::createBusBooking($request->all());
     $status = !empty($created['success']) ? 200 : 422;
     return \App\Core\Response::json($created, $status);
-})->name('api.bus.enquire');
+})->name('api.bus.enquire')->middleware('csrf');
 
 Router::get('/api/bus/routes', function (\App\Core\Request $request) {
     return [

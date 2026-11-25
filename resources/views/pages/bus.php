@@ -819,7 +819,7 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
       </div>
       <h1>Travel by Road in <em>First-Class Comfort</em></h1>
       <p class="hero-sub">
-        Select your departure and return travel dates across Nigeria's leading luxury coach terminals. Every reservation enquiry is automatically sent to our dedicated WhatsApp travel concierge for instant seat verification.
+        Select your departure and return travel dates across Nigeria's leading luxury coach terminals. Your enquiry is saved with a booking reference, and you can open WhatsApp afterwards with the prepared message.
       </p>
 
       <div class="quick-routes-bar">
@@ -1038,7 +1038,7 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
           </button>
 
           <p class="text-center text-muted mt-2" style="font-size:11.5px;">
-            <i class="bi bi-lock-fill text-gold me-1"></i> Submitting immediately saves your reservation reference in our database and opens WhatsApp pre-filled with all travel details.
+            <i class="bi bi-lock-fill text-gold me-1"></i> Submitting saves your reservation reference first. WhatsApp stays closed until you choose to contact the concierge.
           </p>
         </form>
 
@@ -1181,16 +1181,17 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
       </div>
 
       <div class="d-grid gap-2">
-        <a href="#" id="modalWhatsappLink" target="_blank" class="btn-whatsapp-submit" style="text-decoration:none;">
+        <a href="#" id="modalWhatsappLink" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-submit" style="text-decoration:none;">
           <i class="bi bi-whatsapp"></i> Continue to WhatsApp Concierge
         </a>
+        <textarea id="modalWhatsappMessage" readonly rows="5" aria-label="Prepared WhatsApp message" style="width:100%;border:1px solid var(--hairline);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--navy);background:#f7f8fa;resize:vertical;"></textarea>
         <button type="button" class="btn btn-outline-secondary" id="btnDoneBrowsing" style="height:48px;font-size:13px;text-transform:uppercase;letter-spacing:.08em;">
           Done &amp; Return to Page
         </button>
       </div>
 
       <p class="text-center text-muted mt-3 mb-0" style="font-size:11.5px;">
-        If WhatsApp did not launch automatically, click the button above to start the chat.
+        Your enquiry is saved on this site first. WhatsApp is not opened for you, and no message has been sent. Use the button above when you are ready — the prepared message is included in that chat link.
       </p>
     </div>
   </div>
@@ -1466,9 +1467,16 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
       if (closeSuccessModal) closeSuccessModal.addEventListener('click', hideModal);
       if (btnDoneBrowsing) btnDoneBrowsing.addEventListener('click', hideModal);
 
+      var submitting = false;
+      if (closeSuccessModal) closeSuccessModal.addEventListener('click', function () { submitting = false; });
+      if (btnDoneBrowsing) btnDoneBrowsing.addEventListener('click', function () { submitting = false; });
+
       if (form) {
         form.addEventListener('submit', function (e) {
           e.preventDefault();
+          if (submitting) {
+            return;
+          }
           if (errorAlert) {
             errorAlert.style.display = 'none';
             errorAlert.textContent = '';
@@ -1484,7 +1492,8 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
             showError('Please enter your full name.');
             return;
           }
-          if (!phone || phone.replace(/\D/g, '').length < 8) {
+          var phoneDigits = phone.replace(/\D/g, '');
+          if (!phone || phoneDigits.length < 10 || phoneDigits.length > 15) {
             showError('Please enter a valid phone number so we can reach you on WhatsApp.');
             return;
           }
@@ -1514,31 +1523,40 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
             }
           }
 
+          submitting = true;
           submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving & Opening WhatsApp...';
+          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Saving your enquiry...';
 
           var formData = new FormData(form);
           var payload = {};
           formData.forEach(function (value, key) {
             payload[key] = value;
           });
+          var tokenInput = form.querySelector('input[name="_token"]');
+          var csrfToken = tokenInput ? tokenInput.value : '';
+          if (csrfToken) {
+            payload._token = csrfToken;
+          }
 
           var apiUrl = '<?= function_exists('route') ? route('api.bus.enquire') : '/api/bus/enquire' ?>';
 
           fetch(apiUrl, {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
               'Content-Type': 'application/json',
-              'Accept': 'application/json'
+              'Accept': 'application/json',
+              'X-CSRF-TOKEN': csrfToken,
+              'X-Requested-With': 'XMLHttpRequest'
             },
             body: JSON.stringify(payload)
           })
           .then(function (res) { return res.json(); })
           .then(function (data) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="bi bi-whatsapp"></i> Reserve &amp; Send Enquiry via WhatsApp';
-
             if (!data.success) {
+              submitting = false;
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = '<i class="bi bi-whatsapp"></i> Reserve &amp; Send Enquiry via WhatsApp';
               showError(data.error || 'Failed to submit booking. Please try again or chat with us directly.');
               return;
             }
@@ -1564,18 +1582,19 @@ $phoneDisplay = function_exists('cj_phone_display') ? cj_phone_display() : '0813
             if (modalWhatsappLink && data.whatsappUrl) {
               modalWhatsappLink.href = data.whatsappUrl;
             }
+            var messageBox = document.getElementById('modalWhatsappMessage');
+            if (messageBox) {
+              messageBox.value = data.messageText || '';
+            }
 
-            // Show confirmation modal
             if (successModal) {
               successModal.classList.add('show');
             }
 
-            // Open WhatsApp directly in new window/tab
-            if (data.whatsappUrl) {
-              window.open(data.whatsappUrl, '_blank');
-            }
+            submitBtn.innerHTML = '<i class="bi bi-check2"></i> Enquiry saved';
           })
           .catch(function (err) {
+            submitting = false;
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="bi bi-whatsapp"></i> Reserve &amp; Send Enquiry via WhatsApp';
             showError('Network error. Please try again or click the WhatsApp help button.');
