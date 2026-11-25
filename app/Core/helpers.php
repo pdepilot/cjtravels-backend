@@ -55,16 +55,17 @@ if (!function_exists('response')) {
 if (!function_exists('base_subfolder')) {
     function base_subfolder(): string
     {
-        $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
-        $dir = dirname($script);
-        if ($dir === '/' || $dir === '\\' || $dir === '.' || empty($dir)) {
-            return '';
+        $appUrl = (string) env('APP_URL', '');
+
+        if ($appUrl !== '') {
+            $path = parse_url($appUrl, PHP_URL_PATH);
+
+            if (is_string($path)) {
+                return rtrim($path, '/');
+            }
         }
-        if (str_ends_with($dir, '/public') || str_ends_with($dir, '/admin')) {
-            $parent = dirname($dir);
-            return ($parent === '/' || $parent === '\\') ? '' : rtrim($parent, '/');
-        }
-        return rtrim($dir, '/');
+
+        return '';
     }
 }
 
