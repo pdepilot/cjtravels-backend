@@ -25,6 +25,11 @@
     <span class="float-btn-label">Hotels</span>
     <span class="float-badge" id="badgeHotels"><?= (int)($liveCounts['hotels'] ?? 0) ?></span>
   </a>
+  <a class="float-btn <?= routeIs('admin.bus') ? 'active' : '' ?>" href="<?= route('admin.bus') ?>" <?= routeIs('admin.bus') ? 'aria-current="page"' : '' ?> aria-label="Bus Tickets">
+    <i class="bi bi-bus-front-fill"></i>
+    <span class="float-btn-label">Bus Tickets</span>
+    <span class="float-badge" id="badgeBus"><?= (int)($liveCounts['bus'] ?? 0) ?></span>
+  </a>
   <a class="float-btn <?= routeIs('admin.loans') ? 'active' : '' ?>" href="<?= route('admin.loans') ?>" <?= routeIs('admin.loans') ? 'aria-current="page"' : '' ?> aria-label="Travel loans">
     <i class="bi bi-cash-coin"></i>
     <span class="float-btn-label">Travel Loans</span>

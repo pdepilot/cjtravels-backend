@@ -2437,6 +2437,11 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
                   aria-controls="hotels-pane" aria-selected="false">
             <i class="bi bi-building"></i> Luxury Hotels
           </button>
+          <button type="button" class="terminal-tab-btn" id="bus-tab"
+                  data-bs-toggle="pill" data-bs-target="#bus-pane" role="tab"
+                  aria-controls="bus-pane" aria-selected="false">
+            <i class="bi bi-bus-front"></i> Bus Tickets
+          </button>
           <a href="destinations" class="terminal-tab-btn d-none d-md-inline-flex" style="text-decoration:none;">
             <i class="bi bi-compass"></i> Curated Escapes
           </a>
@@ -2591,6 +2596,76 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
                 </button>
               </div>
               <div class="search-status" id="hotelStatus" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <!-- BUS TICKETS PANE -->
+          <div class="tab-pane fade" id="bus-pane" role="tabpanel"
+               aria-labelledby="bus-tab" tabindex="0">
+            <form class="search-form" id="homeBusForm" action="<?= route('bus') ?>" method="GET" novalidate>
+              <div class="row g-3 align-items-end">
+                <div class="col-lg-3 col-md-6">
+                  <label class="form-label" for="homeBusFrom">Departure Terminal</label>
+                  <div class="field">
+                    <i class="bi bi-geo-alt-fill"></i>
+                    <input type="text" class="form-control" id="homeBusFrom" name="from" placeholder="e.g. Lagos (Jibowu)" value="Lagos (Jibowu)" autocomplete="off" />
+                  </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                  <label class="form-label" for="homeBusTo">Destination City</label>
+                  <div class="field">
+                    <i class="bi bi-pin-map-fill"></i>
+                    <input type="text" class="form-control" id="homeBusTo" name="to" placeholder="e.g. Abuja (Utako)" value="Abuja (Utako)" autocomplete="off" />
+                  </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4">
+                  <label class="form-label" for="homeBusDepart">Departure Date</label>
+                  <div class="field">
+                    <i class="bi bi-calendar3"></i>
+                    <input type="date" class="form-control" id="homeBusDepart" name="depart" min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d', strtotime('+1 day')) ?>" />
+                  </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4">
+                  <label class="form-label" for="homeBusReturn">Return Date (Optional)</label>
+                  <div class="field">
+                    <i class="bi bi-calendar2-check"></i>
+                    <input type="date" class="form-control" id="homeBusReturn" name="return" min="<?= date('Y-m-d') ?>" />
+                  </div>
+                </div>
+
+                <div class="col-lg-2 col-md-4">
+                  <label class="form-label" for="homeBusSeats">Passengers</label>
+                  <div class="field">
+                    <i class="bi bi-people"></i>
+                    <select class="form-select border-0 bg-transparent" id="homeBusSeats" name="seats">
+                      <option value="1">1 Seat</option>
+                      <option value="2">2 Seats</option>
+                      <option value="3">3 Seats</option>
+                      <option value="4">4+ Seats</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="terminal-footer">
+                <div class="terminal-filters">
+                  <label class="terminal-filter-tag">
+                    <input type="checkbox" checked /> Executive AC Coaches
+                  </label>
+                  <label class="terminal-filter-tag d-none d-sm-inline-flex">
+                    <input type="checkbox" checked /> GPS Tracked &amp; Verified Captains
+                  </label>
+                  <label class="terminal-filter-tag d-none d-md-inline-flex">
+                    <input type="checkbox" checked /> Direct WhatsApp Seat Confirmation
+                  </label>
+                </div>
+                <button type="submit" class="btn-terminal-submit" style="background:#25D366;border-color:#25D366;">
+                  Book on WhatsApp <i class="bi bi-whatsapp"></i>
+                </button>
+              </div>
             </form>
           </div>
 

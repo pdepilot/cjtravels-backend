@@ -25,6 +25,7 @@
         <ul class="footer-links">
           <li><a href="<?= route('flights') ?>">Flights</a></li>
           <li><a href="<?= route('hotels') ?>">Hotels</a></li>
+          <li><a href="<?= route('bus') ?>">Bus &amp; Road Transport</a></li>
           <li><a href="<?= route('destinations') ?>">Destinations</a></li>
           <li><a href="<?= route('financing') ?>">Travel Financing</a></li>
         </ul>

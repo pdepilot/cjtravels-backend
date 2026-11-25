@@ -23,6 +23,8 @@ Router::get('/about', [HomeController::class, 'about'])->name('about');
 Router::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Router::get('/destinations', [HomeController::class, 'destinations'])->name('destinations');
 Router::get('/financing', [HomeController::class, 'financing'])->name('financing');
+Router::get('/bus', [HomeController::class, 'bus'])->name('bus');
+Router::get('/bus-tickets', fn() => redirect('/bus'))->name('bus-tickets');
 Router::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Router::get('/privacy', [HomeController::class, 'privacy'])->name('privacy');
 Router::get('/flights', [FlightController::class, 'index'])->name('flights');
@@ -126,6 +128,34 @@ Router::get('/api/promo/active', function (\App\Core\Request $request) {
         'data' => \App\Services\RealtimeDataService::getActivePromoCampaign(),
     ];
 })->name('api.promo.active');
+
+Router::post('/api/bus/enquire', function (\App\Core\Request $request) {
+    $created = \App\Services\RealtimeDataService::createBusBooking($request->all());
+    $status = !empty($created['success']) ? 200 : 422;
+    return \App\Core\Response::json($created, $status);
+})->name('api.bus.enquire');
+
+Router::get('/api/bus/routes', function (\App\Core\Request $request) {
+    return [
+        'success' => true,
+        'data' => \App\Services\RealtimeDataService::getPopularBusRoutes(),
+    ];
+})->name('api.bus.routes');
+
+Router::post('/api/bus/estimate', function (\App\Core\Request $request) {
+    $from = (string)$request->input('from', '');
+    $to = (string)$request->input('to', '');
+    $tripType = (string)$request->input('trip_type', 'one-way');
+    $passengers = (int)$request->input('passengers', 1);
+    $coachClass = (string)$request->input('coach_class', 'Executive Luxury AC Coach');
+
+    $estimatedFare = \App\Services\RealtimeDataService::estimateBusFare($from, $to, $tripType, $passengers, $coachClass);
+    return [
+        'success' => true,
+        'estimatedFare' => $estimatedFare,
+        'formattedFare' => '₦' . number_format($estimatedFare),
+    ];
+})->name('api.bus.estimate');
 Router::get('/index', fn() => redirect('/'));
 Router::post('/admin/api/destinations/create', [Admin\ApiController::class, 'createDestination'])->name('admin.api.destinations.create')->middleware(['csrf', 'admin.auth']);
 Router::post('/admin/api/providers/save', [Admin\ApiController::class, 'saveProvider'])->name('admin.api.providers.save')->middleware(['csrf', 'admin.auth']);
@@ -150,6 +180,9 @@ Router::post('/admin/settings/profile', [Admin\SettingController::class, 'update
 Router::post('/admin/settings/password', [Admin\SettingController::class, 'updatePassword'])->name('admin.settings.password')->middleware(['csrf', 'admin.auth']);
 Router::post('/admin/settings/promo', [Admin\SettingController::class, 'updatePromoCampaign'])->name('admin.settings.promo')->middleware(['csrf', 'admin.auth']);
 Router::post('/admin/settings/contact-phone', [Admin\SettingController::class, 'updateContactPhone'])->name('admin.settings.contact-phone')->middleware(['csrf', 'admin.auth']);
+Router::get('/admin/bus', [Admin\BusController::class, 'index'])->name('admin.bus')->middleware('admin.auth');
+Router::post('/admin/api/bus/status', [Admin\BusController::class, 'updateStatus'])->name('admin.api.bus.status')->middleware(['csrf', 'admin.auth']);
+Router::post('/admin/api/bus/delete', [Admin\BusController::class, 'destroy'])->name('admin.api.bus.delete')->middleware(['csrf', 'admin.auth']);
 
 // Customer account pages are closed. Visitors book through the contact page.
 Router::get('/customer', function (\App\Core\Request $request) {
@@ -194,6 +227,8 @@ Router::get('/terms.html', fn() => redirect('/terms'));
 Router::get('/privacy.html', fn() => redirect('/privacy'));
 Router::get('/flights.html', fn() => redirect('/flights'));
 Router::get('/hotels.html', fn() => redirect('/hotels'));
+Router::get('/bus.html', fn() => redirect('/bus'));
+Router::get('/bus-tickets.html', fn() => redirect('/bus'));
 Router::get('/login.html', fn() => redirect('/login'));
 Router::get('/register.html', fn() => redirect('/register'));
 
@@ -207,6 +242,8 @@ Router::get('/terms.php', fn() => redirect('/terms'));
 Router::get('/privacy.php', fn() => redirect('/privacy'));
 Router::get('/flights.php', fn() => redirect('/flights'));
 Router::get('/hotels.php', fn() => redirect('/hotels'));
+Router::get('/bus.php', fn() => redirect('/bus'));
+Router::get('/bus-tickets.php', fn() => redirect('/bus'));
 Router::get('/login.php', fn() => redirect('/login'));
 Router::get('/register.php', fn() => redirect('/register'));
 
@@ -223,6 +260,7 @@ Router::get('/admin/transactions.php', fn() => redirect('/admin/transactions'));
 Router::get('/admin/api.php', fn() => redirect('/admin/api'));
 Router::get('/admin/reports.php', fn() => redirect('/admin/reports'));
 Router::get('/admin/settings.php', fn() => redirect('/admin/settings'));
+Router::get('/admin/bus.php', fn() => redirect('/admin/bus'));
 
 Router::get('/customer/dashboard.php', fn() => redirect('/customer/dashboard'));
 Router::get('/customer/overview.php', fn() => redirect('/customer/dashboard'));

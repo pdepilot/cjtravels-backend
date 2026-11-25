@@ -1,20 +1,21 @@
 <?php
 if (!function_exists('route')) {
-    $bootstrap = __DIR__ . '/bootstrap/app.php';
-    if (!file_exists($bootstrap)) {
-        $bootstrap = __DIR__ . '/../bootstrap/app.php';
-    }
-    if (!file_exists($bootstrap)) {
-        $bootstrap = __DIR__ . '/../../bootstrap/app.php';
-    }
-    if (file_exists($bootstrap)) {
-        require_once $bootstrap;
-    }
+  $bootstrap = __DIR__ . '/bootstrap/app.php';
+  if (!file_exists($bootstrap)) {
+    $bootstrap = __DIR__ . '/../bootstrap/app.php';
+  }
+  if (!file_exists($bootstrap)) {
+    $bootstrap = __DIR__ . '/../../bootstrap/app.php';
+  }
+  if (file_exists($bootstrap)) {
+    require_once $bootstrap;
+  }
 }
 $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <link rel="icon" type="image/png" href="<?= asset('images/logo-mark.png') ?>" />
   <meta charset="UTF-8" />
@@ -56,8 +57,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
     /* =======================================================
        RESET / BASE
        ======================================================= */
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       font-family: 'DM Sans', sans-serif;
       font-weight: 400;
@@ -68,7 +75,13 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       text-rendering: optimizeLegibility;
       overflow-x: hidden;
     }
-    h1, h2, h3, h4, h5, h6 {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
       font-family: 'Cormorant Garamond', serif;
       font-weight: 400;
       letter-spacing: -.01em;
@@ -76,11 +89,26 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       margin: 0;
       line-height: 1.15;
     }
-    p { margin: 0; }
-    a { color: inherit; text-decoration: none; }
-    img { max-width: 100%; display: block; }
 
-    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    p {
+      margin: 0;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
       outline: 1.5px solid var(--navy);
       outline-offset: 4px;
     }
@@ -98,12 +126,21 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       text-transform: uppercase;
       transition: top .25s ease;
     }
-    .skip-link:focus { top: 0; color: var(--ivory); }
+
+    .skip-link:focus {
+      top: 0;
+      color: var(--ivory);
+    }
 
     /* =======================================================
        UTILITIES
        ======================================================= */
-    .container { max-width: 1200px; padding-left: 24px; padding-right: 24px; margin: 0 auto; }
+    .container {
+      max-width: 1200px;
+      padding-left: 24px;
+      padding-right: 24px;
+      margin: 0 auto;
+    }
 
     .eyebrow {
       display: inline-flex;
@@ -117,45 +154,83 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--muted);
       margin-bottom: 24px;
     }
-    .eyebrow::before, .eyebrow::after {
+
+    .eyebrow::before,
+    .eyebrow::after {
       content: "";
       width: 28px;
       height: 1px;
       background: var(--gold);
     }
-    .eyebrow.no-after::after { display: none; }
-    .eyebrow.light { color: rgba(253, 251, 246, .7); }
-    .eyebrow.light::before, .eyebrow.light::after { background: var(--gold-soft); }
 
-    .section { padding: clamp(72px, 9vw, 120px) 0; }
-    .bg-cream { background: var(--cream); }
-    .bg-cream-soft { background: var(--cream-soft); }
-    .bg-ivory { background: var(--ivory); }
+    .eyebrow.no-after::after {
+      display: none;
+    }
+
+    .eyebrow.light {
+      color: rgba(253, 251, 246, .7);
+    }
+
+    .eyebrow.light::before,
+    .eyebrow.light::after {
+      background: var(--gold-soft);
+    }
+
+    .section {
+      padding: clamp(72px, 9vw, 120px) 0;
+    }
+
+    .bg-cream {
+      background: var(--cream);
+    }
+
+    .bg-cream-soft {
+      background: var(--cream-soft);
+    }
+
+    .bg-ivory {
+      background: var(--ivory);
+    }
 
     .section-head {
       max-width: 640px;
       margin: 0 auto clamp(48px, 6vw, 72px);
       text-align: center;
     }
+
     .section-head h2 {
       font-size: clamp(2rem, 4vw, 3.2rem);
       margin-bottom: 20px;
       letter-spacing: -.02em;
     }
-    .section-head h2 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+    .section-head h2 em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
     .section-head p {
       font-size: 16px;
       color: var(--ink-soft);
       line-height: 1.7;
     }
 
-    .reveal { opacity: 1; transform: none; }
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
     .js .reveal {
       opacity: 0;
       transform: translateY(28px);
       transition: opacity .9s cubic-bezier(.4, 0, .2, 1), transform .9s cubic-bezier(.4, 0, .2, 1);
     }
-    .js .reveal.is-visible { opacity: 1; transform: none; }
+
+    .js .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
 
     /* =======================================================
        BUTTONS
@@ -174,16 +249,31 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border: 0;
       transition: all .3s ease;
     }
-    .btn-lux-navy { background: var(--navy); color: var(--ivory); }
-    .btn-lux-navy:hover { background: var(--navy-soft); color: var(--ivory); }
-    .btn-lux-navy .arrow { transition: transform .3s ease; }
-    .btn-lux-navy:hover .arrow { transform: translateX(4px); }
+
+    .btn-lux-navy {
+      background: var(--navy);
+      color: var(--ivory);
+    }
+
+    .btn-lux-navy:hover {
+      background: var(--navy-soft);
+      color: var(--ivory);
+    }
+
+    .btn-lux-navy .arrow {
+      transition: transform .3s ease;
+    }
+
+    .btn-lux-navy:hover .arrow {
+      transform: translateX(4px);
+    }
 
     .btn-lux-ghost {
       background: transparent;
       color: var(--navy);
       border: 1px solid var(--hairline);
     }
+
     .btn-lux-ghost:hover {
       background: var(--cream-soft);
       border-color: var(--navy);
@@ -194,6 +284,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 100%);
       color: var(--navy-deep);
     }
+
     .btn-lux-gold:hover {
       background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
       color: var(--navy-deep);
@@ -205,6 +296,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--ivory);
       border: 1px solid rgba(253, 251, 246, .25);
     }
+
     .btn-lux-outline-light:hover {
       background: rgba(253, 251, 246, .08);
       border-color: var(--gold-soft);
@@ -221,6 +313,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       padding: 14px 0;
       border-bottom: 1px solid rgba(255, 255, 255, .06);
     }
+
     .topbar-inner {
       display: flex;
       align-items: center;
@@ -228,11 +321,13 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       gap: 24px;
       flex-wrap: wrap;
     }
+
     .topbar-left {
       display: flex;
       align-items: center;
       gap: 28px;
     }
+
     .topbar a {
       color: rgba(253, 251, 246, .7);
       display: inline-flex;
@@ -241,13 +336,22 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       letter-spacing: .04em;
       transition: color .2s ease;
     }
-    .topbar a:hover { color: var(--gold-soft); }
-    .topbar i { color: var(--gold-soft); font-size: 12px; }
+
+    .topbar a:hover {
+      color: var(--gold-soft);
+    }
+
+    .topbar i {
+      color: var(--gold-soft);
+      font-size: 12px;
+    }
+
     .topbar-right {
       display: flex;
       align-items: center;
       gap: 20px;
     }
+
     .topbar-badge {
       display: inline-flex;
       align-items: center;
@@ -260,9 +364,11 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       text-transform: uppercase;
       color: var(--gold-soft);
     }
+
     .topbar-badge::before {
       content: "";
-      width: 5px; height: 5px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--gold-soft);
     }
@@ -278,6 +384,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border-bottom: 1px solid var(--hairline-soft);
       transition: box-shadow .3s ease, background-color .3s ease;
     }
+
     .site-header.scrolled {
       background: rgba(245, 240, 230, .97);
       backdrop-filter: blur(12px);
@@ -299,8 +406,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       gap: 12px;
       flex-shrink: 0;
     }
+
     .brand-mark {
-      width: 42px; height: 42px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       border: 1px solid var(--navy);
       display: inline-flex;
@@ -311,7 +420,12 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       flex-shrink: 0;
       transition: all .3s ease;
     }
-    .brand:hover .brand-mark { background: var(--navy); color: var(--ivory); }
+
+    .brand:hover .brand-mark {
+      background: var(--navy);
+      color: var(--ivory);
+    }
+
     .brand-name {
       font-family: 'Cormorant Garamond', serif;
       font-size: 24px;
@@ -320,7 +434,12 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--navy);
       line-height: 1;
     }
-    .brand-name em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+    .brand-name em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
 
     .nav-center {
       display: flex;
@@ -329,6 +448,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       flex: 1;
       justify-content: center;
     }
+
     .nav-center a {
       padding: 10px 16px;
       font-size: 12px;
@@ -340,8 +460,15 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       transition: all .25s ease;
       white-space: nowrap;
     }
-    .nav-center a:hover { color: var(--navy); }
-    .nav-center a.active { color: var(--navy); border-bottom-color: var(--gold); }
+
+    .nav-center a:hover {
+      color: var(--navy);
+    }
+
+    .nav-center a.active {
+      color: var(--navy);
+      border-bottom-color: var(--gold);
+    }
 
     .nav-actions {
       display: flex;
@@ -349,6 +476,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       gap: 20px;
       flex-shrink: 0;
     }
+
     .nav-actions a.text-link {
       font-size: 12px;
       font-weight: 500;
@@ -357,7 +485,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--ink-soft);
       transition: color .2s ease;
     }
-    .nav-actions a.text-link:hover { color: var(--navy); }
+
+    .nav-actions a.text-link:hover {
+      color: var(--navy);
+    }
 
     .btn-nav-cta {
       display: inline-flex;
@@ -375,11 +506,16 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       cursor: pointer;
       transition: background-color .25s ease;
     }
-    .btn-nav-cta:hover { background: var(--navy-soft); color: var(--ivory); }
+
+    .btn-nav-cta:hover {
+      background: var(--navy-soft);
+      color: var(--ivory);
+    }
 
     .navbar-toggler {
       display: none;
-      width: 44px; height: 44px;
+      width: 44px;
+      height: 44px;
       border: 1px solid var(--hairline);
       background: transparent;
       color: var(--navy);
@@ -389,15 +525,23 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
     }
 
     @media (max-width: 991.98px) {
-      .nav-center, .nav-actions { display: none; }
-      .navbar-toggler { display: inline-flex; }
+
+      .nav-center,
+      .nav-actions {
+        display: none;
+      }
+
+      .navbar-toggler {
+        display: inline-flex;
+      }
     }
 
     /* =======================================================
        MOBILE DRAWER — matched to index.php
        ======================================================= */
     .mobile-nav-overlay {
-      position: fixed; inset: 0;
+      position: fixed;
+      inset: 0;
       background: rgba(6, 15, 33, .55);
       backdrop-filter: blur(3px);
       z-index: 1049;
@@ -405,11 +549,17 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       pointer-events: none;
       transition: opacity .3s ease;
     }
-    .mobile-nav-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .mobile-nav-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .mobile-nav {
       position: fixed;
-      top: 0; right: 0; bottom: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
       width: min(360px, 88vw);
       background: var(--cream);
       z-index: 1050;
@@ -419,7 +569,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       flex-direction: column;
       overflow-y: auto;
     }
-    .mobile-nav.open { transform: translateX(0); }
+
+    .mobile-nav.open {
+      transform: translateX(0);
+    }
 
     .mobile-nav-head {
       display: flex;
@@ -428,8 +581,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       padding: 22px 24px;
       border-bottom: 1px solid var(--hairline-soft);
     }
+
     .mobile-nav-close {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       border: 1px solid var(--hairline);
       background: transparent;
       color: var(--navy);
@@ -438,8 +593,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       justify-content: center;
       cursor: pointer;
     }
-    .mobile-nav-body { padding: 24px; flex: 1; }
-    .mobile-nav .nav-list { list-style: none; padding: 0; margin: 0; }
+
+    .mobile-nav-body {
+      padding: 24px;
+      flex: 1;
+    }
+
+    .mobile-nav .nav-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
     .mobile-nav .nav-link {
       display: flex;
       align-items: center;
@@ -452,21 +617,34 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border-bottom: 1px solid var(--hairline-soft);
       transition: color .2s ease;
     }
+
     .mobile-nav .nav-link:hover,
-    .mobile-nav .nav-link.active { color: var(--gold); }
-    .mobile-nav .nav-link i { font-size: 14px; color: var(--hairline); }
+    .mobile-nav .nav-link.active {
+      color: var(--gold);
+    }
+
+    .mobile-nav .nav-link i {
+      font-size: 14px;
+      color: var(--hairline);
+    }
+
     .mobile-nav-cta {
       padding: 24px;
       border-top: 1px solid var(--hairline-soft);
       display: grid;
       gap: 12px;
     }
-    .mobile-nav-cta .btn-lux { justify-content: center; }
+
+    .mobile-nav-cta .btn-lux {
+      justify-content: center;
+    }
+
     .mobile-nav-footer {
       padding: 20px 24px 28px;
       border-top: 1px solid var(--hairline-soft);
       background: var(--cream-soft);
     }
+
     .mobile-nav-footer p {
       font-size: 11px;
       letter-spacing: .22em;
@@ -474,6 +652,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--muted);
       margin-bottom: 12px;
     }
+
     .mobile-nav-footer a {
       display: flex;
       align-items: center;
@@ -482,7 +661,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--ink-soft);
       padding: 6px 0;
     }
-    .mobile-nav-footer a i { color: var(--gold); }
+
+    .mobile-nav-footer a i {
+      color: var(--gold);
+    }
 
     /* =======================================================
        HERO
@@ -494,18 +676,26 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       overflow: hidden;
       text-align: center;
     }
+
     .contact-hero .hero-content {
       max-width: 780px;
       margin: 0 auto;
       padding: 0 24px;
     }
+
     .contact-hero h1 {
       font-size: clamp(2.6rem, 6.5vw, 5rem);
       line-height: 1;
       letter-spacing: -.025em;
       margin-bottom: 28px;
     }
-    .contact-hero h1 em { font-style: italic; color: var(--gold); font-weight: 400; }
+
+    .contact-hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
     .contact-hero .hero-sub {
       font-size: clamp(15px, 1.5vw, 17px);
       color: var(--ink-soft);
@@ -522,6 +712,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border-top: 1px solid var(--hairline-soft);
       border-bottom: 1px solid var(--hairline-soft);
     }
+
     .hero-trust-item {
       padding: 26px 20px;
       border-right: 1px solid var(--hairline-soft);
@@ -530,13 +721,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       align-items: flex-start;
       text-align: left;
     }
-    .hero-trust-item:last-child { border-right: 0; }
+
+    .hero-trust-item:last-child {
+      border-right: 0;
+    }
+
     .hero-trust-item i {
       color: var(--gold);
       font-size: 18px;
       margin-top: 2px;
       flex-shrink: 0;
     }
+
     .hero-trust-item strong {
       display: block;
       font-family: 'Cormorant Garamond', serif;
@@ -545,15 +741,26 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--navy);
       margin-bottom: 2px;
     }
+
     .hero-trust-item span {
       font-size: 12px;
       color: var(--ink-soft);
       line-height: 1.5;
     }
+
     @media (max-width: 767.98px) {
-      .hero-trust { grid-template-columns: 1fr; }
-      .hero-trust-item { border-right: 0; border-bottom: 1px solid var(--hairline-soft); }
-      .hero-trust-item:last-child { border-bottom: 0; }
+      .hero-trust {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-trust-item {
+        border-right: 0;
+        border-bottom: 1px solid var(--hairline-soft);
+      }
+
+      .hero-trust-item:last-child {
+        border-bottom: 0;
+      }
     }
 
     /* =======================================================
@@ -566,6 +773,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       background: var(--hairline-soft);
       border: 1px solid var(--hairline-soft);
     }
+
     .info-card {
       background: var(--cream);
       padding: clamp(32px, 4vw, 48px) clamp(24px, 3vw, 32px);
@@ -573,9 +781,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       flex-direction: column;
       transition: background-color .3s ease;
     }
-    .info-card:hover { background: var(--ivory); }
+
+    .info-card:hover {
+      background: var(--ivory);
+    }
+
     .info-icon {
-      width: 52px; height: 52px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       border: 1px solid var(--gold-pale);
       color: var(--gold);
@@ -586,16 +799,19 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       margin-bottom: 24px;
       transition: all .3s ease;
     }
+
     .info-card:hover .info-icon {
       background: var(--navy);
       border-color: var(--navy);
       color: var(--gold-soft);
     }
+
     .info-card h3 {
       font-size: 1.4rem;
       font-weight: 500;
       margin-bottom: 12px;
     }
+
     .info-card .label {
       display: block;
       font-family: 'DM Sans', sans-serif;
@@ -606,6 +822,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--muted);
       margin-bottom: 10px;
     }
+
     .info-card .primary {
       display: block;
       font-size: 1.15rem;
@@ -615,13 +832,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-weight: 500;
       word-break: break-word;
     }
-    .info-card a.primary:hover { color: var(--gold); }
+
+    .info-card a.primary:hover {
+      color: var(--gold);
+    }
+
     .info-card .secondary {
       display: block;
       font-size: 13px;
       color: var(--ink-soft);
       line-height: 1.7;
     }
+
     .info-card .card-footer-note {
       margin-top: auto;
       padding-top: 20px;
@@ -633,7 +855,11 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       align-items: center;
       gap: 8px;
     }
-    .info-card .card-footer-note i { color: var(--gold); font-size: 13px; }
+
+    .info-card .card-footer-note i {
+      color: var(--gold);
+      font-size: 13px;
+    }
 
     .placeholder-badge {
       display: inline-flex;
@@ -650,10 +876,16 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       margin-top: 16px;
       align-self: flex-start;
     }
-    .placeholder-badge i { font-size: 10px; color: var(--gold); }
+
+    .placeholder-badge i {
+      font-size: 10px;
+      color: var(--gold);
+    }
 
     @media (max-width: 991.98px) {
-      .info-grid { grid-template-columns: 1fr; }
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* =======================================================
@@ -664,12 +896,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border: 1px solid var(--hairline);
       padding: clamp(28px, 4vw, 48px);
     }
+
     .form-card h2 {
       font-size: clamp(1.75rem, 3vw, 2.4rem);
       margin-bottom: 14px;
       letter-spacing: -.02em;
     }
-    .form-card > p {
+
+    .form-card>p {
       color: var(--ink-soft);
       font-size: 15px;
       line-height: 1.7;
@@ -686,6 +920,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--muted);
       margin-bottom: 10px;
     }
+
     .form-control,
     .form-select {
       width: 100%;
@@ -700,7 +935,12 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--navy);
       transition: border-color .25s ease, background-color .25s ease;
     }
-    .form-control::placeholder { color: var(--muted); font-weight: 400; }
+
+    .form-control::placeholder {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
     textarea.form-control {
       height: auto;
       min-height: 160px;
@@ -708,8 +948,12 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       resize: vertical;
       line-height: 1.65;
     }
+
     .form-control:hover,
-    .form-select:hover { border-color: var(--gold-pale); }
+    .form-select:hover {
+      border-color: var(--gold-pale);
+    }
+
     .form-control:focus,
     .form-select:focus {
       outline: none;
@@ -723,6 +967,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border-color: var(--error);
       background-color: rgba(163, 69, 46, .03);
     }
+
     .invalid-feedback {
       font-size: 12px;
       font-weight: 500;
@@ -741,7 +986,13 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       align-items: flex-start;
       gap: 8px;
     }
-    .form-hint i { color: var(--green); font-size: 13px; margin-top: 3px; flex-shrink: 0; }
+
+    .form-hint i {
+      color: var(--green);
+      font-size: 13px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
 
     .char-counter {
       font-size: 11px;
@@ -750,8 +1001,15 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       margin-top: 6px;
       letter-spacing: .04em;
     }
-    .char-counter.warn { color: var(--gold); }
-    .char-counter.over { color: var(--error); font-weight: 600; }
+
+    .char-counter.warn {
+      color: var(--gold);
+    }
+
+    .char-counter.over {
+      color: var(--error);
+      font-weight: 600;
+    }
 
     /* Department selector */
     .dept-grid {
@@ -760,18 +1018,22 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       gap: 8px;
       margin-bottom: 8px;
     }
+
     .dept-option {
       position: relative;
       display: block;
       cursor: pointer;
       margin: 0;
     }
+
     .dept-option input {
       position: absolute;
       opacity: 0;
-      width: 1px; height: 1px;
+      width: 1px;
+      height: 1px;
       pointer-events: none;
     }
+
     .dept-box {
       display: flex;
       align-items: flex-start;
@@ -782,17 +1044,23 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       transition: all .25s ease;
       height: 100%;
     }
+
     .dept-option:hover .dept-box {
       border-color: var(--navy);
       background: var(--cream-soft);
     }
+
     .dept-box i {
       color: var(--gold);
       font-size: 16px;
       margin-top: 2px;
       flex-shrink: 0;
     }
-    .dept-box div { min-width: 0; }
+
+    .dept-box div {
+      min-width: 0;
+    }
+
     .dept-box strong {
       display: block;
       font-family: 'DM Sans', sans-serif;
@@ -801,6 +1069,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--navy);
       line-height: 1.3;
     }
+
     .dept-box span {
       display: block;
       font-size: 12px;
@@ -808,14 +1077,25 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       line-height: 1.5;
       margin-top: 4px;
     }
-    .dept-option input:checked + .dept-box {
+
+    .dept-option input:checked+.dept-box {
       background: var(--navy);
       border-color: var(--navy);
     }
-    .dept-option input:checked + .dept-box i { color: var(--gold-soft); }
-    .dept-option input:checked + .dept-box strong { color: var(--ivory); }
-    .dept-option input:checked + .dept-box span { color: rgba(253, 251, 246, .7); }
-    .dept-option input:focus-visible + .dept-box {
+
+    .dept-option input:checked+.dept-box i {
+      color: var(--gold-soft);
+    }
+
+    .dept-option input:checked+.dept-box strong {
+      color: var(--ivory);
+    }
+
+    .dept-option input:checked+.dept-box span {
+      color: rgba(253, 251, 246, .7);
+    }
+
+    .dept-option input:focus-visible+.dept-box {
       outline: 1.5px solid var(--navy);
       outline-offset: 4px;
     }
@@ -827,10 +1107,15 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-weight: 500;
       margin-top: 8px;
     }
-    .dept-error.show { display: block; }
+
+    .dept-error.show {
+      display: block;
+    }
 
     @media (max-width: 767.98px) {
-      .dept-grid { grid-template-columns: 1fr; }
+      .dept-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Form status */
@@ -841,17 +1126,23 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-size: 13px;
       line-height: 1.65;
     }
-    .form-status.show { display: block; }
+
+    .form-status.show {
+      display: block;
+    }
+
     .form-status.error {
       background: rgba(163, 69, 46, .06);
       border-left: 2px solid var(--error);
       color: var(--error);
     }
+
     .form-status.success {
       background: rgba(46, 125, 91, .06);
       border-left: 2px solid var(--green);
       color: var(--green);
     }
+
     .form-status.success strong {
       display: block;
       color: var(--navy);
@@ -862,7 +1153,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
     /* =======================================================
        ASIDE
        ======================================================= */
-    .aside-stack { display: grid; gap: 20px; }
+    .aside-stack {
+      display: grid;
+      gap: 20px;
+    }
 
     .aside-card {
       background: var(--navy-deep);
@@ -871,16 +1165,24 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       position: relative;
       overflow: hidden;
     }
+
     .aside-card::before {
       content: "";
       position: absolute;
-      width: 300px; height: 300px;
-      right: -120px; top: -120px;
+      width: 300px;
+      height: 300px;
+      right: -120px;
+      top: -120px;
       border-radius: 50%;
       background: radial-gradient(circle, rgba(201, 165, 91, .12), transparent 70%);
       pointer-events: none;
     }
-    .aside-card > * { position: relative; z-index: 1; }
+
+    .aside-card>* {
+      position: relative;
+      z-index: 1;
+    }
+
     .aside-card h3 {
       color: var(--ivory);
       font-size: 1.4rem;
@@ -890,14 +1192,19 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       align-items: center;
       gap: 12px;
     }
-    .aside-card h3 i { color: var(--gold-soft); }
+
+    .aside-card h3 i {
+      color: var(--gold-soft);
+    }
 
     .support-list {
       list-style: none;
-      padding: 0; margin: 0;
+      padding: 0;
+      margin: 0;
       display: grid;
       gap: 0;
     }
+
     .support-list li {
       display: flex;
       gap: 16px;
@@ -905,10 +1212,19 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       padding: 18px 0;
       border-bottom: 1px solid rgba(253, 251, 246, .08);
     }
-    .support-list li:last-child { border-bottom: 0; padding-bottom: 0; }
-    .support-list li:first-child { padding-top: 0; }
+
+    .support-list li:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .support-list li:first-child {
+      padding-top: 0;
+    }
+
     .support-list .icon {
-      width: 30px; height: 30px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       border: 1px solid rgba(201, 165, 91, .4);
       color: var(--gold-soft);
@@ -919,7 +1235,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       flex-shrink: 0;
       margin-top: 2px;
     }
-    .support-list div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+
+    .support-list div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
     .support-list strong {
       color: var(--ivory);
       font-family: 'Cormorant Garamond', serif;
@@ -927,11 +1250,13 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-weight: 500;
       line-height: 1.3;
     }
+
     .support-list span {
       color: rgba(253, 251, 246, .6);
       font-size: 13px;
       line-height: 1.6;
     }
+
     .support-list a {
       color: var(--gold-soft);
       font-size: 13px;
@@ -939,25 +1264,53 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       transition: color .2s ease;
       word-break: break-word;
     }
-    .support-list a:hover { color: var(--ivory); }
+
+    .support-list a:hover {
+      color: var(--ivory);
+    }
 
     .aside-card.light {
       background: var(--ivory);
       color: var(--ink-soft);
       border: 1px solid var(--hairline);
     }
-    .aside-card.light::before { display: none; }
-    .aside-card.light h3 { color: var(--navy); }
-    .aside-card.light h3 i { color: var(--gold); }
-    .aside-card.light .support-list strong { color: var(--navy); }
-    .aside-card.light .support-list span { color: var(--ink-soft); }
-    .aside-card.light .support-list a { color: var(--navy); }
-    .aside-card.light .support-list a:hover { color: var(--gold); }
+
+    .aside-card.light::before {
+      display: none;
+    }
+
+    .aside-card.light h3 {
+      color: var(--navy);
+    }
+
+    .aside-card.light h3 i {
+      color: var(--gold);
+    }
+
+    .aside-card.light .support-list strong {
+      color: var(--navy);
+    }
+
+    .aside-card.light .support-list span {
+      color: var(--ink-soft);
+    }
+
+    .aside-card.light .support-list a {
+      color: var(--navy);
+    }
+
+    .aside-card.light .support-list a:hover {
+      color: var(--gold);
+    }
+
     .aside-card.light .support-list .icon {
       border-color: var(--gold-pale);
       color: var(--gold);
     }
-    .aside-card.light .support-list li { border-bottom-color: var(--hairline-soft); }
+
+    .aside-card.light .support-list li {
+      border-bottom-color: var(--hairline-soft);
+    }
 
     .aside-note {
       display: flex;
@@ -966,12 +1319,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border: 1px solid rgba(201, 165, 91, .25);
       padding: 20px 22px;
     }
+
     .aside-note i {
       color: var(--gold-soft);
       font-size: 20px;
       flex-shrink: 0;
       margin-top: 2px;
     }
+
     .aside-note strong {
       display: block;
       font-family: 'Cormorant Garamond', serif;
@@ -980,6 +1335,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--gold-soft);
       margin-bottom: 4px;
     }
+
     .aside-note span {
       font-size: 13px;
       color: rgba(253, 251, 246, .7);
@@ -993,13 +1349,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       border: 1px solid var(--hairline-soft);
       background: var(--ivory);
     }
+
     .faq-accordion .accordion-item {
       border: 0;
       border-bottom: 1px solid var(--hairline-soft);
       border-radius: 0 !important;
       background: transparent;
     }
-    .faq-accordion .accordion-item:last-child { border-bottom: 0; }
+
+    .faq-accordion .accordion-item:last-child {
+      border-bottom: 0;
+    }
+
     .faq-accordion .accordion-button {
       background: transparent;
       color: var(--navy);
@@ -1011,15 +1372,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       box-shadow: none;
       border-radius: 0;
     }
+
     .faq-accordion .accordion-button:not(.collapsed) {
       background: var(--cream-soft);
       color: var(--navy);
     }
+
     .faq-accordion .accordion-button:focus {
       box-shadow: none;
       border-color: transparent;
       outline: none;
     }
+
     .faq-accordion .accordion-button::after {
       background-image: none;
       content: "+";
@@ -1032,11 +1396,13 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       line-height: 1;
       transition: transform .25s ease;
     }
+
     .faq-accordion .accordion-button:not(.collapsed)::after {
       content: "−";
       transform: none;
       color: var(--gold);
     }
+
     .faq-accordion .accordion-body {
       padding: 0 28px 24px;
       color: var(--ink-soft);
@@ -1054,6 +1420,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       overflow: hidden;
       padding: 96px 0 0;
     }
+
     .footer-watermark {
       position: absolute;
       left: 50%;
@@ -1070,17 +1437,24 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       user-select: none;
       z-index: 0;
       background: linear-gradient(180deg,
-        rgba(201, 165, 91, .14) 0%,
-        rgba(201, 165, 91, .05) 40%,
-        rgba(201, 165, 91, 0) 85%);
+          rgba(201, 165, 91, .14) 0%,
+          rgba(201, 165, 91, .05) 40%,
+          rgba(201, 165, 91, 0) 85%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
     }
-    .footer-watermark::before { content: "CJ Travels"; }
 
-    .footer-inner { position: relative; z-index: 1; }
+    .footer-watermark::before {
+      content: "CJ Travels";
+    }
+
+    .footer-inner {
+      position: relative;
+      z-index: 1;
+    }
+
     .footer-grid {
       display: grid;
       grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
@@ -1088,19 +1462,29 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       padding-bottom: 72px;
       border-bottom: 1px solid rgba(253, 251, 246, .08);
     }
+
     .footer-brand {
       display: inline-flex;
       align-items: center;
       gap: 12px;
       margin-bottom: 24px;
     }
+
     .footer-brand .brand-mark {
-      width: 40px; height: 40px;
+      width: 40px;
+      height: 40px;
       border-color: rgba(201, 165, 91, .4);
       color: var(--gold-soft);
     }
-    .footer-brand .brand-name { color: var(--ivory); font-size: 22px; }
-    .footer-brand .brand-name em { color: var(--gold-soft); }
+
+    .footer-brand .brand-name {
+      color: var(--ivory);
+      font-size: 22px;
+    }
+
+    .footer-brand .brand-name em {
+      color: var(--gold-soft);
+    }
 
     .footer-about {
       font-size: 13px;
@@ -1109,9 +1493,15 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       max-width: 36ch;
       margin-bottom: 28px;
     }
-    .footer-social { display: flex; gap: 10px; }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
     .footer-social a {
-      width: 38px; height: 38px;
+      width: 38px;
+      height: 38px;
       border: 1px solid rgba(253, 251, 246, .14);
       color: rgba(253, 251, 246, .7);
       display: inline-flex;
@@ -1120,6 +1510,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-size: 14px;
       transition: all .25s ease;
     }
+
     .footer-social a:hover {
       border-color: var(--gold-soft);
       color: var(--gold-soft);
@@ -1134,24 +1525,31 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: var(--gold-soft);
       margin-bottom: 24px;
     }
+
     .footer-links {
       list-style: none;
-      padding: 0; margin: 0;
+      padding: 0;
+      margin: 0;
       display: grid;
       gap: 12px;
     }
+
     .footer-links a {
       color: rgba(253, 251, 246, .6);
       font-size: 13px;
       transition: color .2s ease;
     }
-    .footer-links a:hover { color: var(--gold-soft); }
+
+    .footer-links a:hover {
+      color: var(--gold-soft);
+    }
 
     .footer-contact {
       display: grid;
       gap: 12px;
       margin-bottom: 24px;
     }
+
     .footer-contact a {
       display: inline-flex;
       align-items: center;
@@ -1160,24 +1558,37 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: rgba(253, 251, 246, .6);
       transition: color .2s ease;
     }
-    .footer-contact a:hover { color: var(--gold-soft); }
-    .footer-contact i { color: var(--gold-soft); font-size: 12px; }
 
-    .footer-newsletter { margin-top: 24px; }
+    .footer-contact a:hover {
+      color: var(--gold-soft);
+    }
+
+    .footer-contact i {
+      color: var(--gold-soft);
+      font-size: 12px;
+    }
+
+    .footer-newsletter {
+      margin-top: 24px;
+    }
+
     .footer-newsletter p {
       font-size: 12px;
       color: rgba(253, 251, 246, .5);
       margin-bottom: 12px;
       letter-spacing: .02em;
     }
+
     .footer-newsletter-form {
       display: flex;
       border-bottom: 1px solid rgba(253, 251, 246, .15);
       transition: border-color .25s ease;
     }
+
     .footer-newsletter-form:focus-within {
       border-bottom-color: var(--gold-soft);
     }
+
     .footer-newsletter-form input {
       flex: 1;
       background: transparent;
@@ -1189,7 +1600,11 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       outline: none;
       min-width: 0;
     }
-    .footer-newsletter-form input::placeholder { color: rgba(253, 251, 246, .35); }
+
+    .footer-newsletter-form input::placeholder {
+      color: rgba(253, 251, 246, .35);
+    }
+
     .footer-newsletter-form button {
       background: transparent;
       border: 0;
@@ -1199,7 +1614,10 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       font-size: 14px;
       transition: transform .2s ease;
     }
-    .footer-newsletter-form button:hover { transform: translateX(3px); }
+
+    .footer-newsletter-form button:hover {
+      transform: translateX(3px);
+    }
 
     .newsletter-status {
       display: none;
@@ -1207,9 +1625,18 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       margin-top: 8px;
       letter-spacing: .02em;
     }
-    .newsletter-status.show { display: block; }
-    .newsletter-status.success { color: var(--gold-soft); }
-    .newsletter-status.error { color: #f0a19a; }
+
+    .newsletter-status.show {
+      display: block;
+    }
+
+    .newsletter-status.success {
+      color: var(--gold-soft);
+    }
+
+    .newsletter-status.error {
+      color: #f0a19a;
+    }
 
     .footer-bottom {
       padding: 32px 0;
@@ -1222,37 +1649,64 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       color: rgba(253, 251, 246, .4);
       letter-spacing: .04em;
     }
+
     .footer-legal {
       list-style: none;
       display: flex;
       gap: 24px;
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       flex-wrap: wrap;
     }
+
     .footer-legal a {
       color: rgba(253, 251, 246, .4);
       transition: color .2s ease;
     }
-    .footer-legal a:hover { color: var(--gold-soft); }
+
+    .footer-legal a:hover {
+      color: var(--gold-soft);
+    }
 
     @media (max-width: 991.98px) {
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid > :first-child { grid-column: 1 / -1; }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid> :first-child {
+        grid-column: 1 / -1;
+      }
     }
+
     @media (max-width: 575.98px) {
-      .footer-grid { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; text-align: center; }
-      .footer-legal { justify-content: center; }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        justify-content: center;
+      }
     }
 
     /* =======================================================
        REDUCED MOTION
        ======================================================= */
     @media (prefers-reduced-motion: reduce) {
-      * { transition-duration: .01ms !important; animation: none !important; }
-      html { scroll-behavior: auto; }
+      * {
+        transition-duration: .01ms !important;
+        animation: none !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
     }
-  
+
     /* CJ Travels Brand Logo */
     .brand-logo {
       height: 40px;
@@ -1263,17 +1717,20 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       vertical-align: middle;
       transition: transform .25s ease;
     }
+
     .brand-logo:hover {
       transform: scale(1.02);
     }
+
     .footer-brand .brand-logo,
     .footer-logo {
       height: 42px;
     }
-
   </style>
 
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    document.documentElement.classList.add('js');
+  </script>
 </head>
 
 <body>
@@ -1321,7 +1778,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
         </div>
 
         <button class="navbar-toggler" type="button" id="mobileToggle"
-                aria-controls="mobileNav" aria-expanded="false" aria-label="Open menu">
+          aria-controls="mobileNav" aria-expanded="false" aria-label="Open menu">
           <i class="bi bi-list"></i>
         </button>
 
@@ -1337,8 +1794,8 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
   <aside class="mobile-nav" id="mobileNav" aria-label="Mobile navigation">
     <div class="mobile-nav-head">
       <a class="brand" href="<?= route('home') ?>" aria-label="CJ Travels home">
-          <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
-        </a>
+        <img src="<?= asset('images/logo-transparent.png') ?>" alt="CJ Travels" class="brand-logo" />
+      </a>
       <button class="mobile-nav-close" id="mobileClose" aria-label="Close menu">
         <i class="bi bi-x-lg"></i>
       </button>
@@ -1498,28 +1955,28 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
                   <div class="col-md-6">
                     <label class="form-label" for="contactName">Full name</label>
                     <input type="text" class="form-control" id="contactName"
-                           autocomplete="name" placeholder="e.g. Adaeze Okonkwo" required />
+                      autocomplete="name" placeholder="e.g. Adaeze Okonkwo" required />
                     <div class="invalid-feedback">Please enter your full name.</div>
                   </div>
 
                   <div class="col-md-6">
                     <label class="form-label" for="contactEmail">Email address</label>
                     <input type="email" class="form-control" id="contactEmail"
-                           autocomplete="email" placeholder="you@example.com" required />
+                      autocomplete="email" placeholder="you@example.com" required />
                     <div class="invalid-feedback">Please enter a valid email address.</div>
                   </div>
 
                   <div class="col-md-6">
                     <label class="form-label" for="contactPhone">Phone number</label>
                     <input type="tel" class="form-control" id="contactPhone"
-                           autocomplete="tel" placeholder="08135196772" />
+                      autocomplete="tel" placeholder="08135196772" />
                     <div class="invalid-feedback">Enter a phone number with at least 10 digits, or leave it blank.</div>
                   </div>
 
                   <div class="col-12">
                     <label class="form-label" for="contactSubject">Subject</label>
                     <input type="text" class="form-control" id="contactSubject"
-                           placeholder="A short summary of your question" required />
+                      placeholder="A short summary of your question" required />
                     <div class="invalid-feedback">Please add a short subject (at least 3 characters).</div>
                   </div>
 
@@ -1580,8 +2037,8 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
                   <div class="col-12">
                     <label class="form-label" for="contactMessage">Message</label>
                     <textarea class="form-control" id="contactMessage" rows="6" maxlength="1000"
-                              placeholder="Share the details of your question — travel dates, route or booking reference if you have one."
-                              required></textarea>
+                      placeholder="Share the details of your question — travel dates, route or booking reference if you have one."
+                      required></textarea>
                     <div class="invalid-feedback">Please write a message (at least 20 characters).</div>
                     <div class="char-counter" id="charCounter">0 / 1000</div>
                   </div>
@@ -1714,7 +2171,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+                    data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
                     How quickly will I get a reply?
                   </button>
                 </h3>
@@ -1730,14 +2187,14 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                    data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
                     Which department should I choose?
                   </button>
                 </h3>
                 <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                   <div class="accordion-body">
                     Use <strong>Flight Support</strong> for routes, fares and ticketing; <strong>Hotel
-                    Support</strong> for stays and room policies; <strong>Travel Financing</strong> for
+                      Support</strong> for stays and room policies; <strong>Travel Financing</strong> for
                     payment plans and lending partner questions; and <strong>General Enquiries</strong>
                     for everything else. If you are unsure, choose General Enquiries and we will route
                     it internally.
@@ -1748,7 +2205,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                    data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
                     Does this form actually send an email?
                   </button>
                 </h3>
@@ -1765,7 +2222,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                    data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
                     Can I change or cancel a booking through this form?
                   </button>
                 </h3>
@@ -1781,7 +2238,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                    data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
                     Will you ask for my bank password or card PIN?
                   </button>
                 </h3>
@@ -1798,7 +2255,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
+                    data-bs-target="#faq6" aria-expanded="false" aria-controls="faq6">
                     Do you handle travel financing applications here?
                   </button>
                 </h3>
@@ -1815,7 +2272,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
               <div class="accordion-item">
                 <h3 class="accordion-header">
                   <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
+                    data-bs-target="#faq7" aria-expanded="false" aria-controls="faq7">
                     Do you support customers outside Nigeria?
                   </button>
                 </h3>
@@ -1928,7 +2385,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
   <script src="<?= asset('js/promo-banner.js') ?>"></script>
 
   <script>
-    (function () {
+    (function() {
       'use strict';
 
       /* =====================================================
@@ -1936,20 +2393,22 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
          ===================================================== */
       var header = document.getElementById('siteHeader');
       if (header) {
-        var onScroll = function () {
+        var onScroll = function() {
           header.classList.toggle('scrolled', window.scrollY > 8);
         };
         onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, {
+          passive: true
+        });
       }
 
       /* =====================================================
          2. MOBILE DRAWER
          ===================================================== */
-      var toggle   = document.getElementById('mobileToggle');
+      var toggle = document.getElementById('mobileToggle');
       var closeBtn = document.getElementById('mobileClose');
-      var drawer   = document.getElementById('mobileNav');
-      var overlay  = document.getElementById('mobileOverlay');
+      var drawer = document.getElementById('mobileNav');
+      var overlay = document.getElementById('mobileOverlay');
 
       function openMobile() {
         drawer.classList.add('open');
@@ -1957,6 +2416,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
         toggle.setAttribute('aria-expanded', 'true');
         document.body.style.overflow = 'hidden';
       }
+
       function closeMobile() {
         drawer.classList.remove('open');
         overlay.classList.remove('show');
@@ -1966,20 +2426,20 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       if (toggle) toggle.addEventListener('click', openMobile);
       if (closeBtn) closeBtn.addEventListener('click', closeMobile);
       if (overlay) overlay.addEventListener('click', closeMobile);
-      document.addEventListener('keydown', function (e) {
+      document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) {
           closeMobile();
           toggle.focus();
         }
       });
-      document.querySelectorAll('#mobileNav .nav-link').forEach(function (link) {
+      document.querySelectorAll('#mobileNav .nav-link').forEach(function(link) {
         link.addEventListener('click', closeMobile);
       });
 
       /* =====================================================
          3. YEAR
          ===================================================== */
-      document.querySelectorAll('[data-year]').forEach(function (node) {
+      document.querySelectorAll('[data-year]').forEach(function(node) {
         node.textContent = new Date().getFullYear();
       });
 
@@ -1988,17 +2448,24 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
          ===================================================== */
       var revealEls = document.querySelectorAll('.reveal');
       if ('IntersectionObserver' in window && revealEls.length) {
-        var observer = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
             if (entry.isIntersecting) {
               entry.target.classList.add('is-visible');
               observer.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-        revealEls.forEach(function (el) { observer.observe(el); });
+        }, {
+          threshold: 0.12,
+          rootMargin: '0px 0px -60px 0px'
+        });
+        revealEls.forEach(function(el) {
+          observer.observe(el);
+        });
       } else {
-        revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+        revealEls.forEach(function(el) {
+          el.classList.add('is-visible');
+        });
       }
 
       /* =====================================================
@@ -2040,13 +2507,17 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       function setInvalid(field) {
         field.classList.add('is-invalid');
         var feedback = field.parentElement.querySelector('.invalid-feedback');
-        if (feedback) { feedback.style.display = 'block'; }
+        if (feedback) {
+          feedback.style.display = 'block';
+        }
       }
 
       function setValid(field) {
         field.classList.remove('is-invalid');
         var feedback = field.parentElement.querySelector('.invalid-feedback');
-        if (feedback) { feedback.style.display = ''; }
+        if (feedback) {
+          feedback.style.display = '';
+        }
       }
 
       function isValidEmail(value) {
@@ -2068,20 +2539,20 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
         statusBox.innerHTML = '';
       }
 
-      Object.keys(fields).forEach(function (key) {
+      Object.keys(fields).forEach(function(key) {
         var field = fields[key];
-        field.addEventListener('input', function () {
+        field.addEventListener('input', function() {
           field.classList.remove('is-invalid');
         });
       });
 
-      form.querySelectorAll('input[name="department"]').forEach(function (radio) {
-        radio.addEventListener('change', function () {
+      form.querySelectorAll('input[name="department"]').forEach(function(radio) {
+        radio.addEventListener('change', function() {
           deptError.classList.remove('show');
         });
       });
 
-      form.addEventListener('submit', function (event) {
+      form.addEventListener('submit', function(event) {
         event.preventDefault();
         clearStatus();
 
@@ -2147,13 +2618,16 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
           showStatus(
             'error',
             '<strong>Please check the highlighted fields.</strong>' +
-            (errorCount === 1
-              ? ' One field needs your attention before you continue.'
-              : ' ' + errorCount + ' fields need your attention before you continue.')
+            (errorCount === 1 ?
+              ' One field needs your attention before you continue.' :
+              ' ' + errorCount + ' fields need your attention before you continue.')
           );
           if (firstInvalid) {
             firstInvalid.focus();
-            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            firstInvalid.scrollIntoView({
+              behavior: 'smooth',
+              block: 'center'
+            });
           }
           return;
         }
@@ -2163,19 +2637,24 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
         showStatus('success', '<strong>Saving your message…</strong>');
         var base = window.location.pathname.replace(/\/contact(\.php)?$/i, '');
         fetch(base + '/api/contact', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            name: nameValue,
-            email: emailValue,
-            phone: phoneValue,
-            subject: subjectValue,
-            department: department,
-            message: messageValue
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              name: nameValue,
+              email: emailValue,
+              phone: phoneValue,
+              subject: subjectValue,
+              department: department,
+              message: messageValue
+            })
           })
-        })
-          .then(function (res) { return res.json(); })
-          .then(function (res) {
+          .then(function(res) {
+            return res.json();
+          })
+          .then(function(res) {
             if (submitBtn) submitBtn.disabled = false;
             if (res && res.success) {
               showStatus('success', '<strong>Message saved.</strong> Reference <strong>' + escapeHTML(res.reference) + '</strong>.');
@@ -2185,17 +2664,26 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
             }
             showStatus('error', '<strong>' + escapeHTML((res && (res.error || res.message)) || 'Could not save this message.') + '</strong>');
           })
-          .catch(function () {
+          .catch(function() {
             if (submitBtn) submitBtn.disabled = false;
             showStatus('error', '<strong>Could not reach CJ Travels.</strong>');
           });
 
-        statusBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        statusBox.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
       });
 
       function escapeHTML(str) {
-        return String(str).replace(/[&<>"']/g, function (ch) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+        return String(str).replace(/[&<>"']/g, function(ch) {
+          return {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+          } [ch];
         });
       }
 
@@ -2205,7 +2693,7 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
       var newsletterForm = document.getElementById('newsletterForm');
       var newsletterStatus = document.getElementById('newsletterStatus');
       if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function (event) {
+        newsletterForm.addEventListener('submit', function(event) {
           event.preventDefault();
           var email = document.getElementById('newsletterEmail').value.trim();
           var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
@@ -2223,4 +2711,5 @@ $base = function_exists('base_subfolder') ? base_subfolder() : '/TravelBooking';
     })();
   </script>
 </body>
+
 </html>

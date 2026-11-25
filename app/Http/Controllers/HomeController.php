@@ -41,6 +41,14 @@ class HomeController extends Controller
         ]);
     }
 
+    public function bus(): Response
+    {
+        return $this->view('pages/bus', [
+            'title' => 'Luxury Road Transport & Bus Tickets — CJ Travels',
+            'routes' => \App\Services\RealtimeDataService::getPopularBusRoutes(),
+        ]);
+    }
+
     public function terms(): Response
     {
         return $this->view('pages/terms', [

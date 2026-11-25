@@ -8,6 +8,7 @@
       <a href="<?= route('home') ?>" class="<?= (request()->is('/') || request()->is('home')) ? 'active' : '' ?>">Home</a>
       <a href="<?= route('flights') ?>">Flights</a>
       <a href="<?= route('hotels') ?>">Hotels</a>
+      <a href="<?= route('bus') ?>" class="<?= request()->is('bus*') ? 'active' : '' ?>">Bus Tickets</a>
       <a href="<?= route('destinations') ?>">Destinations</a>
       <a href="<?= route('financing') ?>">Financing</a>
       <a href="<?= route('about') ?>">About</a>
@@ -40,6 +41,7 @@
     <a href="<?= route('home') ?>" class="<?= (request()->is('/') || request()->is('home')) ? 'active' : '' ?>"><i class="bi bi-house-door"></i> Home</a>
     <a href="<?= route('flights') ?>"><i class="bi bi-airplane"></i> Flights</a>
     <a href="<?= route('hotels') ?>"><i class="bi bi-building"></i> Hotels</a>
+    <a href="<?= route('bus') ?>" class="<?= request()->is('bus*') ? 'active' : '' ?>"><i class="bi bi-bus-front"></i> Bus Tickets</a>
     <a href="<?= route('destinations') ?>"><i class="bi bi-compass"></i> Destinations</a>
     <a href="<?= route('financing') ?>"><i class="bi bi-cash-coin"></i> Financing</a>
     <a href="<?= route('about') ?>"><i class="bi bi-info-circle"></i> About</a>

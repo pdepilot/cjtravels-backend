@@ -124,5 +124,49 @@ class Request
         }
         return $default;
     }
+
+    public static function create(string $uri, string $method = 'GET', array $parameters = [], array $server = []): self
+    {
+        $backupServer = $_SERVER;
+        $backupGet = $_GET;
+        $backupPost = $_POST;
+
+        $parsedUri = parse_url($uri);
+        $path = $parsedUri['path'] ?? '/';
+        $queryString = $parsedUri['query'] ?? '';
+
+        if (!empty($queryString)) {
+            parse_str($queryString, $parsedQuery);
+            if (strtoupper($method) === 'GET') {
+                $parameters = array_merge($parsedQuery, $parameters);
+            }
+        }
+
+        $_SERVER = array_merge([
+            'REQUEST_METHOD' => strtoupper($method),
+            'REQUEST_URI' => $uri,
+            'SCRIPT_NAME' => '/index.php',
+            'QUERY_STRING' => $queryString,
+            'REMOTE_ADDR' => '127.0.0.1',
+            'HTTP_HOST' => 'localhost',
+        ], $server);
+
+        if (strtoupper($method) === 'GET') {
+            $_GET = $parameters;
+            $_POST = [];
+        } else {
+            $_POST = $parameters;
+            $_GET = [];
+        }
+
+        $instance = new self();
+
+        $_SERVER = $backupServer;
+        $_GET = $backupGet;
+        $_POST = $backupPost;
+
+        return $instance;
+    }
 }
+
 

@@ -301,6 +301,7 @@ class RealtimeDataService
             'monthly' => $monthly,
             'apiProviders' => $apiProviders,
             'apiLogs' => $apiLogs,
+            'busBookings' => self::getBusBookings(50),
             'counts' => [
                 'customers' => count($customers),
                 'flights' => count($flights),
@@ -310,6 +311,7 @@ class RealtimeDataService
                 'transactions' => count($transactions),
                 'api' => count($apiProviders),
                 'messages' => self::contactMessageCount(),
+                'bus' => self::busBookingCount(),
             ],
         ];
     }
@@ -636,6 +638,21 @@ class RealtimeDataService
                 $db->update('destinations', $update, 'id = :id', [':id' => $cleanId]);
                 return true;
 
+            case 'bus':
+            case 'bus_booking':
+                $update = ['updated_at' => $now];
+                if (isset($data['status'])) $update['status'] = trim($data['status']);
+                if (isset($data['customer_name'])) $update['customer_name'] = trim($data['customer_name']);
+                if (isset($data['customer_phone'])) $update['customer_phone'] = trim($data['customer_phone']);
+                if (isset($data['departure_date'])) $update['departure_date'] = trim($data['departure_date']);
+                if (isset($data['return_date'])) $update['return_date'] = !empty($data['return_date']) ? trim($data['return_date']) : null;
+                if (isset($data['passengers'])) $update['passengers'] = (int)$data['passengers'];
+                if (isset($data['coach_class'])) $update['coach_class'] = trim($data['coach_class']);
+                if (isset($data['notes'])) $update['notes'] = trim($data['notes']);
+
+                $db->update('bus_bookings', $update, 'id = :id', [':id' => $cleanId]);
+                return true;
+
             default:
                 return false;
         }
@@ -656,6 +673,8 @@ class RealtimeDataService
             'loan' => 'loan_enquiries',
             'transaction' => 'transactions',
             'destination' => 'destinations',
+            'bus' => 'bus_bookings',
+            'bus_booking' => 'bus_bookings',
         ];
 
         $table = $tableMap[$kind] ?? null;
@@ -2404,5 +2423,406 @@ class RealtimeDataService
             'success' => true,
             'message' => 'The public phone and WhatsApp number have been updated.',
         ];
+    }
+
+    public static function ensureBusBookingSchema(): void
+    {
+        $db = Database::getInstance();
+        if ($db->getDriver() !== 'mysql') {
+            return;
+        }
+
+        $db->getPdo()->exec(
+            "CREATE TABLE IF NOT EXISTS bus_bookings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                ref VARCHAR(32) NOT NULL UNIQUE,
+                customer_name VARCHAR(150) NOT NULL,
+                customer_phone VARCHAR(50) NOT NULL,
+                customer_email VARCHAR(150) NULL,
+                trip_type VARCHAR(20) NOT NULL DEFAULT 'one-way',
+                departure_city VARCHAR(100) NOT NULL,
+                destination_city VARCHAR(100) NOT NULL,
+                departure_date DATE NOT NULL,
+                return_date DATE NULL,
+                departure_time VARCHAR(60) NULL DEFAULT 'Morning (06:30 - 08:00 AM)',
+                passengers INT NOT NULL DEFAULT 1,
+                coach_class VARCHAR(80) NOT NULL DEFAULT 'Executive Luxury AC Coach',
+                preferred_operator VARCHAR(100) NULL DEFAULT 'Any Verified Luxury Partner',
+                estimated_fare DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+                notes TEXT NULL,
+                status VARCHAR(30) NOT NULL DEFAULT 'Pending',
+                whatsapp_status VARCHAR(30) NOT NULL DEFAULT 'Initiated',
+                created_at DATETIME NOT NULL,
+                updated_at DATETIME NOT NULL,
+                INDEX idx_bus_ref (ref),
+                INDEX idx_bus_status (status),
+                INDEX idx_bus_depart_date (departure_date)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
+        );
+    }
+
+    public static function getPopularBusRoutes(): array
+    {
+        return [
+            [
+                'from' => 'Lagos',
+                'to' => 'Abuja',
+                'from_terminal' => 'Jibowu / Ajah Terminal',
+                'to_terminal' => 'Utako Central Terminal',
+                'duration' => '9–11 hrs',
+                'fare' => 32000,
+                'fare_display' => '₦32,000',
+                'badge' => 'Most Popular',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Port Harcourt',
+                'from_terminal' => 'Jibowu / Maza-Maza',
+                'to_terminal' => 'Waterlines Terminal',
+                'duration' => '8–10 hrs',
+                'fare' => 28000,
+                'fare_display' => '₦28,000',
+                'badge' => 'Daily Executive',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Benin City',
+                'from_terminal' => 'Jibowu / Yaba',
+                'to_terminal' => 'Uselu / Akpakpava',
+                'duration' => '4–5 hrs',
+                'fare' => 18000,
+                'fare_display' => '₦18,000',
+                'badge' => 'Express Route',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Enugu',
+                'from_terminal' => 'Jibowu / Ojuelegba',
+                'to_terminal' => 'Holy Ghost / Market Road',
+                'duration' => '7–9 hrs',
+                'fare' => 26000,
+                'fare_display' => '₦26,000',
+                'badge' => 'Top Rated',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Owerri',
+                'from_terminal' => 'Jibowu / Ajah',
+                'to_terminal' => 'Control Post / Orji',
+                'duration' => '8–9 hrs',
+                'fare' => 26000,
+                'fare_display' => '₦26,000',
+                'badge' => 'Daily VIP',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Ibadan',
+                'from_terminal' => 'Ojota / Berger',
+                'to_terminal' => 'Iwo Road / Challenge',
+                'duration' => '2–2.5 hrs',
+                'fare' => 10000,
+                'fare_display' => '₦10,000',
+                'badge' => 'Short Shuttle',
+            ],
+            [
+                'from' => 'Abuja',
+                'to' => 'Kaduna',
+                'from_terminal' => 'Utako / Jabi',
+                'to_terminal' => 'Kawo / Central Station',
+                'duration' => '2.5–3 hrs',
+                'fare' => 8500,
+                'fare_display' => '₦8,500',
+                'badge' => 'Frequent Departures',
+            ],
+            [
+                'from' => 'Abuja',
+                'to' => 'Kano',
+                'from_terminal' => 'Utako Terminal',
+                'to_terminal' => 'Sabon Gari / Naibawa',
+                'duration' => '5–6 hrs',
+                'fare' => 16000,
+                'fare_display' => '₦16,000',
+                'badge' => 'Northern Corridor',
+            ],
+            [
+                'from' => 'Abuja',
+                'to' => 'Jos',
+                'from_terminal' => 'Utako Terminal',
+                'to_terminal' => 'Terminus / British America',
+                'duration' => '3.5–4.5 hrs',
+                'fare' => 12000,
+                'fare_display' => '₦12,000',
+                'badge' => 'Scenic Plateau',
+            ],
+            [
+                'from' => 'Abuja',
+                'to' => 'Port Harcourt',
+                'from_terminal' => 'Utako Central Terminal',
+                'to_terminal' => 'Aba Road / Waterlines',
+                'duration' => '10–12 hrs',
+                'fare' => 30000,
+                'fare_display' => '₦30,000',
+                'badge' => 'Cross-Country',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Asaba / Onitsha',
+                'from_terminal' => 'Jibowu / Ajah',
+                'to_terminal' => 'Upper Iweka / Summit Rd',
+                'duration' => '6–7.5 hrs',
+                'fare' => 24000,
+                'fare_display' => '₦24,000',
+                'badge' => 'Commercial Hub',
+            ],
+            [
+                'from' => 'Lagos',
+                'to' => 'Calabar',
+                'from_terminal' => 'Jibowu Terminal',
+                'to_terminal' => 'Murtala Mohammed Hwy',
+                'duration' => '11–13 hrs',
+                'fare' => 32000,
+                'fare_display' => '₦32,000',
+                'badge' => 'Coastal Voyage',
+            ],
+        ];
+    }
+
+    public static function estimateBusFare(string $from, string $to, string $tripType, int $passengers, string $coachClass): float
+    {
+        $passengers = max(1, min(20, $passengers));
+        $routes = self::getPopularBusRoutes();
+
+        $fromLower = strtolower(trim($from));
+        $toLower = strtolower(trim($to));
+
+        $baseFare = 22000.00; // default baseline interstate fare
+        foreach ($routes as $r) {
+            $rFrom = strtolower($r['from']);
+            $rTo = strtolower($r['to']);
+            if (
+                (str_contains($fromLower, $rFrom) && str_contains($toLower, $rTo)) ||
+                (str_contains($fromLower, $rTo) && str_contains($toLower, $rFrom))
+            ) {
+                $baseFare = (float)$r['fare'];
+                break;
+            }
+        }
+
+        // Coach Class multiplier
+        $classMultiplier = match (strtolower(trim($coachClass))) {
+            'vip first-class coach', 'first-class vip express', 'vip' => 1.50,
+            'executive luxury ac coach', 'executive coach', 'executive' => 1.25,
+            'standard comfort ac bus', 'standard' => 1.00,
+            default => 1.20,
+        };
+
+        // Trip Type multiplier (1.0 for one-way, 1.95 for round-trip with 5% discount)
+        $tripMultiplier = (strtolower(trim($tripType)) === 'round-trip') ? 1.95 : 1.00;
+
+        return round($baseFare * $classMultiplier * $tripMultiplier * $passengers, 2);
+    }
+
+    public static function createBusBooking(array $data): array
+    {
+        self::$lastError = '';
+        self::ensureBusBookingSchema();
+        $db = Database::getInstance();
+
+        $name = trim((string)($data['customer_name'] ?? $data['name'] ?? $data['fullName'] ?? ''));
+        $phone = trim((string)($data['customer_phone'] ?? $data['phone'] ?? ''));
+        $email = strtolower(trim((string)($data['customer_email'] ?? $data['email'] ?? '')));
+        $from = trim((string)($data['departure_city'] ?? $data['from'] ?? ''));
+        $to = trim((string)($data['destination_city'] ?? $data['to'] ?? ''));
+        $departDate = trim((string)($data['departure_date'] ?? $data['depart'] ?? ''));
+        $returnDate = trim((string)($data['return_date'] ?? $data['return'] ?? ''));
+        $tripType = strtolower(trim((string)($data['trip_type'] ?? 'one-way'))) === 'round-trip' ? 'round-trip' : 'one-way';
+        $passengers = max(1, min(20, (int)($data['passengers'] ?? $data['seats'] ?? 1)));
+        $departTime = trim((string)($data['departure_time'] ?? 'Morning (06:30 - 08:00 AM)'));
+        $coachClass = trim((string)($data['coach_class'] ?? 'Executive Luxury AC Coach'));
+        $operator = trim((string)($data['preferred_operator'] ?? 'Any Verified Luxury Partner'));
+        $notes = trim((string)($data['notes'] ?? $data['special_requests'] ?? ''));
+
+        // Validation
+        if ($name === '') {
+            self::$lastError = 'Please enter your full name.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+        if ($phone === '' || strlen(preg_replace('/\D+/', '', $phone)) < 8) {
+            self::$lastError = 'Please provide a valid phone or WhatsApp number.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+        if ($from === '' || $to === '') {
+            self::$lastError = 'Please select both departure and destination locations.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+        if (strcasecmp($from, $to) === 0) {
+            self::$lastError = 'Departure and destination cannot be the same city.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+        if ($departDate === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $departDate)) {
+            self::$lastError = 'Please choose a valid departure date.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+
+        // Validate not in the past
+        $today = date('Y-m-d');
+        if ($departDate < $today) {
+            self::$lastError = 'Departure date cannot be in the past.';
+            return ['success' => false, 'error' => self::$lastError];
+        }
+
+        if ($tripType === 'round-trip') {
+            if ($returnDate === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $returnDate)) {
+                self::$lastError = 'Please select a valid return date for round-trip travel.';
+                return ['success' => false, 'error' => self::$lastError];
+            }
+            if ($returnDate < $departDate) {
+                self::$lastError = 'Return date cannot be earlier than departure date.';
+                return ['success' => false, 'error' => self::$lastError];
+            }
+        } else {
+            $returnDate = null;
+        }
+
+        $estimatedFare = self::estimateBusFare($from, $to, $tripType, $passengers, $coachClass);
+        $formattedFare = '₦' . number_format($estimatedFare);
+
+        $ref = 'CJBUS-' . strtoupper(substr(uniqid(), -6));
+        $now = date('Y-m-d H:i:s');
+
+        $insert = [
+            'ref' => $ref,
+            'customer_name' => $name,
+            'customer_phone' => $phone,
+            'customer_email' => $email !== '' ? $email : null,
+            'trip_type' => $tripType,
+            'departure_city' => $from,
+            'destination_city' => $to,
+            'departure_date' => $departDate,
+            'return_date' => $returnDate,
+            'departure_time' => $departTime !== '' ? $departTime : 'Morning (06:30 - 08:00 AM)',
+            'passengers' => $passengers,
+            'coach_class' => $coachClass,
+            'preferred_operator' => $operator !== '' ? $operator : 'Any Verified Luxury Partner',
+            'estimated_fare' => $estimatedFare,
+            'notes' => $notes !== '' ? $notes : null,
+            'status' => 'Pending',
+            'whatsapp_status' => 'Initiated',
+            'created_at' => $now,
+            'updated_at' => $now,
+        ];
+
+        $id = (int)$db->insert('bus_bookings', $insert);
+
+        // Build WhatsApp Message
+        $whatsappNumber = function_exists('cj_whatsapp_number') ? cj_whatsapp_number() : '2348135196772';
+        $formattedDepartDate = date('D, j M Y', strtotime($departDate));
+        $formattedReturnDate = $returnDate ? date('D, j M Y', strtotime($returnDate)) : 'N/A (One-Way)';
+
+        $lines = [
+            "🚌 *CJ TRAVELS — ROAD TRANSPORT & BUS TICKET ENQUIRY*",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            "📋 *Booking Ref:* {$ref}",
+            "👤 *Passenger Name:* {$name}",
+            "📞 *Phone:* {$phone}",
+        ];
+
+        if ($email !== '') {
+            $lines[] = "📧 *Email:* {$email}";
+        }
+
+        $lines[] = "";
+        $lines[] = "🛣️ *Journey Overview:*";
+        $lines[] = "• *Departure City:* {$from}";
+        $lines[] = "• *Destination:* {$to}";
+        $lines[] = "• *Trip Type:* " . ($tripType === 'round-trip' ? 'Round-Trip (Two-Way)' : 'One-Way');
+        $lines[] = "• *Departure Date:* {$formattedDepartDate} ({$departTime})";
+
+        if ($tripType === 'round-trip') {
+            $lines[] = "• *Return Date:* {$formattedReturnDate}";
+        }
+
+        $lines[] = "• *Passengers / Seats:* {$passengers} Seat" . ($passengers > 1 ? 's' : '');
+        $lines[] = "• *Coach Class:* {$coachClass}";
+        $lines[] = "• *Preferred Operator:* " . ($operator ?: 'Any Verified Luxury Partner');
+        $lines[] = "• *Estimated Total Fare:* {$formattedFare}";
+
+        if ($notes !== '') {
+            $lines[] = "";
+            $lines[] = "💬 *Special Requests / Luggage:*";
+            $lines[] = "{$notes}";
+        }
+
+        $lines[] = "";
+        $lines[] = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+        $lines[] = "Hello CJ Travels, I would like to confirm bus availability and complete this booking.";
+
+        $messageText = implode("\n", $lines);
+        $whatsappUrl = "https://wa.me/{$whatsappNumber}?text=" . rawurlencode($messageText);
+
+        return [
+            'success' => true,
+            'message' => 'Your bus travel enquiry has been created! Please click below to send it to our WhatsApp reservations desk.',
+            'booking' => array_merge($insert, [
+                'id' => $id,
+                'formattedFare' => $formattedFare,
+                'formattedDepartDate' => $formattedDepartDate,
+                'formattedReturnDate' => $formattedReturnDate,
+            ]),
+            'whatsappUrl' => $whatsappUrl,
+            'messageText' => $messageText,
+        ];
+    }
+
+    public static function getBusBookings(int $limit = 50, ?string $status = null): array
+    {
+        self::ensureBusBookingSchema();
+        $db = Database::getInstance();
+        $params = [];
+        $sql = "SELECT * FROM bus_bookings";
+        if ($status !== null && $status !== '') {
+            $sql .= " WHERE status = :status";
+            $params[':status'] = $status;
+        }
+        $sql .= " ORDER BY id DESC LIMIT " . (int)$limit;
+
+        $rows = $db->select($sql, $params);
+        $bookings = [];
+        foreach ($rows as $r) {
+            $bookings[] = [
+                'id' => (int)$r['id'],
+                'ref' => (string)$r['ref'],
+                'customer_name' => (string)$r['customer_name'],
+                'customer_phone' => (string)$r['customer_phone'],
+                'customer_email' => (string)($r['customer_email'] ?? ''),
+                'trip_type' => (string)$r['trip_type'],
+                'departure_city' => (string)$r['departure_city'],
+                'destination_city' => (string)$r['destination_city'],
+                'departure_date' => (string)$r['departure_date'],
+                'return_date' => !empty($r['return_date']) ? (string)$r['return_date'] : null,
+                'departure_time' => (string)($r['departure_time'] ?? 'Morning'),
+                'passengers' => (int)$r['passengers'],
+                'coach_class' => (string)$r['coach_class'],
+                'preferred_operator' => (string)($r['preferred_operator'] ?? 'Any'),
+                'estimated_fare' => (float)$r['estimated_fare'],
+                'formatted_fare' => '₦' . number_format((float)$r['estimated_fare']),
+                'notes' => (string)($r['notes'] ?? ''),
+                'status' => (string)$r['status'],
+                'whatsapp_status' => (string)($r['whatsapp_status'] ?? 'Initiated'),
+                'created_at' => (string)$r['created_at'],
+            ];
+        }
+        return $bookings;
+    }
+
+    public static function busBookingCount(): int
+    {
+        self::ensureBusBookingSchema();
+        try {
+            $row = Database::getInstance()->selectOne("SELECT COUNT(*) as c FROM bus_bookings");
+            return (int)($row['c'] ?? 0);
+        } catch (\Throwable $e) {
+            return 0;
+        }
     }
 }
